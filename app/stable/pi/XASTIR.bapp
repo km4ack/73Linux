@@ -1,0 +1,54 @@
+BAPP=4.0
+ID=XASTIR
+Name=Xastir
+Comment='APRS Client'
+Ver=Update:2.1.8
+localVer=2.1.7
+
+
+INSTALL(){
+	sudo apt-get -y install build-essential automake git xorg-dev libmotif-dev graphicsmagick \
+		gv libcurl4-openssl-dev shapelib libshp-dev libpcre3-dev libproj-dev libdb-dev python-dev \
+		libax25-dev libwebp-dev libwebp-dev libgraphicsmagick1-dev festival festival-dev
+
+	cd ${BUILDDIR} || return
+	git clone https://github.com/Xastir/Xastir.git
+	cd Xastir || return
+	./bootstrap.sh
+	mkdir build
+	cd build || return
+	../configure
+	make
+	sudo make install
+	sudo make clean
+
+	cat >xastir.desktop <<EOF
+[Desktop Entry]
+Name=Xastir
+Comment=X Amateur Station Tracking and Information Reporting
+Exec=xastir
+Icon=/usr/local/share/xastir/symbols/icon.png
+Terminal=false
+Type=Application
+Categories=Network;HamRadio
+Keywords=APRS;AX.25;HamRadio
+EOF
+
+	sudo mv xastir.desktop /usr/share/applications/
+}
+
+
+VERSION(){
+	if ! hash xastir 2>/dev/null; then
+		CURRENT=0
+		NEWVER=$(curl -s https://github.com/Xastir/Xastir | grep Release- | head -1 | sed 's/.*Release-//;s/">//')
+	else		
+		CURRENT=$(/usr/local/bin/xastir -V | awk '{print $2}' | sed 's/V//' | sed '/^[[:space:]]*$/d')
+		NEWVER=$(curl -s https://github.com/Xastir/Xastir | grep Release- | head -1 | sed 's/.*Release-//;s/">//')
+	fi
+}
+
+REMOVE(){
+	sudo rm /usr/local/bin/xastir /usr/share/applications/xastir.desktop
+	sudo apt purge -y festival festival-dev
+}

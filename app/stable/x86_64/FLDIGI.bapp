@@ -1,0 +1,97 @@
+BAPP=4.0
+ID=FLDIGI
+Name=FLDIGI
+Comment="Digital Software"
+Ver=Update:4.1.23
+localVer=0
+W3=
+
+INSTALL(){
+
+	CLEANSOURCE(){
+		#this function removes any old source files before
+		#new files are downloaded for installation. This
+		#function is called by install functions below.
+		PACKAGE=$(ls ${HOME}/.bap-source-files | grep ${PACKAGE})
+		echo "package is $PACKAGE"
+		if [ -z $PACKAGE ]; then
+			echo "no old package found"
+		else
+			if [ -d ${HOME}/.bap-source-files/${PACKAGE} ]; then
+		   		echo "Dir to remove is ${HOME}/.bap-source-files/${PACKAGE}/"
+		   		rm -rf ${HOME}/.bap-source-files/${PACKAGE}/
+			fi
+		fi
+	}
+
+	##################################
+	#	DEPENDS
+	##################################
+
+	##################################
+	#	FLXMLRPC
+	##################################
+	FLX=$(ldconfig -p | grep flxmlrpc)
+
+	if [ -z "$FLX" ]; then
+
+		LIBJPG=libjpeg62-dev
+		sudo -A apt install -y libfltk1.3-dev $LIBJPG libxft-dev libxinerama-dev libxcursor-dev libsndfile1-dev libsamplerate0-dev portaudio19-dev libpulse-dev libusb-1.0-0-dev texinfo libudev-dev
+
+		#determine latest FLXMLRPC & download
+		FLXM=$(curl -s http://www.w1hkj.com/files/flxmlrpc/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
+		XMPKG=$(echo ${FLXM} | sed 's/.tar.gz//')
+		cd ${BUILDDIR} || return
+		wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flxmlrpc/${FLXM}
+		tar -zxvf ${FLXM}
+
+		#build FLXMLRPC
+		cd ${XMPKG} || return
+		./configure --prefix=/usr/local --enable-static
+		make
+		sudo make install
+		sudo ldconfig
+		sudo make clean
+	fi
+
+    CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+    mkdir -p ${BAPSRC}
+    PACKAGE=fldigi
+    CLEANSOURCE
+
+	#Determine latest FLDIGI
+	FLTAR=$(curl -s http://www.w1hkj.com/files/fldigi/ | grep .tar.gz | sed 's/.*fldigi/fldigi/;s/.gz.*$/.gz/')
+	FLPKG=$(echo ${FLTAR} | sed 's/.tar.gz//')
+
+	#Download latest FLDIGI tar file
+	cd ${BAPSRC}
+	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/fldigi/${FLTAR}
+	tar -zxvf ${FLTAR}
+
+	#build FLDIGI
+	cd ${FLPKG} || return
+	./configure --prefix=/usr/local --enable-static
+	make
+	sudo -A make install
+	sudo -A ldconfig
+	sudo -A make clean
+}
+
+
+REMOVE(){
+    sudo -A rm /usr/local/bin/fldigi /usr/local/share/applications/fldigi.desktop
+}
+
+VERSION(){
+	if ! hash fldigi 2>/dev/null; then
+		CURRENT=0
+		NEWVER=$(curl -s https://sourceforge.net/projects/fldigi/files/fldigi/ |
+			grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar" '{print $1}')
+	else
+		CURRENT=$(fldigi --version | awk 'FNR == 1 {print $2}')
+		NEWVER=$(curl -s https://sourceforge.net/projects/fldigi/files/fldigi/ |
+			grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar" '{print $1}')
+    fi
+
+}
+

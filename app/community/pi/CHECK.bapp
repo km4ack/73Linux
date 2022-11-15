@@ -1,0 +1,37 @@
+BAPP=4.0
+ID=CHECK
+Name=Checklist
+Comment='Checklist Generator'
+Ver=0
+localVer=0
+
+
+INSTALL(){
+
+if [ -f /usr/local/bin/checklist-generator ]; then
+	sudo rm /usr/local/bin/checklist-generator
+fi
+
+cd ${BAPSRC}
+wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/checklist-generator
+bash checklist-generator install
+
+}
+
+REMOVE(){
+if [ -f /usr/local/bin/checklist-generator ]; then
+	sudo rm /usr/local/bin/checklist-generator
+	sudo rm /usr/local/share/applications/checklist.desktop
+fi
+
+}
+
+VERSION(){
+if [ -f /usr/local/bin/checklist-generator ]; then
+	CURRENT=$(grep VERSION /usr/local/bin/checklist-generator | head -1 | sed 's/VERSION=//')
+	NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/checklist-generator | grep VERSION | head -1 | sed 's/VERSION=//')
+else
+	CURRENT=0
+	NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/checklist-generator | grep VERSION | head -1 | sed 's/VERSION=//')
+fi
+}

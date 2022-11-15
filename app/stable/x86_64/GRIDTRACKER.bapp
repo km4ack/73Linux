@@ -1,0 +1,40 @@
+BAPP=4.0
+ID=GRIDTRACKER
+Name=GridTracker
+Comment="Track grids in WSJTX"
+Ver=Update:1.22.1016
+localVer=0
+Maintainer=KM4ACK
+
+INSTALL(){
+    CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+    cd ${BAPSRC}
+    wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/gt-download-links
+    source gt-download-links
+
+    wget --tries 2 --connect-timeout=60 $nwjs
+    PKG=$(ls | grep nwjs)
+    sudo -A dpkg -i ${PKG}
+    rm ${PKG}
+    wget --tries 2 --connect-timeout=60 $deb
+    PKG=$(ls | grep -i gridtracker)
+    sudo -A dpkg -i ${PKG}
+    sudo apt --fix-broken install -y
+    sudo -A dpkg -i ${PKG}    
+    rm ${PKG} gt-download-links
+}
+
+REMOVE(){
+    sudo -A dpkg --remove gridtracker
+}
+
+VERSION(){
+    if ! hash gridtracker 2>/dev/null; then
+        CURRENT=0
+        NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gt-download-links | grep deb= | sed 's/.*gridtracker_//;s/_all.*//')
+    else
+        CURRENT=$(dpkg --list | grep grid | awk '{print $3}')
+        NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gt-download-links | grep deb= | sed 's/.*gridtracker_//;s/_all.*//')
+    fi
+echo $CURRENT $NEWVER
+}

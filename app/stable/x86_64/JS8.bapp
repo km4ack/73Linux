@@ -1,0 +1,35 @@
+BAPP=4.0
+ID=JS8
+Name=JS8Call
+Comment="Weak Signal Digital Mode Software"
+Ver=Update:2.2.0
+localVer=0
+
+INSTALL(){
+
+    CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+    mkdir -p ${BAPSRC}
+
+    cd ${BAPSRC}
+    sudo -A apt install libqt5multimedia5-plugins
+    wget --tries 2 --connect-timeout=60 http://files.js8call.com/2.2.0/js8call_2.2.0_20.04_amd64.deb
+    file=$(ls | grep js8call)
+    sudo -A dpkg -i $file
+    sudo -A apt --fix-broken install -y
+    sudo -A dpkg -i $file
+    rm $file
+}
+
+VERSION(){
+    if [ ! -f /usr/bin/js8call ]; then
+        CURRENT=0
+        NEWVER=$(curl -s http://files.js8call.com/latest.html | grep amd64 | head -1 | awk -F "/" '{print $4}')
+    else
+        CURRENT=$(dpkg --list | grep js8call | awk '{print $3}')
+        NEWVER=$(curl -s http://files.js8call.com/latest.html | grep amd64 | head -1 | awk -F "/" '{print $4}')
+    fi
+}
+
+REMOVE(){
+sudo -A rm /usr/bin/js8call /usr/share/applications/js8call.desktop
+}

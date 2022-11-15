@@ -1,0 +1,83 @@
+BAPP=4.0
+ID=EES
+Name=Email-Server
+Comment='KM4ACK Emergency Email Server'
+Ver=Update:1
+localVer=0
+
+
+INSTALL(){
+	#install PHP7.4 if not installed
+	#this will also install apache2
+	if ! hash php7.4 2>/dev/null; then
+		sudo apt install -y php7.4
+	fi
+	#install ghostwriter if needed
+	#this is used to mod the new index.html
+	#page. 20200229
+	if ! hash ghostwriter 2>/dev/null; then
+		sudo apt-get install -y ghostwriter
+	fi
+	#Install the KM4ACK EES
+	cd ${BUILDDIR} || return
+	git clone https://github.com/km4ack/EES-LITE.git
+	cd ${DIR}/EES-LITE || return
+	#git dev branch of code
+	git checkout dev
+	sudo cp -r ${BUILDDIR}/EES-LITE/* /var/www/html/
+	rm -rf "${BUILDDIR}/EES-LITE"
+	cd /var/www/html || return
+	sudo chmod +x /var/www/html/firstrun
+	sudo /var/www/html/./firstrun
+	sudo sed -i "s/N0CALL/${CALL}/" /var/www/html/config.php
+	sudo sed -i 's/REMINDER\ FOR\ OPERATOR\ TO\ DO\ SOMETHING/ENABLE\ AUTO\ POST\ REPLY\ IN\ CRON/' /var/www/html/config.php
+	cd ${DIR} || return
+	#Change Pat Winlink port so it won't interfer with the EES
+	sed -i 's/:8080/:5000/' ${XDG_CONFIG_HOME}/pat/config.json
+	sed -i 's/PORT=8080/PORT=5000/' ${HOME}/patmenu2/config
+
+	sudo killall pat
+	sudo systemctl start pat@${WHO}
+
+	#Move info.markdown from EES folder to Documents
+	sudo mv /var/www/html/info.markdown ${HOME}/Documents/
+	sudo chown ${WHO}:${WHO} ${HOME}/Documents/info.markdown
+	#move info.html to pi documents folder
+	sudo cp /var/www/html/index.html ${HOME}/Documents/info.html
+	sudo chown ${WHO}:${WHO} ${HOME}/Documents/info.html
+	#move script to be run by cron to bin dir
+	sudo mv /var/www/html/webcopy ${HOME}/bin/
+	sudo chown ${WHO}:${WHO} ${HOME}/bin/webcopy
+	sudo chmod +x ${HOME}/bin/webcopy
+
+	#set up cron job for EES
+	echo "#-----Start EES Server Options------" >>${TEMPCRON}
+	echo "#Move EES email to Pat Winlink Outbox" >>${TEMPCRON}
+	echo "*/1 * * * * /var/www/html/movetopat" >>${TEMPCRON}
+	echo " " >>${TEMPCRON}
+	echo "#Auto post replies for EES server" >>${TEMPCRON}
+	echo "#Default is off. Activate by removing # on line below" >>${TEMPCRON}
+	echo "#*/1 * * * * /var/www/html/autopostreply" >>${TEMPCRON}
+	echo "#Line below moves info.html to index.html when modified" >>${TEMPCRON}
+	echo "*/1 * * * * ${HOME}/bin/webcopy" >>${TEMPCRON}
+	echo "#-----End EES Server Options------" >>${TEMPCRON}
+}
+
+
+VERSION(){
+	if [ -f /var/www/html/email.php ]; then
+		CURRENT=1
+		NEWVER=1
+	else
+		CURRENT=0
+		NEWVER=1
+	fi
+}
+
+REMOVE(){
+echo
+echo "##########################################"
+echo "Remove not available at this time for EES"
+echo "##########################################"
+sleep 4
+}

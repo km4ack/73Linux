@@ -1,0 +1,57 @@
+BAPP=4.0
+ID=JS8
+Name=JS8Call
+Comment='Weak Signal Digital Mode'
+Ver=Update:1
+localVer=0
+
+
+INSTALL(){
+	#https://9a3gos.com/install-js8call-2-0-0-rc3-on-ubuntu-19-10-hamlib/
+
+	#Verify HAMLIB installed or JS8 Won't Build.
+	if ! hash rigctl 2>/dev/null; then
+		source ${BAPDIR}/app/stable/pi/HAMLIB.bapp
+		INSTALL
+		
+	fi
+
+	echo "###############################"
+	echo "Installing JS8Call Dependancies"
+	echo "###############################"
+	sudo apt-get install -y build-essential gfortran autoconf automake libtool cmake git asciidoctor libfftw3-dev qtdeclarative5-dev texinfo libqt5multimedia5 libqt5multimedia5-plugins qtmultimedia5-dev libusb-1.0.0-dev libqt5serialport5-dev asciidoc libudev-dev
+
+	JS8PKG=$(curl -s http://files.js8call.com/latest.html | grep .tgz | sed 's/.*js8call-/js8call-/;s/<.*$//')
+	JS8VERSION=$(echo $JS8PKG | sed 's/js8call-//;s/.tgz.*$//')
+	cd ${BUILDDIR}
+	echo "###################"
+	echo "Downloading JS8Call"
+	echo "###################"
+	wget --tries 2 --connect-timeout=60 http://files.js8call.com/$JS8VERSION/$JS8PKG
+	tar -xvf $JS8PKG
+	rm $JS8PKG
+	cd ${BUILDDIR}/js8call
+	echo "#################"
+	echo "Compiling JS8Call"
+	echo "#################"
+	cmake -D CMAKE_INSTALL_PREFIX=${BUILDDIR}/js8call
+	cmake --build . -- -j4
+	sudo cp js8 js8call /usr/local/bin
+	sudo cp js8call.desktop /usr/share/applications
+	sudo cp ./artwork/icon_128.svg /usr/share/pixmaps/js8call_icon.svg
+}
+
+
+VERSION(){
+	if [ -f /usr/local/bin/js8call ]; then
+		CURRENT=1
+		NEWVER=1
+	else
+		CURRENT=0
+		NEWVER=1
+	fi
+}
+
+REMOVE(){
+	sudo rm /usr/local/bin/js8call /usr/share/applications/js8call.desktop
+}

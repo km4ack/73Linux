@@ -1,0 +1,51 @@
+BAPP=4.0
+ID=QTSOUND
+Name=QtSoundModem
+Comment='PiQtSoundModem'
+Ver=Update:0.57
+localVer=0
+
+
+INSTALL(){
+    #Documentation - https://www.cantab.net/users/john.wiseman/Documents/QtSoundModem.html
+    #determine if 32 or 64 bit and install correct dependencies. Thanks Ben,KU0HN! Reference: https://groups.io/g/bpq32/message/34486
+    	if [ `getconf LONG_BIT` = '32' ]; then
+    		sudo apt install libqt5serialport5
+    	else
+    		sudo dpkg --add-architecture armhf
+    		sudo apt update
+    		sudo apt install -y libqt5widgets5:armhf libqt5serialport5:armhf libasound2:armhf libasound2-plugins:armhf
+    	fi
+    cd ${HOME}/Downloads || return
+    wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/piQtSoundModem
+    chmod +x piQtSoundModem
+    sudo mv piQtSoundModem /usr/local/bin
+
+   cat > /run/user/$UID/qtsoundmodem.desktop <<EOF
+[Desktop Entry]
+Name=piQtSoundModem
+GenericName=port of UZ7HO's SoundModem
+Comment=port of UZ7HO's SoundModem
+Exec=/usr/local/bin/piQtSoundModem
+Icon=/usr/share/icons/gnome/32x32/apps/preferences-system-sharing.png
+Terminal=false
+Type=Application
+Categories=Utility;HamRadio
+EOF
+    sudo mv /run/user/$UID/qtsoundmodem.desktop /usr/share/applications/
+}
+
+
+VERSION(){
+	if [ -f /usr/local/bin/piQtSoundModem ]; then
+		CURRENT=0.57
+		NEWVER=0.57
+	else
+		CURRENT=0
+		NEWVER=0.57
+	fi
+}
+
+REMOVE(){
+	sudo rm /usr/local/bin/piQtSoundModem /usr/share/applications/qtsoundmodem.desktop
+}

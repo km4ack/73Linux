@@ -1,0 +1,69 @@
+BAPP=4.0
+ID=GRIDTRACKER
+Name=GridTracker
+Comment='Track grids in FT8'
+Ver=Update:1.22.1016
+localVer=1.22.1010
+
+
+INSTALL(){
+	#due to constant changes to GT website, get the download link from a file on KM4ACK github.
+	cd /run/user/$UID/
+	wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/gt-download-links	
+	cd ${HOME} || return
+	sudo apt-get install -y libgconf-2-4
+
+	#determine if 32/64 bit and set download link accordingly. issue #382
+	if [ `getconf LONG_BIT` = '32' ]; then
+	GRIDDLL=$(cat /run/user/$UID/gt-download-links | grep arm32 | sed 's/arm32=//')
+	GT_TAR_NAME=$(echo $GRIDDLL | sed 's/.*GridTracker/GridTracker/')
+
+	else
+	GRIDDLL=$(cat /run/user/$UID/gt-download-links | grep arm64 | sed 's/arm64=//')
+	GT_TAR_NAME=$(echo $GRIDDLL | sed 's/.*GridTracker/GridTracker/')
+	fi
+
+	wget --tries 2 --connect-timeout=60 $GRIDDLL
+	tar -xzvf $GT_TAR_NAME
+	rm GridTracker*.gz
+	#determine if 32/64 bit and get correct directory name.
+	if [ `getconf LONG_BIT` = '32' ]; then
+	OLDFOLDER=$(ls | grep GridTracker*-linux-arm32)
+	else
+	OLDFOLDER=$(ls | grep GridTracker*-linux-arm64)
+	fi
+	mv "$OLDFOLDER" $HOME/GridTracker
+
+
+	cat >gridtracker.desktop <<EOF
+[Desktop Entry]
+Name=GridTracker
+Comment=GridTracker
+GenericName=GridTracker, a WSJT-X Companion
+Exec=${HOME}/GridTracker/GridTracker --disable-accelerated-2d-canvas --num-raster-threads=2
+Icon=${HOME}/GridTracker/gridtracker.png
+Path=${HOME}/GridTracker
+Type=Application
+Encoding=UTF-8
+Terminal=false
+Categories=HamRadio;
+EOF
+
+	sudo mv gridtracker.desktop /usr/share/applications/
+}
+
+
+VERSION(){
+	if [ -d ${HOME}/GridTracker ]; then
+		CURRENT=$(grep version ${HOME}/GridTracker/package.nw/package.json | sed 's/"version": "//;s/",//;s/ //g')
+		NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gt-download-links | grep arm32 | sed 's/.*GridTracker-//;s/-linux.*//')
+	else
+		CURRENT=0
+		NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gt-download-links | grep arm32 | sed 's/.*GridTracker-//;s/-linux.*//')
+	fi
+}
+
+REMOVE(){
+	rm -rf ${HOME}/GridTracker
+	sudo rm /usr/share/applications/gridtracker.desktop
+}

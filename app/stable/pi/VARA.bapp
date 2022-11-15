@@ -1,0 +1,36 @@
+BAPP=4.0
+ID=VARA
+Name=vara
+Comment='vara modem'
+Ver=Update:4.6.4
+localVer=0
+
+
+INSTALL(){
+    cd ${HOME}/Downloads || return
+    curl -O https://raw.githubusercontent.com/WheezyE/Winelink/main/install_winelink.sh && bash install_winelink.sh bap
+    rm ${HOME}/Downloads/install_winelink.sh
+
+	sudo sed -i "/Type=Application/i Icon=${BUILDDIR}\/data\/ico\/vara.png" /usr/share/applications/resetwine.desktop
+	sudo sed -i "/Type=Application/i Icon=${BUILDDIR}\/data\/ico\/vara.png" /usr/share/applications/vara-update.desktop
+	sudo sed -i "/Type=Application/i Icon=${BUILDDIR}\/data\/ico\/vara.png" /usr/share/applications/vara-soundcardsetup.desktop
+}
+
+VERSION(){
+
+ 	if [ -d ${HOME}/.wine/drive_c/VARA ]; then
+		CURRENT=$(cat ${HOME}/.wine/drive_c/VARA/ChangeLog.txt | head -2 | grep v | awk '{print $1}' | sed 's/v//')
+		NEWVER=4.3.0
+	else
+		CURRENT=0
+		NEWVER=4.3.0
+	fi
+}
+
+REMOVE(){
+echo
+echo "##########################################"
+echo "Remove not available at this time for $ID"
+echo "##########################################"
+sleep 4
+}

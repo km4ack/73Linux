@@ -1,0 +1,69 @@
+BAPP=4.0
+ID=CHIRP
+Name=Chirp
+Comment='Radio Programming'
+Ver=Update:20221025
+localVer=0
+
+
+INSTALL(){
+	cd ${DIR} || return
+	sudo apt install libfuse2
+	CHIRPDATE=$(curl -s https://github.com/goldstar611/chirp-appimage | grep "releases/tag/" | sed 's|.*releases/tag/||;s|">||')
+
+	#determine if 32/64 bit and set download link accordingly. issue #382
+	if [ `getconf LONG_BIT` = '32' ]; then
+	
+	LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-daily-$CHIRPDATE-armhf.AppImage"
+
+	else
+
+	LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-daily-$CHIRPDATE-aarch64.AppImage"
+
+	fi
+
+	wget --tries 2 --connect-timeout=60 $LINK
+	CHIRP=$(ls | grep Chirp-daily)
+	sudo mv $CHIRP /usr/local/bin/chirp
+	sudo chmod +x /usr/local/bin/chirp
+
+cat >chirp.desktop <<EOF
+[Desktop Entry]
+Name=Chirp
+Comment=Radio Programming Software
+GenericName=Chirp
+Exec=/usr/local/bin/chirp
+Icon=${BAPDIR}/data/ico/chirp.png
+Type=Application
+Terminal=false
+Categories=HamRadio;
+EOF
+
+	sudo mv chirp.desktop /usr/share/applications/
+}
+
+
+VERSION(){
+	
+	lastrelease() {
+		git ls-remote --tags https://github.com/goldstar611/chirp-appimage | cut -d/ -f3- | tail -n1
+	 }
+
+if ! hash chirp 2>/dev/null; then
+	CURRENT=0
+	NEWVER=$(lastrelease)
+	sleep 3
+else
+	echo "standby....this takes a few seconds"
+	CP=$(chirp --version)
+	CURRENT=$(echo ${CP} | awk '{ print $2 }' | sed 's/daily-//')
+	#function above called here as shorthand
+	NEWVER=$(lastrelease)
+
+
+fi
+}
+
+REMOVE(){
+	sudo rm /usr/local/bin/chirp /usr/share/applications/chirp.desktop
+}

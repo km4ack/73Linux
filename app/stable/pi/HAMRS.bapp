@@ -1,0 +1,71 @@
+BAPP=4.0
+ID=HAMRS
+Name=HAMRS
+Comment='Logging Software'
+Ver=Update:1
+localVer=0
+
+
+INSTALL(){
+	#move any existing hamrs files that might get in the way - https://github.com/km4ack/pi-build/issues/288
+	HAMRSCHECK=$(ls ~/Downloads/ | grep hamrs-)
+		if [ -n $HAMRSCHECK ]; then
+			echo "moving old hamrs file(s)"
+			mkdir -p $HOME/Downloads/old-hamrs
+			mv $HOME/Downloads/hamrs* $HOME/Downloads/old-hamrs
+		fi
+
+	cd ${HOME}/Downloads
+	DL=$(curl https://www.hamrs.app | grep armv7 | sed 's/.*href="//;s/".*//')
+	wget --tries 2 --connect-timeout=60 ${DL}
+	HAMRS=$(ls | grep hamrs-)
+	mv ${HAMRS} hamrs
+	chmod +x hamrs
+	sudo mv hamrs /usr/local/bin/
+	#following four lines added to resolve issue #345
+	sudo apt install -y fuse
+	sudo modprobe fuse
+	sudo groupadd fuse
+	sudo usermod -a -G fuse pi
+
+
+	#as of Feb 2022 there is no 64 bit version of HAMRS. The following will allow it to run
+		if [ `getconf LONG_BIT` = '64' ]; then
+			sudo dpkg --add-architecture armhf 
+			sudo apt-get update
+			sudo apt install -y libasound2:armhf zlib1g-dev:armhf fuse:armhf libglib2.0-0:armhf libnss3:armhf libatk1.0-0:armhf \
+			libatk-bridge2.0-0:armhf libx11-xcb1:armhf libgdk-pixbuf-2.0-0:armhf libgtk-3-0:armhf libdrm2:armhf libgbm1:armhf
+		fi
+
+	#create menu item and download icon	
+	cat >${HOME}/Downloads/hamrs.desktop <<EOF
+[Desktop Entry]
+Name=HAMRS
+Comment=POTA Logging Software
+Exec=/usr/local/bin/hamrs --no-sandbox
+Icon=/usr/share/pixmaps/hamrs-logo.png
+Terminal=false
+Type=Application
+Categories=HamRadio
+EOF
+	sudo mv ${HOME}/Downloads/hamrs.desktop /usr/share/applications/
+	cd $HOME/Downloads
+	wget https://github.com/km4ack/pi-scripts/raw/master/hamrs-logo.png
+	sudo mv $HOME/Downloads/hamrs-logo.png /usr/share/pixmaps/hamrs-logo.png
+}
+
+
+VERSION(){
+	if [ ! -f /usr/local/bin/hamrs ]; then
+		CURRENT=0
+		NEWVER=1
+	else
+		CURRENT=1
+		NEWVER=1
+	fi
+}
+
+REMOVE(){
+	sudo rm /usr/local/bin/hamrs
+	sudo rm /usr/share/applications/hamrs.desktop
+}

@@ -1,0 +1,26 @@
+BAPP=4.0
+ID=PIQSO
+Name=Pi-QSO
+Comment='Logging Software'
+Ver=Update:REPO
+localVer=0
+
+
+INSTALL(){
+	sudo apt-get install -y pyqso
+}
+
+
+VERSION(){
+	if ! hash pyqso 2>/dev/null; then
+		CURRENT=0
+		NEWVER=REPO
+	else
+		CURRENT=REPO
+		NEWVER=REPO
+	fi
+}
+
+REMOVE(){
+	sudo apt-get purge -y pyqso
+}

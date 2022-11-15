@@ -1,0 +1,41 @@
+BAPP=4.0
+ID=WSJTX
+Name=WSJTX
+Comment="Weak Signal Digital Software"
+Ver=
+localVer=
+W3=
+
+INSTALL(){
+    CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+    mkdir -p ${BAPSRC}
+
+    sudo -A apt install -y wsjtx
+    sudo -A apt install -y --fix-broken
+    sudo -A apt install -y wsjtx
+
+
+    #PKG=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep amd64 | head -1 | sed 's/href="//;s/ //g;s/">.*//')
+    #cd ${BAPSRC}
+    #wget https://physics.princeton.edu/pulsar/k1jt/$PKG
+    #sudo -A dpkg -i $PKG
+    #sudo -A apt install -y --fix-broken
+    #sudo -A dpkg -i $PKG
+}
+
+REMOVE(){
+    sudo -A dpkg --remove wsjtx
+    sudo -A dpkg --remove wsjtx-data
+    sudo -A dpkg --remove wsjtx-doc
+}
+
+VERSION(){
+    if [ ! -f /usr/bin/wsjtx ]; then
+        CURRENT=0
+        NEWVER=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep amd64 | head -1 | sed 's/href="//;s/ //g;s/">.*//' | sed 's/wsjtx_//;s/_amd.*//')
+    else
+        CURRENT=$(dpkg --list | grep wsjtx | head -1 | awk '{print $3}' | cut -b1-5)
+        NEWVER=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep amd64 | head -1 | sed 's/href="//;s/ //g;s/">.*//' | sed 's/wsjtx_//;s/_amd.*//')
+    fi
+}
+

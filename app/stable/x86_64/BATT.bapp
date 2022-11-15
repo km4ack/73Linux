@@ -1,0 +1,50 @@
+BAPP=4.0
+ID=BATT
+Name=Battery
+Comment="Battery Test Script"
+Ver=Update:1
+localVer=0
+W3=
+
+MENU(){
+    cat >battery-test.desktop <<EOF
+[Desktop Entry]
+Name=Battery Test Script
+GenericName=Battery Test Script
+Comment=Battery Test Utility
+Exec=${HOME}/bin/batt-test
+Terminal=true
+Type=Application
+Categories=Utility
+EOF
+
+    sudo -A mv battery-test.desktop /usr/local/share/applications/
+}
+
+INSTALL(){
+    mkdir -p $HOME/bin
+    cd $HOME/bin
+        if [ -f batt-test ]; then
+            rm batt-test
+        fi
+    wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/batt-test
+    chmod +x batt-test
+    MENU
+}
+
+
+REMOVE(){
+    rm $HOME/bin/batt-test
+    sudo -A rm /usr/local/share/applications/battery-test.desktop
+}
+
+VERSION(){
+    #there is no version number for this app.     
+    if [ -f $HOME/bin/batt-test ]; then
+        CURRENT=1
+        NEWVER=1
+    else
+        CURRENT=0
+        NEWVER=1
+    fi
+}

@@ -1,0 +1,68 @@
+BAPP=4.0
+ID=HAMCLOCK
+Name=HamClock
+Comment='Large Ham Clock'
+Ver=Update:1
+localVer=0
+
+
+INSTALL(){
+
+	CLEANSOURCE(){
+		#this function removes any old source files before
+		#new files are downloaded for installation. This
+		#function is called by install functions below.
+		PACKAGE=$(ls ${HOME}/.bap-source-files | grep ${PACKAGE})
+		echo "package is $PACKAGE"
+		if [ -z $PACKAGE ]; then
+			echo "no old package found"
+		else
+			if [ -d ${HOME}/.bap-source-files/${PACKAGE} ]; then
+		   		echo "Dir to remove is ${HOME}/.bap-source-files/${PACKAGE}/"
+		   		rm -rf ${HOME}/.bap-source-files/${PACKAGE}/
+			fi
+		fi
+	
+	}
+
+	PACKAGE=ESP
+	CLEANSOURCE
+	sudo apt -y install make g++ libx11-dev
+	cd ${BUILDDIR} || return
+	curl -o ESPHamClock.zip http://www.clearskyinstitute.com/ham/HamClock/ESPHamClock.zip
+	unzip ESPHamClock.zip
+	rm ESPHamClock.zip
+	cd ESPHamClock || return
+	sudo make -j 4 hamclock-1600x960
+	sudo chmod +s hamclock-1600x960
+	sudo mv hamclock-1600x960 /usr/local/bin/hamclock
+
+	cat >${HOME}/Downloads/hamclock.desktop <<EOF
+[Desktop Entry]
+Name=HamClock
+GenericName=Ham Clock
+Comment=Ham Clock
+Exec=hamclock
+Icon=/usr/share/icons/Adwaita/scalable/apps/preferences-system-time-symbolic.svg
+Terminal=false
+Type=Application
+Categories=HamRadio;
+EOF
+
+	sudo mv ${HOME}/Downloads/hamclock.desktop /usr/share/applications/
+}
+
+
+VERSION(){
+	if [ -f /usr/local/bin/hamclock ]; then
+		CURRENT=1
+		NEWVER=1
+	else
+		CURRENT=0
+		NEWVER=1
+	fi
+}
+
+REMOVE(){
+	sudo rm /usr/local/bin/hamclock /usr/share/applications/hamclock.desktop
+}

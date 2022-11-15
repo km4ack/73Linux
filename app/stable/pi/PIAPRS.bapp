@@ -1,0 +1,47 @@
+BAPP=4.0
+ID=PIAPRS
+Name=Pi-APRS
+Comment='APRS Messaging Client'
+Ver=1
+localVer=1
+
+
+INSTALL(){
+
+	if [ -d ${HOME}/Pi-APRS ]; then
+		rm -rf ${HOME}/Pi-APRS
+	fi
+
+	cd ${HOME} || return
+	git clone https://github.com/km4ack/Pi-APRS.git
+
+	cat <<EOF > /run/user/$UID/piaprs.desktop
+[Desktop Entry]
+Name=Pi-APRS
+GenericName=Pi-ARPS by KM4ACK
+Comment=Pi-APRS by KM4ACK
+Exec=/home/`whoami`/Pi-APRS/pi-aprs
+Icon=/home/`whoami`/Pi-APRS/ISS.png
+Terminal=true
+Type=Application
+Categories=HamRadio;
+EOF
+	sudo cp /run/user/$UID/piaprs.desktop /usr/share/applications/
+
+}
+
+
+VERSION(){
+	if [ -d ${HOME}/Pi-APRS ]; then
+		CURRENT=1
+		NEWVER=1
+	else
+		CURRENT=0
+		NEWVER=1
+	fi
+}
+
+REMOVE(){
+	rm -rf $HOME/Pi-APRS/
+	sudo rm /usr/share/applications/piaprs.desktop
+}

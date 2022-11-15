@@ -1,0 +1,34 @@
+BAPP=4.0
+ID=VNC
+Name=VNC
+Comment='VNC Viewer'
+Ver=6.22.826
+localVer=6.22.826
+
+
+INSTALL(){
+    cd ${BAPSRC}
+    PACKAGE=$(curl -s https://www.realvnc.com/en/connect/download/viewer/raspberrypi/ | grep ARM.deb | head -1 | sed s'/.*href="//;s/".*//;s/.*files\///')
+
+    wget --tries 2 --connect-timeout=60 https://downloads.realvnc.com/download/file/viewer.files/VNC-Viewer-6.22.826-Linux-ARM.deb
+    sudo dpkg -i VNC-Viewer-6.22.826-Linux-ARM.deb
+    rm ${PACKAGE}
+    if [ `getconf LONG_BIT` = '64' ]; then
+    sudo apt --fix-broken install -y
+    fi
+}
+
+
+VERSION(){
+if ! hash vncviewer 2>/dev/null; then
+	CURRENT=0
+	NEWVER=6.22.826
+else
+	CURRENT=6.22.826
+	NEWVER=6.22.826
+fi  
+}
+
+REMOVE(){
+	echo "$ID needs removal tool"
+}

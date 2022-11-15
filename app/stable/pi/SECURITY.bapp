@@ -1,0 +1,45 @@
+BAPP=4.0
+ID=SECURITY
+Name=Security
+Comment='File Encryption'
+Ver=1
+localVer=1
+
+
+INSTALL(){
+    cd ${HOME}/bin || return
+    wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/security-tools
+    bash security-tools
+
+    sudo mv ${HOME}/bin/securefile /usr/local/bin
+
+    cat >secure-file.desktop <<EOF
+[Desktop Entry]
+Name=SSE File Encryptor
+GenericName=SSE File Encryptor
+Comment=A program to encrypt files on the pi
+Exec=/usr/local/bin/securefile
+Icon=/usr/share/icons/gnome/22x22/actions/lock.png
+Terminal=false
+Type=Application
+Categories=Utility
+EOF
+
+    sudo mv secure-file.desktop /usr/share/applications/
+}
+
+
+VERSION(){
+	if [ -f /usr/local/bin/securefile ]; then
+		CURRENT=1
+		NEWVER=1
+	else
+		CURRENT=0
+		NEWVER=1
+	fi
+}
+
+REMOVE(){
+	sudo rm /usr/local/bin/securefile /usr/share/applications/secure-file.desktop
+	rm ${HOME}/bin/otp
+}

@@ -1,0 +1,62 @@
+BAPP=4.0
+ID=HAMLIB
+Name=Rig_Control
+Comment="Rig Control for Radios"
+Ver=Update:4.4
+localVer=0
+W3=
+
+INSTALL(){
+CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+
+    mkdir -p ${BAPSRC}
+
+CLEANSOURCE(){
+    #this function removes any old source files before
+    #new files are downloaded for installation. This
+    #function is called by install functions below.
+    PACKAGE=$(ls $BUILDDIR | grep $PACKAGE)
+        if [ -d ${BAPSRC}/${PACKAGE} ]; then
+        sudo rm -rf ${BAPSRC}/${PACKAGE}*
+        fi
+}
+
+    PACKAGE=hamlib
+    CLEANSOURCE
+    sudo -A apt install libusb-1.0-0 libusb-1.0-0-dev
+    cd ${BAPSRC}
+    NEWRIG=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download |
+        grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] |
+        head -n 1 | awk -F "/" '{print $7}')
+    HAMLIBLINK=https://sourceforge.net/projects/hamlib/files/hamlib/${NEWRIG}/hamlib-${NEWRIG}.tar.gz
+    wget --tries 2 --connect-timeout=60 ${HAMLIBLINK}
+
+    tar -xzf hamlib-${NEWRIG}.tar.gz
+    rm hamlib-${NEWRIG}.tar.gz
+    cd hamlib-${NEWRIG} || return
+    ./configure
+    make
+    sudo -A make install
+    sudo -A ldconfig
+    sudo -A make clean
+}
+
+
+REMOVE(){
+    echo "hamlib needs removal tool"
+}
+
+
+VERSION(){
+    if ! hash rigctl 2>/dev/null; then
+		CURRENT=0
+        	NEWVER=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download |
+			grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] |
+			head -n 1 | awk -F "/" '{print $7}')
+	else
+		CURRENT=$(rigctl --version | awk '{print $3}')
+		NEWVER=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download |
+			grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] |
+			head -n 1 | awk -F "/" '{print $7}')
+    fi
+}

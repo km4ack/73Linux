@@ -1,0 +1,47 @@
+BAPP=4.0
+ID=DIPOLE
+Name=DIPOLE
+Comment='Dipole Calculator'
+Ver=Update:1
+localVer=0
+
+
+INSTALL(){
+	if [ -f ${HOME}/bin/dipole ]; then
+		rm ${HOME}/bin/dipole
+	fi
+
+	cd ${HOME}/bin || return
+	wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/dipole
+	chmod +x dipole
+
+    cat >dipole.desktop <<EOF
+[Desktop Entry]
+Name=Dipole Calculator
+GenericName=Dipole Calc
+Comment=Dipole Calculator
+Exec=${HOME}/bin/dipole
+Icon=/usr/share/icons/Adwaita/scalable/apps/accessories-calculator-symbolic.svg
+Terminal=false
+Type=Application
+Categories=HamRadio;
+EOF
+
+    sudo mv dipole.desktop /usr/share/applications/
+}
+
+
+VERSION(){
+	if [ -f ${HOME}/bin/dipole ]; then
+		CURRENT=1
+		NEWVER=1
+	else
+		CURRENT=0
+		NEWVER=1
+	fi
+}
+
+REMOVE(){
+	rm $HOME/bin/dipole
+	sudo rm /usr/share/applications/dipole.desktop
+}

@@ -1,0 +1,31 @@
+BAPP=4.0
+ID=AX25
+Name=ax25
+Comment='Data Link Layer Protocol'
+Ver=REPO
+localVer=REPO
+
+
+INSTALL(){
+	sudo apt-get install -y ax25-tools ax25-apps
+	CHK=$(grep ${MYCALL} /etc/ax25/axports)
+	if [ -z "${CHK}" ]; then
+		echo "wl2k ${MYCALL} 1200 255 7 Winlink" | sudo tee -a /etc/ax25/axports
+	fi
+}
+
+VERSION(){
+	if ! hash kissattach 2>/dev/null; then
+		CURRENT=0
+		NEWVER=REPO
+	else
+		CURRENT=REPO
+		NEWVER=REPO
+
+	fi
+}
+
+
+REMOVE(){
+	sudo apt purge -y ax25-tools ax25-apps
+}

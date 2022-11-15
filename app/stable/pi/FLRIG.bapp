@@ -1,0 +1,95 @@
+BAPP=4.0
+ID=FLRIG
+Name=flrig
+Comment='Rig Control GUI'
+Ver=Update:1.4.7
+localVer=0
+
+
+INSTALL(){
+
+	CLEANSOURCE(){
+		#this function removes any old source files before
+		#new files are downloaded for installation. This
+		#function is called by install functions below.
+		PACKAGE=$(ls ${HOME}/.bap-source-files | grep ${PACKAGE})
+		echo "package is $PACKAGE"
+		if [ -z $PACKAGE ]; then
+			echo "no old package found"
+		else
+			if [ -d ${HOME}/.bap-source-files/${PACKAGE} ]; then
+		   		echo "Dir to remove is ${HOME}/.bap-source-files/${PACKAGE}/"
+		   		rm -rf ${HOME}/.bap-source-files/${PACKAGE}/
+			fi
+		fi
+	
+	}
+
+	##################################
+	#	DEPENDS
+	##################################
+	#install needed depends
+	#check to see if 32 or 64 bit to detemine correct dependency
+	if [ `getconf LONG_BIT` = '64' ]; then
+	LIBJPG=libjpeg62-turbo-dev
+	else
+	LIBJPG=libjpeg9-dev
+	fi
+	sudo apt-get install -y libfltk1.3-dev $LIBJPG libxft-dev libxinerama-dev libxcursor-dev libsndfile1-dev libsamplerate0-dev portaudio19-dev libpulse-dev libusb-1.0-0-dev texinfo libudev-dev
+	FLX=$(ldconfig -p | grep flxmlrpc)
+	if [ -z "$FLX" ]; then
+		#determine latest FLXMLRPC & download
+		FLXM=$(curl -s http://www.w1hkj.com/files/flxmlrpc/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
+		XMPKG=$(echo ${FLXM} | sed 's/.tar.gz//')
+		cd ${BUILDDIR} || return
+		wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flxmlrpc/${FLXM}
+		tar -zxvf ${FLXM}
+
+		#build FLXMLRPC
+		cd ${XMPKG} || return
+		./configure --prefix=/usr/local --enable-static
+		make
+		sudo make install
+		sudo ldconfig
+		sudo make clean
+		rm ${BUILDDIR}/*.gz
+	fi
+	
+	PACKAGE=flrig
+	CLEANSOURCE
+	#Determine latest FLRIG
+	RIGTAR=$(curl -s http://www.w1hkj.com/files/flrig/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//')
+	RIGPKG=$(echo ${RIGTAR} | sed 's/.tar.gz//')
+
+	#Download latest FLRIG
+	cd ${BUILDDIR} || return
+	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flrig/${RIGTAR}
+	tar -zxvf ${RIGTAR}
+
+	#Build FLRIG
+	cd ${RIGPKG} || return
+	./configure --prefix=/usr/local --enable-static
+	make
+	sudo make install
+	sudo ldconfig
+	sudo make clean
+	sudo apt-mark manual libjpeg9
+	rm ${BUILDDIR}/*.gz
+}
+
+
+REMOVE(){
+	DIR=$(ls $BUILDDIR | grep flrig)
+	cd ${BUILDDIR}/${DIR}
+	sudo make uninstall
+}
+
+VERSION(){
+		if ! hash flrig 2>/dev/null; then
+			CURRENT=0
+			NEWVER=$(curl -s https://sourceforge.net/projects/fldigi/files/flrig/ | grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar.gz" '{print $1}')
+		else		
+			CURRENT=$(flrig --version | sed 's/Version: //')
+			NEWVER=$(curl -s https://sourceforge.net/projects/fldigi/files/flrig/ | grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar.gz" '{print $1}')
+		fi
+}

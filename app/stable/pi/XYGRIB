@@ -1,0 +1,27 @@
+BAPP=4.0
+ID=XYGRIB
+Name=XyGrib
+Comment='Grib File Viewer'
+Ver=Update:REPO
+localVer=0
+
+
+INSTALL(){
+    sudo apt install -y xygrib
+}
+
+
+VERSION(){
+	if ! hash xygrib 2>/dev/null; then
+		CURRENT=0
+		NEWVER=REPO
+	else
+		CURRENT=REPO
+		NEWVER=REPO
+
+	fi
+}
+
+REMOVE(){
+    sudo apt purge -y xygrib
+}

@@ -1,0 +1,55 @@
+BAPP=4.0
+ID=CONKY
+Name=Conky
+Comment="Desktop Information Display"
+Ver=REPO
+localVer=REPO
+W3=
+
+MENU(){
+    cat >setconky.desktop <<EOF
+[Desktop Entry]
+Name=Conky Prefs
+GenericName=Conky Prefs
+Comment=Update Conky Layout
+Exec=${HOME}/bin/set-conky
+Icon=${BAPDIR}/data/ico/conky.png
+Terminal=false
+Type=Application
+Categories=HamRadio;
+EOF
+
+    sudo -A mv setconky.desktop /usr/local/share/applications/
+}
+
+INSTALL(){
+    sudo -A apt install -y conky
+    sudo -A apt install -y ruby-full
+    sudo -A gem install gpsd_client
+    sudo -A gem install maidenhead
+    ln -sf /usr/share/applications/conky.desktop ${HOME}/.config/autostart/conky.desktop
+    cp -r ${BAPDIR}/data/conky/ ${HOME}/bin/
+    cp ${HOME}/bin/conky/default.86 ${HOME}/.conkyrc
+    sed -i "s/N0CALL/${BAPCALL}/" ${HOME}/.conkyrc
+    #Line below is for https://github.com/km4ack/pi-build/issues/198
+    echo "#Update GPS maidenhead for conky" >>${TEMPCRON}
+    echo "*/1 * * * * /home/`whoami`/bin/conky/grid" >>${TEMPCRON}
+    MENU
+}
+
+
+REMOVE(){
+    sudo -A killall conky
+    sudo -A apt purge -y conky conky-std
+    sudo -A rm ${HOME}/.config/autostart/conky.desktop
+}
+
+VERSION(){
+	if ! hash conky 2>/dev/null; then
+		CURRENT=0
+        	NEWVER=REPO
+    	else
+        	CURRENT=REPO
+       	 	NEWVER=REPO
+    	fi
+}

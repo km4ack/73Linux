@@ -1,0 +1,27 @@
+BAPP=4.0
+ID=GPREDICT
+Name=GPredict
+Comment='Satellite Tracking'
+Ver=Update:REPO
+localVer=0
+
+
+INSTALL(){
+	sudo apt install -y gpredict
+}
+
+
+VERSION(){
+	if ! hash gpredict 2>/dev/null; then
+		CURRENT=0
+		NEWVER=REPO
+	else
+		CURRENT=REPO
+		NEWVER=REPO
+
+	fi
+}
+
+REMOVE(){
+	sudo apt purge -y gpredict
+}

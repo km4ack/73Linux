@@ -1,0 +1,30 @@
+BAPP=4.0
+ID=AX25
+Name=AX25
+Comment="AX25 and AX25 Tools"
+Ver=Update:REPO
+localVer=0
+
+
+INSTALL(){
+    CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+
+
+    sudo -A apt install -y ax25-tools
+    echo "wl2k ${CALL} 1200 255 7 Winlink" | sudo -A tee -a /etc/ax25/axports
+    sudo -A apt install -y ax25-apps
+}
+
+VERSION(){
+	if ! hash kissattach 2>/dev/null; then
+		CURRENT=0
+        	NEWVER=REPO
+    	else
+		CURRENT=REPO
+		NEWVER=REPO
+    	fi
+}
+
+REMOVE(){
+    sudo -A apt purge -y ax25-tools ax25-apps
+}

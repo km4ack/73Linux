@@ -1,0 +1,77 @@
+BAPP=4.0
+ID=PAT
+Name=Pat_Winlink
+Comment="Winlink Client"
+Ver=Update:0.13.1
+localVer=0.12.1
+
+INSTALL(){
+    CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+    mkdir -p ${BAPSRC}
+
+    sudo -A apt install -y jq
+
+    #############################
+    #backup config file if exist
+    #############################
+    if [ -f $HOME/.config/pat/config.json ]; then
+    cp $HOME/.config/pat/config.json /run/user/$UID/
+    fi
+
+    #download pat
+	cd ${BAPSRC}
+	NEWPATV=$(curl -s https://github.com/la5nta/pat/releases | grep amd64 | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//')
+	NEWPAT=$(echo ${NEWPATV} | sed 's/pat_//' | sed 's/_linux_amd64.deb//' | sed 's/0\.//')
+	echo "new pat v ${NEWPATV}"
+	echo "new pat ${NEWPAT}"
+	wget --tries 2 --connect-timeout=60 https://github.com/la5nta/pat/releases/download/v0.${NEWPAT}/${NEWPATV}
+	sudo -A dpkg -i ${BAPSRC}/${NEWPATV}
+	rm ${BAPSRC}/${NEWPATV}
+
+    WHO=`whoami`
+
+	pat http &
+	sudo -A killall pat
+
+
+
+    FIG=$HOME/.config/pat/config.json
+
+    cd $HOME/.config/pat/
+    mv config.json config.json.bkup
+    echo "#############################"
+    echo "downloading pat config file"
+    echo "#############################"
+    wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/config.json
+
+    #update config file
+	#set callsign
+	sed -i "s/\"mycall\": \".*\",/\"mycall\": \"${CALL}\",/" ${FIG}
+	#set password
+	sed -i "s/\"secure_login_password\": \".*\",/\"secure_login_password\": \""$WL2KPASS"\",/" ${FIG}
+	#set locator
+	sed -i "s/\"locator\": \".*\",/\"locator\": \"$GRID\",/" ${FIG}
+
+    #restore config if previously backed up
+    if [ -f /run/user/$UID/config.json ]; then
+    mv /run/user/$UID/config.json $HOME/.config/pat/
+    fi
+
+	sudo -A systemctl start pat@${WHO}
+	sudo -A systemctl enable pat@${WHO}
+}
+
+
+REMOVE(){
+    sudo -A dpkg --remove pat
+}
+
+VERSION(){
+    if [ ! -f /usr/bin/pat ]; then
+        CURRENT=0
+        NEWVER=$(curl -s https://github.com/la5nta/pat/releases | grep armhf | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//' | sed 's/pat_//;s/_linux.*//')
+    else
+        CURRENT=$(/usr/bin/pat version | awk '{print $2}' | sed 's/v//')
+        NEWVER=$(curl -s https://github.com/la5nta/pat/releases | grep armhf | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//' | sed 's/pat_//;s/_linux.*//')
+    fi
+}

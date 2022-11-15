@@ -1,0 +1,29 @@
+BAPP=4.0
+ID=XYGRIB
+Name=XYGrib
+Comment="Grib File Viewer"
+Ver=Update:REPO
+localVer=0
+W3=
+
+INSTALL(){
+    sudo -A apt install -y xygrib xygrib-maps
+}
+
+UPDATE(){
+    INSTALL
+}
+
+REMOVE(){
+    sudo -A apt purge -y xygrib xygrib-maps
+}
+
+VERSION(){
+	if ! hash xygrib 2>/dev/null; then
+		CURRENT=0
+        NEWVER=REPO
+    else
+        CURRENT=REPO
+        NEWVER=REPO
+    fi
+}

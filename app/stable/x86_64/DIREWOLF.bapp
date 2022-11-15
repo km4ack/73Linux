@@ -1,0 +1,58 @@
+BAPP=4.0
+ID=DIREWOLF
+Name=direwolf
+Comment="Software TNC"
+Ver=1.6
+localVer=1.6
+W3=
+
+INSTALL(){
+    CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+    source ${CUR_PATH}/config
+    mkdir -p ${BAPSRC}
+    cd ${BAPSRC}
+    CLEANSOURCE(){
+        #this function removes any old source files before
+        #new files are downloaded for installation. This
+        #function is called by install functions below.
+        PACKAGE=$(ls ${BAPSRC} | grep $PACKAGE)
+    
+        if [ -d ${BAPSRC}/${PACKAGE} ]; then
+            sudo rm -rf ${BAPSRC}/${PACKAGE}*
+        fi
+    }
+
+    PACKAGE=direwolf
+    CLEANSOURCE
+    sudo -A apt install -y libasound2-dev cmake libudev-dev
+    cd ${BAPSRC} || return
+    git clone https://www.github.com/wb2osz/direwolf
+    cd ${BAPSRC}/direwolf || return
+    mkdir build
+    cd build
+    cmake ..
+    make -j 4
+    sudo -A make install
+    make install-conf
+    sudo -A make clean
+    sed -i "s/N0CALL/${CALL}/" "${HOME}/direwolf.conf"
+    sed -i 's/# ADEVICE  plughw:1,0/ADEVICE  plughw:3,0/' ${HOME}/direwolf.conf
+    sed -i '/#PTT\ \/dev\/ttyUSB0\ RTS/a #Uncomment line below for PTT with CAT through FLRIG\n#PTT RIG 2 localhost:4532' ${HOME}/direwolf.conf
+}
+
+
+REMOVE(){
+echo "$ID needs remove function"
+}
+
+VERSION(){
+	if ! hash direwolf 2>/dev/null; then
+		CURRENT=0
+		wget -P /tmp/ https://raw.githubusercontent.com/wb2osz/direwolf/master/CHANGES.md >/dev/null 2>&1
+		NEWVER=$(cat /tmp/CHANGES.md | head -5 | tail -1 | awk '{ print $3 }')
+	else
+		CURRENT=$(direwolf -S -t 0 | head -1 | sed 's/Dire\ Wolf\ version\ //')
+		wget -P /tmp/ https://raw.githubusercontent.com/wb2osz/direwolf/master/CHANGES.md >/dev/null 2>&1
+		NEWVER=$(cat /tmp/CHANGES.md | head -5 | tail -1 | awk '{ print $3 }')
+    fi
+}

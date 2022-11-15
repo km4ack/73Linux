@@ -1,0 +1,81 @@
+BAPP=4.0
+ID=CONKY
+Name=Conky
+Comment='System Information Display'
+Ver=REPO
+localVer=REPO
+
+
+INSTALL(){
+	if ! hash conky 2>/dev/null; then
+		sudo apt install -y conky
+	fi
+	touch ${HOME}/Documents/mylog.txt  #conky will fail to load if this file doesn't exist
+	touch /var/lib/misc/dnsmasq.leases #conky will fail to load if this file doesn't exist
+	sudo apt-get install -y ruby2.7
+	sudo gem install gpsd_client
+	sudo gem install maidenhead
+	mkdir -p ${HOME}/bin/conky
+	cp ${BAPDIR}/data/conky/* ${HOME}/bin/conky/
+	chmod +x ${HOME}/bin/conky/get-grid ${HOME}/bin/conky/get-freq ${HOME}/bin/conky/grid
+	cp ${HOME}/bin/conky/large.pi ${HOME}/.conkyrc
+	#Line below is for https://github.com/km4ack/pi-build/issues/198
+	echo "#Update GPS maidenhead for conky" >>${TEMPCRON}
+	echo "*/1 * * * * /home/`whoami`/bin/conky/grid" >>${TEMPCRON}
+	sed -i "s/N0CALL/$CALL/" ${HOME}/.conkyrc
+
+	#Create files needed for autostart at login
+	#Fix issue https://github.com/km4ack/pi-build/issues/83
+
+	cat <<EOF >${HOME}/.local/share/applications/conky.desktop
+[Desktop Entry]
+Name=Conky
+Comment=Conky
+GenericName=Conky Screen Background Monitor
+Exec=conky --pause=5
+Icon=${BAPDIR}/data/ico/conky-logo.png
+Type=Application
+Encoding=UTF-8
+Terminal=false
+Categories=HamRadio
+Keywords=Radio
+EOF
+
+	ln -sf ${HOME}/.local/share/applications/conky.desktop ${HOME}/.config/autostart/conky.desktop
+
+	#####Add setconky to main menu
+	chmod +x ${HOME}/bin/conky/setconky
+
+	cat <<EOF >${HOME}/.local/share/applications/setconky.desktop
+[Desktop Entry]
+Name=Conky-Prefs
+Comment=Conky-Prefs
+GenericName=Change Conky Preferences
+Exec=/home/`whoami`/bin/conky/setconky
+Icon=${BAPDIR}/data/ico/conky-logo.png
+Type=Application
+Encoding=UTF-8
+Terminal=false
+Categories=Settings;DesktopSettings;GTK;X-LXDE-Settings;
+Keywords=Radio,Conky
+EOF
+}
+
+
+VERSION(){
+	if ! hash conky 2>/dev/null; then
+		CURRENT=0
+		NEWVER=REPO
+	else
+		CURRENT=REPO
+		NEWVER=REPO
+
+	fi
+}
+
+REMOVE(){
+		sudo apt purge -y conky conky-std
+		rm ${HOME}/.config/autostart/conky.desktop
+		rm ${HOME}/.local/share/applications/setconky.desktop
+		rm ${HOME}/.local/share/applications/conky.desktop
+}

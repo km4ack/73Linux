@@ -1,0 +1,55 @@
+BAPP=4.0
+ID=CHECK
+Name=Checklist
+Comment='Checklist Generator'
+Ver=0
+localVer=0
+
+
+INSTALL(){
+
+if [ -f /usr/local/bin/checklist-generator ]; then
+	sudo -A rm /usr/local/bin/checklist-generator
+fi
+
+if ! hash pandoc 2>/dev/null; then
+	echo "installing dependency for checklist-generator - pandoc"
+	sudo -A apt install -y pandoc
+fi
+
+cd ${BUILDDIR}
+wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/checklist-generator
+chmod +x checklist-generator
+sudo -A mv checklist-generator /usr/local/bin/
+	cat <<EOF > /run/user/$UID/checklist.desktop
+[Desktop Entry]
+Name=Checklist Generator
+GenericName=Checklist Generator
+Comment=Checklist Generator
+Exec=/usr/local/bin/checklist-generator
+Terminal=false
+Icon=/usr/share/icons/HighContrast/48x48/stock/gtk-apply.png
+Type=Application
+Categories=Utility
+EOF
+	sudo -A mv /run/user/$UID/checklist.desktop /usr/local/share/applications/
+
+}
+
+REMOVE(){
+if [ -f /usr/local/bin/checklist-generator ]; then
+	sudo -A rm /usr/local/bin/checklist-generator
+	sudo -A rm /usr/local/share/applications/checklist.desktop
+fi
+
+}
+
+VERSION(){
+if [ -f /usr/local/bin/checklist-generator ]; then
+	CURRENT=$(grep VERSION /usr/local/bin/checklist-generator | head -1 | sed 's/VERSION=//')
+	NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/checklist-generator | grep VERSION | head -1 | sed 's/VERSION=//')
+else
+	CURRENT=0
+	NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/checklist-generator | grep VERSION | head -1 | sed 's/VERSION=//')
+fi
+}

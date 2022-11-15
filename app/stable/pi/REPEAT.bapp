@@ -1,0 +1,30 @@
+BAPP=4.0
+ID=REPEAT
+Name=RepeaterSTART
+Comment='Repeater Directory'
+Ver=Update:
+localVer=0
+
+
+INSTALL(){
+	sudo apt install -y gir1.2-osmgpsmap-1.0 gir1.2-geoclue-2.0 libosmgpsmap-1.0-1
+	REPEAT_LATEST=$(curl -s https://sourceforge.net/projects/repeater-start/files/ | grep all.deb | head -1 | sed 's/.*repeater/repeater/;s/".*//')
+	cd ${HOME}/Downloads
+	wget --tries 2 --connect-timeout=60 https://sourceforge.net/projects/repeater-start/files/$REPEAT_LATEST
+	sudo dpkg -i $REPEAT_LATEST
+}
+
+
+VERSION(){
+	if [ -f /usr/bin/repeaterSTART ]; then
+		NEWVER=$(apt-cache show repeater-start | grep Version | sed 's/Version: //')
+		CURRENT=$(dpkg --list | grep repeater-start | awk '{print $3}')
+	else
+		CURRENT=0
+		NEWVER=$(apt-cache show repeater-start | grep Version | sed 's/Version: //')
+	fi
+}
+
+REMOVE(){
+	sudo dpkg --remove repeater-start
+}

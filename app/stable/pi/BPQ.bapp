@@ -1,0 +1,111 @@
+BAPP=4.0
+ID=BPQ
+Name=LinBPQ
+Comment='BBS-Winlink Gateway'
+Ver=0
+localVer=0
+
+
+INSTALL(){
+    source ${HOME}/pi-build/config || return
+    #install LinBPQ
+    cd || return
+    ##########################################################################
+    #commands below this line were taken from John Wiseman's install script.
+    #and modded to pull the operators call sign from the BAP config file.
+    #http://www.cantab.net/users/john.wiseman/Downloads/installLinRMS
+    ##########################################################################
+    export LINBPQ=pilinbpq
+    export APRS=piBPQAPRS
+    echo "Downloading ${LINBPQ} and ${APRS} to linbpq and bpqaprs"
+
+    mkdir linbpq
+    cd linbpq || return
+    wget -nv http://www.cantab.net/users/john.wiseman/Downloads/Beta/${LINBPQ} -O linbpq
+    chmod +x linbpq
+    wget -nv http://www.cantab.net/users/john.wiseman/Downloads/Beta/${APRS} -O bpqaprs
+    chmod +x bpqaprs
+
+    echo "Downloading BPQ config files"
+
+    wget -nv http://www.cantab.net/users/john.wiseman/Downloads/SimpleRMSGateway_bpq32.cfg -O bpq32.cfg
+
+    echo "Downloading HTML Files"
+
+    mkdir HTML
+    cd HTML || return
+    wget -nv http://www.cantab.net/users/john.wiseman/Downloads/Beta/HTMLPages.zip
+    unzip -o -q HTMLPages.zip
+    rm HTMLPages.zip
+    cd .. || return
+    wget -nv http://www.cantab.net/users/john.wiseman/Downloads/LinBPQAPRS.zip
+    unzip -o -q LinBPQAPRS.zip
+    rm LinBPQAPRS.zip
+
+    echo "Updating your callsign in BPQ config files"
+
+    #read -e -p "Enter Your Callsign (Without SSID): "  CALL
+    CALL=$(echo "$CALL" | tr '[:lower:]' '[:upper:]')
+
+    sed -i "s/MYCALL/$CALL/g" bpq32.cfg
+
+    #####################################################
+    #End John Wiseman install script
+    #####################################################
+    #install BPQ config generator
+    cd ${HOME}/linbpq || return
+    wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/piBPQConfigGen
+    chmod +x piBPQConfigGen
+
+    cat >bpq-config.desktop <<EOF
+[Desktop Entry]
+Name=BPQ Config Generator
+GenericName=BPQ Config Generator
+Comment=Config File Generator for LinBPQ
+Exec=${HOME}/linbpq/piBPQConfigGen
+Terminal=false
+Type=Application
+Categories=Utility
+EOF
+
+    sudo mv bpq-config.desktop /usr/share/applications/
+
+    #add LinBPQ-README to desktop
+    FILE=${HOME}/Desktop/LinBPQ-README
+    touch ${FILE}
+    cat <<EOF >${FILE}
+LinBPQ was installed during the build.
+You will find the config file generator
+under accessories in the main pi menu.
+NO CONFIGURATION was done for LinBPQ
+during the build. Each individual
+operator is responsible for configuring
+his/her station.
+
+After completing the config file, you can
+start LinBPQ from the command line by running:
+~/linbpq/./linbpq
+
+Depending on your station setup, you may
+need to start rig control, direwolf, or
+other applications before running LinBPQ.
+
+If you need help, you can find
+the LinBPQ forums at
+https://groups.io/g/bpq32/topics
+and the main LinBPQ web page at
+http://g8bpq.org.uk
+EOF
+}
+
+
+VERSION(){
+	echo "$ID needs version checking"
+}
+
+REMOVE(){
+	echo "####################################"
+	echo "$ID has no removal tool"
+	echo "####################################"
+	sleep 3
+}

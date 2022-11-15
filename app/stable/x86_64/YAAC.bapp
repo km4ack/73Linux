@@ -1,0 +1,64 @@
+BAPP=4.0
+ID=YAAC
+Name=YAAC
+Comment="Yet Another APRS Client"
+Ver=Update:179
+localVer=0
+
+MENU(){
+	cat >yaac.desktop <<EOF
+[Desktop Entry]
+Name=YAAC
+GenericName=YAAC
+Comment=APRS Client
+Exec=${HOME}/YAAC/YAAC
+Terminal=false
+Type=Application
+Categories=Network;HamRadio;
+EOF
+
+	sudo -A mv yaac.desktop /usr/local/share/applications/
+}
+
+INSTALL(){
+    CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+
+	cd ${HOME}
+	wget --tries 2 --connect-timeout=60 https://www.ka2ddo.org/ka2ddo/YAAC.zip
+	sudo -A apt install -y librxtx-java openjdk-17-dbg
+	mkdir -p ${HOME}/YAAC
+	cd ${HOME}/YAAC
+		#Fix issue 375 to prevent YAAC from reopening
+		if [ -f ${HOME}/YAAC/YAAC ]; then
+		rm ${HOME}/YAAC/YAAC
+		fi
+	touch YAAC
+	echo "#!/bin/bash" >>YAAC
+	echo "java -jar ${HOME}/YAAC/YAAC.jar" >>YAAC
+	chmod +x YAAC
+	unzip -o ${HOME}/YAAC.zip
+    rm ${HOME}/YAAC.zip
+    MENU
+}
+
+UPDATE(){
+    INSTALL
+}
+
+VERSION(){
+    if [ ! -d $HOME/YAAC ]; then
+        CURRENT=0
+	    wget -q https://sourceforge.net/projects/yetanotheraprsc/files/YAACBuildLabel.txt -O /run/user/${UID}/latestyaac.txt
+	    NEWVER=$(cat /run/user/${UID}/latestyaac.txt | sed 's/1.0-beta//;s/(.*//')
+    else 
+	    CURRENT=$(java -jar ${HOME}/YAAC/YAAC.jar -version | grep beta | sed 's/.*beta//;s/(.*//')
+	    wget -q https://sourceforge.net/projects/yetanotheraprsc/files/YAACBuildLabel.txt -O /run/user/${UID}/latestyaac.txt
+	    NEWVER=$(cat /run/user/${UID}/latestyaac.txt | sed 's/1.0-beta//;s/(.*//')
+    fi
+}
+
+REMOVE(){
+    rm -rf $HOME/YAAC
+    sudo -A rm /usr/local/share/applications/yaac.desktop
+    sudo -A apt purge -y librxtx-java openjdk-17-dbg
+}

@@ -1,0 +1,57 @@
+BAPP=4.0
+ID=SHOWLOG
+Name=ShowLog
+Comment="KM4ACK Log Viewer"
+Ver=Update:1
+localVer=
+W3=
+
+MENU(){
+    cat >/run/user/$UID/showlog.desktop <<EOF
+[Desktop Entry]
+Name=Log Viewer
+GenericName=KM4ACK Log Viewer
+Comment=Log File Viewer
+Exec=$HOME/bin/./showlog
+Icon=
+Terminal=false
+Type=Application
+Categories=Utility
+EOF
+
+    sudo -A mv /run/user/$UID/showlog.desktop /usr/local/share/applications/
+}
+
+INSTALL(){
+    mkdir -p $HOME/bin
+    cd $HOME/bin
+    wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/showlog
+    chmod +x showlog
+    MENU
+}
+
+REMOVE(){
+    rm $HOME/bin/showlog
+    sudo -A rm /usr/local/share/applications/showlog.desktop
+}
+
+VERSION(){
+    if [ -f $HOME/bin/showlog ]; then
+        CURRENT=$(grep VERSION $HOME/bin/showlog | sed 's/VERSION=//')
+        NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/showlog | grep VERSION | sed 's/VERSION=//')
+    else
+        CURRENT=0
+        NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/showlog | grep VERSION | sed 's/VERSION=//')
+    fi
+}
+
+UPDATE(){
+    cd $HOME/bin
+    if [ -f showlog ]; then
+        rm showlog
+    fi
+    wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/showlog
+    chmod +x showlog
+    MENU
+}
+

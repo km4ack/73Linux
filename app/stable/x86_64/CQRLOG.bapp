@@ -1,0 +1,50 @@
+BAPP=4.0
+ID=CQRLOG
+Name=CQRLOG
+Comment="Logging Software"
+Ver=
+localVer=
+W3=
+
+INSTALL(){
+    sudo -A apt install -y lcl-2.0
+    sudo -A apt install -y lazarus
+    sudo -A apt install -y lcl
+    sudo -A apt install -y fp-utils
+    sudo -A apt install -y fp-units-misc
+    sudo -A apt install -y fp-units-gfx
+    sudo -A apt install -y fp-units-gtk2
+    sudo -A apt install -y fp-units-db
+    sudo -A apt install -y fp-units-math
+    sudo -A apt install -y fp-units-net
+    sudo -A apt install -y libssl-dev
+    sudo -A apt install -y mariadb-server
+    sudo -A apt install -y mariadb-client
+    sudo -A apt install -y default-libmysqlclient-dev
+
+    cd ${BAPSRC}
+	rm -rf cqrlog
+	mkdir cqrlog
+	cd cqrlog
+
+    git clone https://github.com/ok2cqr/cqrlog
+    cd cqrlog
+
+    make
+    sudo -A make install
+}
+
+REMOVE(){
+    echo "removal tool for $ID not available at this time"
+}
+
+
+VERSION(){
+	if ! hash cqrlog 2>/dev/null; then
+	CURRENT=0
+        NEWVER=$(curl -s https://raw.githubusercontent.com/ok2cqr/cqrlog/master/CHANGELOG | head | grep -w [0-9].[0-9].[0-9] | awk '{print $1}')
+    else
+        CURRENT=$(cqrlog -v | awk '{print $2}' | sed 's/Ver://')
+        NEWVER=$(curl -s https://raw.githubusercontent.com/ok2cqr/cqrlog/master/CHANGELOG | head | grep -w [0-9].[0-9].[0-9] | awk '{print $1}')
+    fi
+}

@@ -1,0 +1,48 @@
+BAPP=4.0
+ID=SHOWLOG
+Name=ShowLog
+Comment='Log Viewer'
+Ver=1
+localVer=1
+
+
+INSTALL(){
+
+	if [ -f ${HOME}/bin/showlog ]; then
+		rm ${HOME}/bin/showlog
+	fi
+
+    cd ${HOME}/bin || return
+    wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/showlog
+    chmod +x showlog
+
+    cat >showlog.desktop <<EOF
+[Desktop Entry]
+Name=Log Viewer
+GenericName=KM4ACK Log Viewer
+Comment=Log File Viewer
+Exec=${HOME}/bin/showlog
+Icon=/usr/share/icons/PiXflat/48x48/apps/fm-details.png
+Terminal=false
+Type=Application
+Categories=Utility
+EOF
+
+    sudo mv showlog.desktop /usr/share/applications/
+}
+
+
+VERSION(){
+	if [ -f ${HOME}/bin/showlog ]; then
+		CURRENT=1
+		NEWVER=1
+	else
+		CURRENT=0
+		NEWVER=1
+	fi
+}
+
+REMOVE(){
+	rm $HOME/bin/showlog
+	sudo rm /usr/share/applications/showlog.desktop
+}

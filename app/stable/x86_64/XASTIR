@@ -1,0 +1,28 @@
+BAPP=4.0
+ID=XASTIR
+Name=Xastir
+Comment="APRS GUI Interface"
+Ver=Update:REPO
+localVer=0
+W3=
+
+INSTALL(){
+
+    sudo -A apt install -y xastir
+}
+
+REMOVE(){
+    sudo -A apt purge -y xastir
+}
+
+
+VERSION(){
+	if ! hash xastir 2>/dev/null; then
+		CURRENT=0
+        	NEWVER=REPO
+    else
+        	CURRENT=REPO
+        	NEWVER=REPO
+    fi
+}
+

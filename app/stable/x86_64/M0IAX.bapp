@@ -1,0 +1,47 @@
+BAPP=4.0
+ID=M0IAX
+Name=JS8CallUtilities
+Comment="Help app for JS8Call"
+Ver=Update:2
+localVer=0
+W3=
+
+MENU(){
+	cat >m0iax.desktop <<EOF
+[Desktop Entry]
+Name=M0IAX JS8 Utils
+GenericName=M0IAX JS8 Utils
+Comment=GPS & Message Tool for JS8Call
+Exec=JS8CallUtils_v2
+Terminal=false
+Type=Application
+Categories=Network;HamRadio;
+EOF
+
+    sudo -A mv m0iax.desktop /usr/local/share/applications/
+}
+
+INSTALL(){
+    cd ${BUILDDIR}
+    wget --tries 2 --connect-timeout=60 https://m0iax.com/wp-content/uploads/2021/04/JS8CallUtils_v2_ubuntu2004.zip
+    unzip JS8CallUtils_v2_ubuntu2004.zip
+    rm JS8CallUtils_v2_ubuntu2004.zip
+    chmod +x JS8CallUtils_v2
+    sudo -A mv JS8CallUtils_v2 /usr/local/bin
+    MENU
+}
+
+REMOVE(){
+    sudo -A rm /usr/local/bin/JS8CallUtils_v2
+    sudo -A rm /usr/local/share/applications/m0iax.desktop
+}
+
+VERSION(){
+    if [ -f /usr/local/bin/JS8CallUtils_v2 ]; then
+        CURRENT=2
+        NEWVER=2
+    else
+        CURRENT=0
+        NEWVER=2
+    fi
+}

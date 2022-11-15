@@ -1,0 +1,75 @@
+BAPP=4.0
+ID=GARIM
+Name=GARIM
+Comment="File Transfer Program"
+Ver=Update:1.7
+localVer=0
+W3=
+
+#needs version, remove
+#update needs second look. Remove org build dir?
+
+INSTALL(){
+
+	CLEANSOURCE(){
+		#this function removes any old source files before
+		#new files are downloaded for installation. This
+		#function is called by install functions below.
+		PACKAGE=$(ls ${HOME}/.bap-source-files | grep ${PACKAGE})
+		echo "package is $PACKAGE"
+		if [ -z $PACKAGE ]; then
+			echo "no old package found"
+		else
+			if [ -d ${HOME}/.bap-source-files/${PACKAGE} ]; then
+		   		echo "Dir to remove is ${HOME}/.bap-source-files/${PACKAGE}/"
+		   		rm -rf ${HOME}/.bap-source-files/${PACKAGE}/
+			fi
+		fi
+	}
+
+    CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+    mkdir -p ${BAPSRC}
+    PACKAGE=garim
+    CLEANSOURCE
+
+	GPKG=$(curl -s https://www.whitemesa.net/garim/src/ | grep tar.gz | tail -1 | sed 's/^.*garim/garim/' | sed 's/tar.gz.*$/tar.gz/')
+	cd ${BAPSRC}
+	wget --tries 2 --connect-timeout=60 https://www.whitemesa.net/garim/src/$GPKG
+	tar -xzvf $GPKG
+	DIRR=$(echo $GPKG | sed 's/.tar.gz//')
+	cd ${DIRR} || return
+	./configure
+	make
+	sudo -A make install
+	sudo -A make clean
+}
+
+UPDATE(){
+	GPKG=$(curl -s https://www.whitemesa.net/garim/src/ | grep tar.gz | tail -1 | sed 's/^.*garim/garim/' | sed 's/tar.gz.*$/tar.gz/')
+	cd ${BAPSRC} || return
+	wget --tries 2 --connect-timeout=60 https://www.whitemesa.net/garim/src/$GPKG
+	tar -xzvf $GPKG
+	DIRR=$(echo $GPKG | sed 's/.tar.gz//')
+	cd ${DIRR} || return
+	./configure
+	make
+	sudo -A make install
+	sudo -A make clean
+	cd ${BAPSRC}
+}
+
+REMOVE(){
+    echo "$ID needs remove tool"
+}
+
+VERSION(){
+	if ! hash garim 2>/dev/null; then
+		CURRENT=0
+		NEWVER=$(curl -s https://www.whitemesa.net/garim/garim.html | grep -m 1 \
+			"armv7l.tar.gz" | awk -F '-' '{print $2}')
+	else
+		CURRENT=$(garim --version | head -n1 | awk -F ' ' '{print $2}')
+		NEWVER=$(curl -s https://www.whitemesa.net/garim/garim.html | grep -m 1 \
+			"armv7l.tar.gz" | awk -F '-' '{print $2}')
+    fi
+}

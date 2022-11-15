@@ -1,0 +1,55 @@
+BAPP=4.0
+ID=HAMRS
+Name=HAMRS
+Comment="Logging Application"
+Ver=Update:1.0.6
+localVer=0
+W3=
+
+MENU(){
+    cat >hamrs.desktop <<EOF
+[Desktop Entry]
+Name=HAMRS
+GenericName=HAMRS
+Comment=Logging Software
+Exec=$pkg
+Icon=${BAPDIR}/data/ico/hamrs.png
+Terminal=false
+Type=Application
+Categories=Network;HamRadio;
+EOF
+
+    sudo -A mv hamrs.desktop /usr/local/share/applications
+}
+
+INSTALL(){
+    CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+    mkdir -p ${BAPSRC}
+
+    cd ${BAPSRC}
+    pkg=$(curl -s https://hamrs.app/ | grep x86_64 | sed 's/.*href="//;s/AppImage.*/AppImage/')
+    wget --tries 2 --connect-timeout=60 $pkg
+    pkg=$(ls | grep hamrs)
+    chmod +x $pkg
+    sudo -A mv $pkg /usr/local/bin/
+    export pkg
+    MENU
+}
+
+REMOVE(){
+    HAMRS=$(ls /usr/local/bin/ | grep hamrs)
+    sudo -A rm /usr/local/bin/$HAMRS
+    sudo -A rm /usr/local/share/applications/hamrs.desktop
+}
+
+
+VERSION(){
+    CHECK=$(ls /usr/local/bin/ | grep hamrs)
+        if [ -z "${CHECK}" ]; then
+            CURRENT=0
+            NEWVER=$(curl -s https://hamrs.app/ | grep x86_64 | sed 's/.*href="//;s/AppImage.*/AppImage/' | awk -F "/" '{print $5}' | sed 's/hamrs-//;s/-linux.*//') 
+        else
+            CURRENT=$(ls /usr/local/bin/ | grep hamrs | sed 's/hamrs-//;s/-linux.*//')
+            NEWVER=$(curl -s https://hamrs.app/ | grep x86_64 | sed 's/.*href="//;s/AppImage.*/AppImage/' | awk -F "/" '{print $5}' | sed 's/hamrs-//;s/-linux.*//')        
+        fi
+}

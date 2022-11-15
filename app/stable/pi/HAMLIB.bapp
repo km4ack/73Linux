@@ -1,0 +1,65 @@
+BAPP=4.0
+ID=HAMLIB
+Name=hamlib
+Comment='rig control software'
+Ver=Update:4.5
+localVer=0
+
+
+INSTALL(){
+	CLEANSOURCE(){
+		#this function removes any old source files before
+		#new files are downloaded for installation. This
+		#function is called by install functions below.
+		PACKAGE=$(ls ${HOME}/.bap-source-files | grep ${PACKAGE})
+		echo "package is $PACKAGE"
+		if [ -z $PACKAGE ]; then
+			echo "no old package found"
+		else
+			if [ -d ${HOME}/.bap-source-files/${PACKAGE} ]; then
+		   		echo "Dir to remove is ${HOME}/.bap-source-files/${PACKAGE}/"
+		   		rm -rf ${HOME}/.bap-source-files/${PACKAGE}/
+			fi
+		fi
+	
+	}
+
+    PACKAGE=hamlib
+    CLEANSOURCE
+    sudo apt install libusb-1.0-0 libusb-1.0-0-dev
+    cd ${BUILDDIR} || return
+    NEWRIG=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download |
+        grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] |
+        head -n 1 | awk -F "/" '{print $7}')
+    HAMLIBLINK=https://sourceforge.net/projects/hamlib/files/hamlib/${NEWRIG}/hamlib-${NEWRIG}.tar.gz
+
+    wget --tries 2 --connect-timeout=60 ${HAMLIBLINK}
+
+    tar -xzf hamlib-${NEWRIG}.tar.gz
+    rm hamlib-${NEWRIG}.tar.gz
+    cd hamlib-${NEWRIG} || return
+    ./configure
+    make -j $BAPCORE
+    sudo make install
+    sudo ldconfig
+    sudo make clean
+    rm ${BUILDDIR}/*.gz
+}
+
+VERSION(){
+	if ! hash rigctl 2>/dev/null; then
+		CURRENT=0
+		NEWVER=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download | grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] | head -n 1 | awk -F "/" '{print $7}')
+	else
+		CURRENT=$(rigctl --version | awk '{print $3}')
+		NEWVER=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download | grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] | head -n 1 | awk -F "/" '{print $7}')
+	fi
+}
+
+REMOVE(){
+	DIR=$(ls $BUILDDIR | grep hamlib)
+	cd ${BUILDDIR}/${DIR}
+	./configure
+	sudo make uninstall
+	sudo make clean
+}

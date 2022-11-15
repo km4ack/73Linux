@@ -1,0 +1,51 @@
+BAPP=4.0
+ID=GPSUPDATE
+Name=gps_update_tool
+Comment="GPS Update Tool"
+Ver=Update:5
+localVer=0
+W3='https://groups.io/g/KM4ACK-Pi'
+
+MENU(){
+    cat >gpsupdate.desktop <<EOF
+[Desktop Entry]
+Name=GPS Update Tool
+GenericName=Used to change between GPS units
+Comment=Used to change between GPS units
+Exec=gpsupdate
+Icon=/usr/share/icons/Mint-Y/actions/16/gps.svg
+Terminal=false
+Type=Application
+Categories=Utility
+EOF
+
+    sudo -A mv gpsupdate.desktop /usr/local/share/applications/
+}
+
+INSTALL(){
+    #remove existing file if needed before installing
+    if [ -f /usr/local/bin/gpsupdate ]; then
+        sudo -A rm /usr/local/bin/gpsupdate
+    fi
+
+    wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsupdate
+    chmod +x gpsupdate
+    sudo -A mv gpsupdate /usr/local/bin/
+    MENU
+}
+
+
+REMOVE(){
+    sudo -A rm /usr/local/bin/gpsupdate /usr/local/share/applications/gpsupdate.desktop
+}
+
+VERSION(){
+    if [ ! -f /usr/local/bin/gpsupdate ]; then
+    	CURRENT=0
+        NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsupdate | grep VERSION= | sed 's/VERSION=//')
+    else
+	CURRENT=$(grep VERSION= /usr/local/bin/gpsupdate | sed 's/VERSION=//')
+	VERSION=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsupdate | grep VERSION= | sed 's/VERSION=//')
+    fi
+}
+

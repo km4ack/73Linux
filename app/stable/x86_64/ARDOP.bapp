@@ -1,0 +1,31 @@
+BAPP=4.0
+ID=ARDOP
+Name=ardopc64
+Comment="ARDOP Sound Modem"
+Ver=
+localVer=
+W3='https://www.cantab.net/users/john.wiseman/Documents/'
+
+INSTALL(){
+    CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+    if [ -f /usr/local/bin/ardopc64 ]; then
+        sudo -A rm /usr/local/bin/ardopc64
+    fi
+    mkdir -p ${BAPSRC}
+    cd ${BAPSRC}
+    wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/ardopc64
+    chmod +x ${BAPSRC}/ardopc64
+    sudo -A mv ${BAPSRC}/ardopc64 /usr/local/bin/
+}
+
+VERSION(){
+    if [ -f /usr/local/bin/ardopc64 ]; then
+    CURRENT=1
+    NEWVER=1
+    else
+    CURRENT=0
+    NEWVER=1
+    fi
+}
+
+

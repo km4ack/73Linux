@@ -1,0 +1,78 @@
+BAPP=4.0
+ID=SECURITY
+Name=Security
+Comment="Security Tools"
+Ver=Update:1
+localVer=0
+W3=
+
+MENU(){
+    cat > /run/user/$UID/securetext.desktop <<EOF
+[Desktop Entry]
+Name=SecureText
+GenericName=Securetext
+Comment=Text Encryption App
+Exec=java -jar /usr/local/bin/pte.jar
+Icon=
+Terminal=false
+Type=Application
+Categories=Network;HamRadio;
+EOF
+
+    cat > /run/user/$UID/securefile.desktop <<EOF
+[Desktop Entry]
+Name=SecureFile
+GenericName=SecureFile
+Comment=File Encryption App
+Exec=java -jar /usr/local/bin/ssefencgui.jar
+Icon=
+Terminal=false
+Type=Application
+Categories=Network;HamRadio;
+EOF
+
+#move desktop files
+    sudo -A mv /run/user/$UID/securefile.desktop /usr/local/share/applications/
+    sudo -A mv /run/user/$UID/securetext.desktop /usr/local/share/applications/
+}
+
+INSTALL(){
+    CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+    source ${CUR_PATH}/config
+    mkdir -p ${BAPSRC}
+
+    #download PTE & move
+    cd $HOME/Downloads
+    wget --tries 2 --connect-timeout=60 https://paranoiaworks.mobi/download/files/PTE-PC.zip
+    unzip PTE-PC.zip
+    rm PTE-PC.zip
+    sudo -A mv Paranoia\ Text\ Encryption/pte.jar /usr/local/bin/pte.jar
+    rm -rf Paranoia\ Text\ Encryption
+
+    #download SSE & move to security folder
+    cd $HOME/Downloads
+    wget --tries 2 --connect-timeout=60 https://paranoiaworks.mobi/download/files/SSEFilePC.zip
+    unzip SSEFilePC.zip
+    rm SSEFilePC.zip
+    cd SSEFilePC
+    sudo -A mv ssefencgui.jar /usr/local/bin/ssefencgui.jar
+    rm -rf SSEFilePC
+    MENU
+}
+
+REMOVE(){
+    sudo -A rm /usr/local/bin/ssefencgui.jar /usr/local/bin/pte.jar \
+    /usr/local/share/applications/securefile.desktop /usr/local/share/applications/securetext.desktop
+}
+
+
+VERSION(){
+    #there is no version number for the script that installs the apps.     
+    if [ -f /usr/local/bin/pte.jar ]; then
+        CURRENT=1
+        NEWVER=1
+    else
+        CURRENT=0
+        NEWVER=1
+    fi
+}

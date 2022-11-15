@@ -1,0 +1,55 @@
+BAPP=4.0
+ID=ARDOPGUI
+Name=ardop-gui
+Comment='GUI for ARDOP Modem'
+Ver=Update:1
+localVer=0
+
+MENU(){
+	cat >ardopgui.desktop <<EOF
+[Desktop Entry]
+Name=ARDOP GUI
+GenericName=ARDOP GUI
+Comment=Graphical User Interface for ARDOP modem
+Exec=${HOME}/ardop/piARDOP_GUI
+Icon=${BAPDIR}/data/ico/ardop.png
+Terminal=false
+Type=Application
+Categories=Network;HamRadio;
+EOF
+
+	sudo mv ardopgui.desktop /usr/share/applications/
+}
+
+INSTALL(){
+	mkdir -p ${HOME}/ardop
+	cd ${HOME}/ardop || return
+	wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/piARDOP_GUI
+	sudo chmod +x ${HOME}/ardop/piARDOP_GUI
+
+	FILE=${HOME}/.config/G8BPQ/ARDOP_GUI.conf
+	mkdir -p ${HOME}/.config/G8BPQ
+	touch ${FILE}
+	echo "[General]" >>${FILE}
+	echo "Host=local" >>${FILE}
+	echo "Port=8515" >>${FILE}
+	MENU
+}
+
+VERSION(){
+if [ ! -f ${HOME}/ardop/piARDOP_GUI ]; then
+	CURRENT=0
+	NEWVER=1
+else
+	CURRENT=1
+	NEWVER=1
+
+fi
+}
+
+REMOVE(){
+	if [ -f $HOME/ardop/piARDOP_GUI ]; then
+		rm $HOME/ardop/piARDOP_GUI
+		sudo rm /usr/share/applications/ardopgui.desktop
+	fi
+}

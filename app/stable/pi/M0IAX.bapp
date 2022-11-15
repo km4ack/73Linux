@@ -1,0 +1,45 @@
+BAPP=4.0
+ID=M0IAX
+Name=JS8CallUtilities
+Comment='Tools for JS8Call Messages'
+Ver=Update:2
+localVer=0
+
+
+INSTALL(){
+	cd ${BUILDDIR} || return
+	wget --tries 2 --connect-timeout=60 http://m0iax.com/wp-content/uploads/2020/08/JS8CallUtils_RaspberryPi.zip
+	unzip JS8CallUtils_RaspberryPi.zip
+	rm JS8CallUtils_RaspberryPi.zip
+	chmod +x JS8CallUtils_v2
+	sudo mv JS8CallUtils_v2 /usr/local/bin
+
+	cat >m0iax.desktop <<EOF
+[Desktop Entry]
+Name=M0IAX JS8 Utils
+GenericName=M0IAX JS8 Utils
+Comment=GPS & Message Tool for JS8Call
+Exec=JS8CallUtils_v2
+Icon=${BAPDIR}/data/ico/m0iax.png
+Terminal=false
+Type=Application
+Categories=Network;HamRadio;
+EOF
+
+	sudo mv m0iax.desktop /usr/share/applications/
+}
+
+
+VERSION(){
+	if [ -f /usr/local/bin/JS8CallUtils_v2 ]; then
+		CURRENT=2
+		NEWVER=2
+	else
+		CURRENT=0
+		NEWVER=2
+	fi
+}
+
+REMOVE(){
+	sudo rm /usr/local/bin/JS8CallUtils_v2 /usr/share/applications/m0iax.desktop
+}

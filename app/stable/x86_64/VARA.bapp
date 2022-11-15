@@ -1,0 +1,116 @@
+BAPP=4.0
+ID=VARA
+Name=vara
+Comment="VARA Modems"
+Ver=Update:0.6
+localVer=0
+W3=
+
+
+
+#install files are static download during initial test phase
+INSTALL(){
+#VARA HF/FM installer script for Linux Mint
+#2022SEPT08 KM4ACK
+
+#Many thanks to K6ETA for his initial work on this project!
+#Reference - http://k6eta.com/linux/installing-rms-express-on-linux-with-wine
+
+VERSION="0.6"
+VARAFM=https://www.dropbox.com/s/y64rpowbxtobdxb/VARA%20FM%20v4.2.3%20Setup.zip
+VARAHF=https://www.dropbox.com/s/5gf3i7o8heidahc/VARA%20HF%20v4.6.3%20Setup.zip
+
+HEADER(){
+clear;echo
+echo "##########################"
+echo "VARA Installer for Mint"
+echo "by KM4ACK v $VERSION"
+echo "##########################"
+echo "# Installing $APP"
+echo "##########################"
+sleep 1
+}
+
+clear;echo
+echo "adding user to tty, dialout, & audio groups"
+sleep 1
+MYUSER=$(whoami)
+CHK_DIALOUT=$(id -nG | grep dialout)
+CHK_TTY=$(id -nG | grep tty)
+CHK_AUDIO=$(id -nG | grep audio)
+
+if [ -z "$CHK_DIALOUT" ]; then
+echo "Adding user to dialout group"
+sudo -A usermod -a -G dialout $MYUSER
+else
+echo "User already in dialout group"
+fi
+
+if [ -z "$CHK_TTY" ]; then
+echo "Adding user to tty group"
+sudo -A usermod -a -G tty $MYUSER
+else
+echo "User already in tty group"
+fi
+
+if [ -z "$CHK_AUDIO" ]; then
+echo "Adding user to audio group"
+sudo -A usermod -a -G audio $MYUSER
+else
+echo "User already in audio group"
+fi
+
+export WINEARCH=win32
+
+#install dependencies
+APP=Dependencies
+HEADER
+sudo -A apt install -y wine-stable winetricks 
+
+#install with wintricks
+APP=winetricks
+HEADER
+winetricks winxp
+winetricks sound=alsa
+winetricks vb6run
+winetricks -q vcrun2015
+
+#download/install VARA HF/FM
+APP="VARA HF/FM"
+HEADER
+cd $HOME/Downloads
+wget --tries 2 --connect-timeout=60 $VARAHF
+wget --tries 2 --connect-timeout=60 $VARAFM
+echo "unzipping VARA files"
+sleep 1
+unzip VARA\ FM\ v4.2.3\ Setup.zip
+unzip VARA\ HF\ v4.6.3\ Setup.zip
+rm VARA\ FM\ v4.2.3\ Setup.zip VARA\ HF\ v4.6.3\ Setup.zip
+#install VARA FM with wine
+/usr/bin/wine VARA\ FM\ setup\ \(Run\ as\ Administrator\).exe
+#install VARA with wine
+/usr/bin/wine VARA\ setup\ \(Run\ as\ Administrator\).exe
+
+#Install Driver
+APP="pdh.dll driver"
+HEADER
+cd $HOME/Downloads
+wget --tries 2 --connect-timeout=60 http://files.k6eta.com/pdh.dll.zip
+unzip pdh.dll.zip
+rm pdh.dll.zip
+mv pdh.dll $HOME/.wine/drive_c/windows/system32
+}
+
+VERSION(){
+    if [ ! -d $HOME/.wine/drive_c/VARA ]; then
+        CURRENT=0
+        NEWVER=0.6
+    else
+        CURRENT=0.6
+        NEWVER=0.6
+    fi
+}
+
+REMOVE(){
+    echo "VARA needs remove tool"
+}

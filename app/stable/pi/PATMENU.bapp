@@ -1,0 +1,55 @@
+BAPP=4.0
+ID=PATMENU
+Name=PatMenu
+Comment='Pat Help Application'
+Ver=2.10.0
+localVer=2.11.0
+
+
+INSTALL(){
+	DIR=${BUILDDIR}
+	#backup config files (Issue #119)
+	if [ -f ${HOME}/patmenu2/config ]; then
+		mkdir -p ${DIR}/patconfig
+		cp ${HOME}/patmenu2/*config* ${DIR}/patconfig/
+	fi
+	#update pat menu
+	if [ -d ${HOME}/patmenu2 ]; then
+		rm -rf "${HOME}/patmenu2"
+	fi
+	cd ${HOME}
+	git clone https://github.com/km4ack/patmenu2.git ${HOME}/patmenu2
+
+	#Verify that pat is on master branch. Pat can remain on an old branch
+	#due to a workaround when moving to Pat version 12. This caused Pat Menu
+	#to constantly report that it needed an update with the BAP update tool.
+	PAT_VER=$(grep release $HOME/patmenu2/changelog | head -1 | sed 's/release=//;s/\.//g')
+	if [ "$PAT_VER" -lt 260 ]; then
+	cd $HOME/patmenu2
+	git checkout master
+	fi
+
+	bash ${HOME}/patmenu2/setup
+	sed -i "s/N0CALL/${CALL}/" ${HOME}/patmenu2/config
+	sed -i 's/1,0/3,0/g' ${HOME}/patmenu2/config
+	#restore config files
+	if [ -d ${DIR}/patconfig/ ]; then
+		mv ${DIR}/patconfig/* ${HOME}/patmenu2/
+	fi
+}
+
+
+VERSION(){
+	if [ -d $HOME/patmenu2 ]; then
+		CURRENT=$(grep release $HOME/patmenu2/changelog | head -1 | sed 's/release=//')
+		NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/patmenu2/master/changelog | head -1 | sed 's/release=//')
+	else
+		CURRENT=0
+		NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/patmenu2/master/changelog | head -1 | sed 's/release=//')
+	fi
+}
+
+REMOVE(){
+	rm -rf ${HOME}/patmenu2
+	sudo rm /usr/share/applications/patmenu.desktop
+}

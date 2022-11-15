@@ -1,0 +1,58 @@
+BAPP=4.0
+ID=GARIM
+Name=GARIM
+Comment='File Transfer Program'
+Ver=Update:1
+localVer=0
+
+
+INSTALL(){
+
+	CLEANSOURCE(){
+		#this function removes any old source files before
+		#new files are downloaded for installation. This
+		#function is called by install functions below.
+		PACKAGE=$(ls ${HOME}/.bap-source-files | grep ${PACKAGE})
+		echo "package is $PACKAGE"
+		if [ -z $PACKAGE ]; then
+			echo "no old package found"
+		else
+			if [ -d ${HOME}/.bap-source-files/${PACKAGE} ]; then
+		   		echo "Dir to remove is ${HOME}/.bap-source-files/${PACKAGE}/"
+		   		rm -rf ${HOME}/.bap-source-files/${PACKAGE}/
+			fi
+		fi
+	
+	}
+
+	PACKAGE=garim
+	CLEANSOURCE
+	GPKG=$(curl -s https://www.whitemesa.net/garim/src/ | grep tar.gz | tail -1 | sed 's/^.*garim/garim/' | sed 's/tar.gz.*$/tar.gz/')
+	cd ${BUILDDIR} || return
+	wget --tries 2 --connect-timeout=60 https://www.whitemesa.net/garim/src/$GPKG
+	tar -xzvf $GPKG
+	DIRR=$(echo $GPKG | sed 's/.tar.gz//')
+	cd ${DIRR} || return
+	./configure
+	make
+	sudo make install
+	sudo make clean
+	rm ${BUILDDIR}/*.gz
+}
+
+
+VERSION(){
+if ! hash garim 2>/dev/null; then
+	CURRENT=0
+	NEWVER=1
+else
+	CURRENT=1
+	NEWVER=1
+fi   
+}
+
+REMOVE(){
+	DIR=$(ls ${BUILDDIR} | grep garim)
+	cd ${BUILDDIR}/$DIR
+	sudo make uninstall
+}

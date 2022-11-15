@@ -1,0 +1,29 @@
+BAPP=4.0
+ID=GRIDCALC
+Name=GridCalc
+Comment='Grid Calculation'
+Ver=1
+localVer=1
+
+
+INSTALL(){
+	sudo apt install -y wwl bc
+	cd ${HOME}/bin
+	wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/grid-calc
+	chmod +x $HOME/bin/grid-calc
+}
+
+
+VERSION(){
+	if [ -f ${HOME}/bin/grid-calc ]; then
+		CURRENT=1
+		NEWVER=1
+	else
+		CURRENT=0
+		NEWVER=1
+	fi
+}
+
+REMOVE(){
+	rm ${HOME}/bin/grid-calc
+}

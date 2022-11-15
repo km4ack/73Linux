@@ -1,0 +1,65 @@
+BAPP=4.0
+ID=PATMENU
+Name=PATMENU
+Comment="Helper app for Pat Winlink"
+Ver=2.10.0
+localVer=2.11.0
+W3=
+
+MENU(){
+cat >patmenu.desktop <<EOF
+[Desktop Entry]
+Name=PatMenu
+GenericName=Pat Menu
+Comment=Helper application for Pat Winlink
+Exec=/home/km4ack/patmenu2/patmenu
+Icon=/home/km4ack/patmenu2/pmlogo.png
+Terminal=false
+Type=Application
+Categories=Network;HamRadio;
+EOF
+
+sudo -A mv patmenu.desktop /usr/local/share/applications
+}
+
+INSTALL(){
+cd $HOME
+git clone https://github.com/km4ack/patmenu2.git
+cd $HOME/patmenu2
+git checkout x86-dev
+sudo -A cp patmenu2.desktop /usr/local/share/applications/
+MENU
+}
+
+UPDATE(){
+    #backup existing config files
+    if [ -d $HOME/patmenu2 ]; then
+    mkdir -p /run/user/$UID/patmenu_config
+    cp $HOME/patmenu2/config /run/user/$UID/patmenu_config/
+    cp $HOME/patmenu2/*.config /run/user/$UID/patmenu_config/
+    rm -rf $HOME/patmenu2
+    INSTALL
+    cp /run/user/$UID/patmenu_config/* $HOME/patmenu2/
+    else
+    INSTALL
+    fi
+}
+
+REMOVE(){
+    rm -rf $HOME/patmenu2 
+    sudo -A rm /usr/local/share/applications/patmenu2.desktop
+}
+
+DEPENDS(){
+    echo "PAT"
+}
+
+VERSION(){
+    if [ ! -d $HOME/patmenu2 ]; then
+    CURRENT=0
+    NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/patmenu2/master/changelog | grep release | head -1 | sed 's/release=//')
+    else
+    CURRENT=$(cat $HOME/patmenu2/changelog | grep release | head -1 | sed 's/release=//')
+    NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/patmenu2/master/changelog | grep release | head -1 | sed 's/release=//')
+    fi
+}

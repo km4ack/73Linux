@@ -1,0 +1,35 @@
+BAPP=4.0
+ID=CHIRP
+Name=Chirp
+Comment="Radio Programming"
+Ver=
+localVer=
+W3='https://chirp.danplanet.com/projects/chirp/wiki/Home'
+
+INSTALL(){
+    CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+
+    sudo -A apt install -y flatpak
+    cd ${BAPSRC}
+    LATEST=$(curl -s https://trac.chirp.danplanet.com/chirp_daily/LATEST/ | grep flatpak | sed 's/.*href="//;s/">.*//' | head -1)
+    wget https://trac.chirp.danplanet.com/chirp_daily/LATEST/$LATEST
+    sudo -A flatpak install -y $LATEST
+}
+
+
+REMOVE(){
+    sudo flatpak uninstall -y chirp
+}
+
+VERSION(){
+    CHECK=$(flatpak list | grep chirp)
+    if [ -z "${CHECK}" ]; then
+        CURRENT=0
+        NEWVER=$(curl -s https://trac.chirp.danplanet.com/chirp_daily/LATEST/ |
+			grep .tar.gz | awk -F 'chirp-daily-' '{print $2}' | head -c 8)
+    else
+        CURRENT=$(flatpak run com.danplanet.chirp --version | awk '{print $2}' | sed 's/daily-//')
+        NEWVER=$(curl -s https://trac.chirp.danplanet.com/chirp_daily/LATEST/ |
+			grep .tar.gz | awk -F 'chirp-daily-' '{print $2}' | head -c 8)
+    fi
+}
