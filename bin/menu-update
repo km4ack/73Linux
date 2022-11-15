@@ -1,0 +1,267 @@
+#!/bin/bash
+
+#Script to create additional menu subcategories
+#and move some items to those categories.
+#Four new catagories will be created that can
+#be used in .desktop files.
+#flsuite - flsuite subcategory
+#bap - Build a Pi subcategory
+#km4ack - km4ack subcategory
+#vara - vara subcategory
+
+REV=20221031
+
+sudo mkdir -p /usr/local/share/applications
+
+
+FLSUITE(){
+##########################
+#	FLSUITE 
+##########################
+CATEGORY=flsuite
+
+FLPATH=/usr/local/share/applications
+
+if [ -f $FLPATH/fldigi.desktop ]; then
+echo "updating fldigi"
+sudo sed -i "s/Categories.*/Categories=$CATEGORY/" $FLPATH/fldigi.desktop
+fi
+
+if [ -f $FLPATH/flamp.desktop ]; then
+echo "updating flamp"
+sudo sed -i "s/Categories.*/Categories=$CATEGORY/" $FLPATH/flamp.desktop
+fi
+
+if [ -f $FLPATH/flarq.desktop ]; then
+echo "updating flarq"
+sudo sed -i "s/Categories.*/Categories=$CATEGORY/" $FLPATH/flarq.desktop
+fi
+
+if [ -f $FLPATH/flmsg.desktop ]; then
+echo "updating flmsg"
+sudo sed -i "s/Categories.*/Categories=$CATEGORY/" $FLPATH/flmsg.desktop
+fi
+
+if [ -f $FLPATH/flnet.desktop ]; then
+echo "updating flnet"
+sudo sed -i "s/Categories.*/Categories=$CATEGORY/" $FLPATH/flnet.desktop
+fi
+
+if [ -f $FLPATH/flwrap.desktop ]; then
+echo "updating flwrap"
+sudo sed -i "s/Categories.*/Categories=$CATEGORY/" $FLPATH/flwrap.desktop
+fi
+
+if [ -f $FLPATH/flrig.desktop ]; then
+echo "updating flrig"
+sudo sed -i "s/Categories.*/Categories=$CATEGORY/" $FLPATH/flrig.desktop
+fi
+}
+
+VARA(){
+##########################
+#	VARA
+##########################
+echo "updating VARA shortcuts"
+if [ -f /usr/share/applications/vara-chat.desktop ]; then
+sudo sed -i 's/Categories.*/Categories=vara/' /usr/share/applications/vara-chat.desktop
+fi
+
+if [ -f /usr/share/applications/vara.desktop ]; then
+sudo sed -i 's/Categories.*/Categories=vara/' /usr/share/applications/vara.desktop
+fi
+
+if [ -f /usr/share/applications/vara-fm.desktop ]; then
+sudo sed -i 's/Categories.*/Categories=vara/' /usr/share/applications/vara-fm.desktop
+fi
+
+if [ -f /usr/share/applications/vara-sat.desktop ]; then
+sudo sed -i 's/Categories.*/Categories=vara/' /usr/share/applications/vara-sat.desktop
+fi
+
+if [ -f /usr/share/applications/vara-soundcardsetup.desktop ]; then
+sudo sed -i 's/Categories.*/Categories=vara/' /usr/share/applications/vara-soundcardsetup.desktop
+fi
+
+if [ -f /usr/share/applications/vara-update.desktop ]; then
+sudo sed -i 's/Categories.*/Categories=vara/' /usr/share/applications/vara-update.desktop
+fi
+
+}
+
+BAP(){
+##########################
+#	BAP 
+##########################
+echo "Updating 73 Linux Shortcuts"
+cd /run/user/$UID
+
+#DONATE
+if [ ! -f /usr/local/share/applications/donate.desktop ]; then
+	cat >donate.desktop <<EOF
+[Desktop Entry]
+Name=Donate
+Comment=Donate to Build a Pi
+Exec=xdg-open https://www.paypal.com/paypalme/km4ack
+Icon=${BAPDIR}/data/73.png
+Terminal=false
+Type=Application
+Categories=bap
+Keywords=Support
+EOF
+
+	sudo mv donate.desktop /usr/local/share/applications/
+fi
+
+#FAQ
+if [ ! -f /usr/local/share/applications/faq.desktop ]; then
+	cat >faq.desktop <<EOF
+[Desktop Entry]
+Name=FAQ
+Comment=Build a Pi FAQ
+Exec=xdg-open https://app.simplenote.com/publish/C3bBxN
+Icon=${BAPDIR}/data/73.png
+Terminal=false
+Type=Application
+Categories=bap
+Keywords=Support
+
+EOF
+
+	sudo mv faq.desktop /usr/local/share/applications/
+fi
+
+#SUPPORT
+if [ ! -f /usr/local/share/applications/support.desktop ]; then
+	cat >support.desktop <<EOF
+[Desktop Entry]
+Name=Tech Support
+Comment=Build a Pi Tech Support
+Exec=xdg-open https://groups.io/g/KM4ACK-Pi/topics
+Icon=${BAPDIR}/data/73.png
+Terminal=false
+Type=Application
+Categories=bap
+Keywords=Support
+
+EOF
+
+	sudo mv support.desktop /usr/local/share/applications/
+fi
+
+if [ ! -f /usr/local/share/applications/73.desktop ]; then
+	cat >73.desktop <<EOF
+[Desktop Entry]
+Name=73 Linux
+Comment=73 Linux
+Exec=${BAPDIR}/73.sh
+Icon=${BAPDIR}/data/73.png
+Terminal=true
+Type=Application
+Categories=bap
+Keywords=Support
+
+EOF
+	sudo mv 73.desktop /usr/local/share/applications/
+fi
+}
+
+CREATEMENU(){
+#Create menu subcategories
+cd /run/user/$UID
+
+cat >FLsuite.directory <<EOF
+[Desktop Entry]
+Type=Directory
+Encoding=UTF-8
+Name=flsuite
+Icon=fldigi
+EOF
+
+sudo mv FLsuite.directory /usr/share/desktop-directories/
+
+cat >vara.directory <<EOF
+[Desktop Entry]
+Type=Directory
+Encoding=UTF-8
+Name=VARA
+Icon=CQ.png
+EOF
+
+sudo mv vara.directory /usr/share/desktop-directories/
+
+cat >bap.directory <<EOF
+[Desktop Entry]
+Type=Directory
+Encoding=UTF-8
+Name=73-Linux
+Icon=${BAPDIR}/data/73.png
+EOF
+
+sudo mv bap.directory /usr/share/desktop-directories/
+
+#MOD HAMRADIO.MENU FILE
+cat >hamradio.menu <<EOF
+<!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"
+ "http://www.freedesktop.org/standards/menu-spec/1.0/menu.dtd">
+<Menu>
+  <Name>Applications</Name>
+  <Menu>
+    <Name>Hamradio</Name>
+    <Directory>HamRadio.directory</Directory>
+    <Include>
+        <Category>HamRadio</Category>
+    </Include>
+    <Menu>
+     <Name>FLSUITE</Name>
+     <Directory>FLsuite.directory</Directory>
+    <Include>
+          <Category>flsuite</Category>
+    </Include>
+    </Menu>
+        <Menu>
+            <Name>VARA</Name>
+            <Directory>vara.directory</Directory>
+            <Include>
+                <Category>vara</Category>
+            </Include>
+
+        </Menu>
+	<Menu>
+        <Name>73-Linux</Name>
+        <Directory>bap.directory</Directory>
+        <Include>
+            <Category>bap</Category>
+        </Include>
+
+    </Menu>
+  </Menu> <!-- End hamradio -->
+</Menu>
+EOF
+
+sudo mv hamradio.menu /usr/share/extra-xdg-menus/
+}
+
+#verify ham menu is installed
+if ! hash extra-xdg-menus 2>/dev/null; then
+sudo apt install -y extra-xdg-menus
+fi
+
+BAP
+
+#check to see if this script has already run
+CK=$(grep MENU $HOME/.config/KM4ACK | sed 's/MENU=//')
+if [ -z "$CK" ]; then
+	echo "Menu modified with rev $REV"
+	sed -i s"/MENU=.*/MENU=$REV/" $HOME/.config/KM4ACK
+	CREATEMENU
+	FLSUITE
+	VARA
+else
+	echo "menu mods already made" 
+	echo "Menu mod $REV installed"
+	exit
+fi
+
+
+
