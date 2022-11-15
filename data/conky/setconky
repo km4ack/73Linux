@@ -1,0 +1,53 @@
+CONFIG_DIR=$HOME/bin/conky
+CONKY_TMP=/tmp/conky.txt
+CPU=$(lscpu | grep Architecture | grep arm)
+if [ -z "$CPU" ]; then
+	CONFIG_FILES=${CONFIG_DIR}/*.86
+else
+	CONFIG_FILES=${CONFIG_DIR}/*.pi
+fi
+
+CALL=$(cat ~/.conkyrc | grep "{color Yellow}" | sed s'/.*{alignc}//' | head -1)
+	INFO=$(yad --form --width=420 --text-align=center --center --title="Conky Prefs" \
+		--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+		--text="<b>Enter Your Call Sign</b>" \
+		--field="Call Sign" "$CALL" \
+		--button="Continue":2)
+	BUT=$?
+	if [ ${BUT} = 252 ]; then
+		exit
+	fi
+CALL=$(echo ${INFO} | awk -F "|" '{print $1}')
+
+for files in ${CONFIG_FILES}; do
+	echo -e "\n$files" | awk -F "/" '{print $NF}' | sed 's/.pi//'
+done | yad --width=550 --height=400 --title="Conky Prefs" --image=$LOGO \
+            --center --list --print-all --checklist --grid-lines=hor \
+            --column="" --column="File Name" \
+            --text="Select ONE config to install." --button="Cancel":1 --button="Load Config":2 > $CONKY_TMP
+
+
+CK=$(grep TRUE $CONKY_TMP)
+if [ -z "$CK" ]; then
+	rm $CONKY_TMP
+	exit
+fi
+
+NEW_CONKY=$(grep TRUE $CONKY_TMP | awk -F "|" '{print $2}')
+NEW_CONKY=${CONFIG_DIR}/${NEW_CONKY}
+echo $NEW_CONKY
+cp $NEW_CONKY $HOME/.conkyrc
+WLAN=$(ifconfig | grep wl | awk '{print $1}' | sed 's/://')
+sed -i "s/wlan0/$WLAN/" $HOME/.conkyrc
+sed -i "s/N0CALL/${CALL}/" $HOME/.conkyrc
+CONKY_PID=$(pidof conky)
+kill -9 $CONKY_PID
+/usr/bin/conky
+rm $CONKY_TMP
+
+
+
+
+
+
+

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+#reinstall wifi drivers after kernel update
+
+
+unzip ./rtl8723du-master.zip
+cd rtl8723du-master
+make
+sudo make install
+rm -rf ./rtl8723du-master
+
+sudo modprobe -v 8723du
