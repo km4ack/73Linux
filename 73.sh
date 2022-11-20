@@ -69,7 +69,7 @@ fi
 #	Verify not run as root
 #####################################
 if [ "$WHO" = 'root' ]; then
-	yad --form --width=500 --text-align=center --center --title="73 Linuxi" --text-align=center \
+	yad --form --width=500 --text-align=center --center --title="73 Linux" --text-align=center \
 		--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
 		--text="<b>ROOT DETECTED</b>\rDon't run this script as root. \
 Restart the script without sudo" \
@@ -92,7 +92,7 @@ if [ ! -f "$BAPSYSINFO" ]; then
     mkdir -p ${HOME}/.bap-source-files
 
     #set the station call sign
-    N0CALL=$(yad --form --width=420 --text-align=center --title="73 Linuxi" --center \
+    N0CALL=$(yad --form --width=420 --text-align=center --title="73 Linux" --center \
         --title="Amature Radio Callsign Required" --center --image="$LOGO" \
         --field="Call Sign" \
         --field="<b>Required</b>":LBL)
