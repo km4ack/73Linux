@@ -23,35 +23,32 @@ sudo -A mv patmenu.desktop /usr/local/share/applications
 }
 
 INSTALL(){
-cd $HOME
-git clone https://github.com/km4ack/patmenu2.git
-cd $HOME/patmenu2
-git checkout x86-dev
-sudo -A cp patmenu2.desktop /usr/local/share/applications/
-MENU
-}
-
-UPDATE(){
-    #backup existing config files
-    if [ -d $HOME/patmenu2 ]; then
-    mkdir -p /run/user/$UID/patmenu_config
-    cp $HOME/patmenu2/config /run/user/$UID/patmenu_config/
-    cp $HOME/patmenu2/*.config /run/user/$UID/patmenu_config/
-    rm -rf $HOME/patmenu2
-    INSTALL
-    cp /run/user/$UID/patmenu_config/* $HOME/patmenu2/
-    else
-    INSTALL
-    fi
+#backup existing config files
+if [ -d $HOME/patmenu2 ]; then
+	mkdir -p /run/user/$UID/patmenu_config
+	cp $HOME/patmenu2/config /run/user/$UID/patmenu_config/
+	cp $HOME/patmenu2/*.config /run/user/$UID/patmenu_config/
+	rm -rf $HOME/patmenu2
+	cd $HOME
+	git clone https://github.com/km4ack/patmenu2.git
+	cd $HOME/patmenu2
+	git checkout x86-dev
+	sudo -A cp patmenu2.desktop /usr/local/share/applications/
+	MENU
+	cp /run/user/$UID/patmenu_config/* $HOME/patmenu2/
+else
+	cd $HOME
+	git clone https://github.com/km4ack/patmenu2.git
+	cd $HOME/patmenu2
+	git checkout x86-dev
+	sudo -A cp patmenu2.desktop /usr/local/share/applications/
+	MENU
+fi
 }
 
 REMOVE(){
     rm -rf $HOME/patmenu2 
     sudo -A rm /usr/local/share/applications/patmenu2.desktop
-}
-
-DEPENDS(){
-    echo "PAT"
 }
 
 VERSION(){
