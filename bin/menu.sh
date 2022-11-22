@@ -15,7 +15,8 @@ echo "###################################"
 for f in $APPSFILES; do
     #only accept good files
     CHECKFILE=$(head -c6 $f | sed 's/BAPP=//')
-    if [ $CHECKFILE == $BAPPVER ];then
+    CURBAPVER=$(grep version ${BAPDIR}/changelog | head -1 | sed 's/version=//' | cut -b 1)
+    if [ $CHECKFILE == $CURBAPVER ];then
         grep -m 1 -e '^[[:blank:]]*BAPP' $f | cut -d = -f 2
         grep -m 1 -e '^[[:blank:]]*ID' $f | cut -d = -f 2
         grep -m 1 -e '^[[:blank:]]*Name' $f | cut -d = -f 2
