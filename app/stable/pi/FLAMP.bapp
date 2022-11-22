@@ -85,11 +85,11 @@ REMOVE(){
 VERSION(){
 		if ! hash flamp 2>/dev/null; then
 			CURRENT=0
-			NEWVER=$(curl -s https://sourceforge.net/projects/fldigi/files/flamp/ |
+			NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/fldigi/files/flamp/ |
 		grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar.gz" '{print $1}')
 		else		
 			CURRENT=$(flamp --version | sed 's/Version: //')
-			NEWVER=$(curl -s https://sourceforge.net/projects/fldigi/files/flamp/ |
+			NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/fldigi/files/flamp/ |
 		grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar.gz" '{print $1}')
 		fi
 }
