@@ -65,11 +65,11 @@ REMOVE(){
 VERSION(){
 	if ! hash garim 2>/dev/null; then
 		CURRENT=0
-		NEWVER=$(curl -s https://www.whitemesa.net/garim/garim.html | grep -m 1 \
+		NEWVER=$(curl --max-time 20 -s https://www.whitemesa.net/garim/garim.html | grep -m 1 \
 			"armv7l.tar.gz" | awk -F '-' '{print $2}')
 	else
 		CURRENT=$(garim --version | head -n1 | awk -F ' ' '{print $2}')
-		NEWVER=$(curl -s https://www.whitemesa.net/garim/garim.html | grep -m 1 \
+		NEWVER=$(curl --max-time 20 -s https://www.whitemesa.net/garim/garim.html | grep -m 1 \
 			"armv7l.tar.gz" | awk -F '-' '{print $2}')
     fi
 }

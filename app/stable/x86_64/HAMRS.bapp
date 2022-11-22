@@ -47,9 +47,9 @@ VERSION(){
     CHECK=$(ls /usr/local/bin/ | grep hamrs)
         if [ -z "${CHECK}" ]; then
             CURRENT=0
-            NEWVER=$(curl -s https://hamrs.app/ | grep x86_64 | sed 's/.*href="//;s/AppImage.*/AppImage/' | awk -F "/" '{print $5}' | sed 's/hamrs-//;s/-linux.*//') 
+            NEWVER=$(curl --max-time 20 -s https://hamrs.app/ | grep x86_64 | sed 's/.*href="//;s/AppImage.*/AppImage/' | awk -F "/" '{print $5}' | sed 's/hamrs-//;s/-linux.*//') 
         else
             CURRENT=$(ls /usr/local/bin/ | grep hamrs | sed 's/hamrs-//;s/-linux.*//')
-            NEWVER=$(curl -s https://hamrs.app/ | grep x86_64 | sed 's/.*href="//;s/AppImage.*/AppImage/' | awk -F "/" '{print $5}' | sed 's/hamrs-//;s/-linux.*//')        
+            NEWVER=$(curl --max-time 20 -s https://hamrs.app/ | grep x86_64 | sed 's/.*href="//;s/AppImage.*/AppImage/' | awk -F "/" '{print $5}' | sed 's/hamrs-//;s/-linux.*//')        
         fi
 }

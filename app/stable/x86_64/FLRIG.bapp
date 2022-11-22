@@ -86,11 +86,11 @@ REMOVE(){
 VERSION(){
 	if ! hash flrig 2>/dev/null; then
 		CURRENT=0
-        NEWVER=$(curl -s https://sourceforge.net/projects/fldigi/files/flrig/ |
+        NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/fldigi/files/flrig/ |
 			grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar.gz" '{print $1}')
 	else
 		CURRENT=$(flrig --version | awk 'FNR == 1 {print $2}')
-		NEWVER=$(curl -s https://sourceforge.net/projects/fldigi/files/flrig/ |
+		NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/fldigi/files/flrig/ |
 			grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar.gz" '{print $1}')
     fi
 }

@@ -85,11 +85,11 @@ REMOVE(){
 VERSION(){
 	if ! hash fldigi 2>/dev/null; then
 		CURRENT=0
-		NEWVER=$(curl -s https://sourceforge.net/projects/fldigi/files/fldigi/ |
+		NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/fldigi/files/fldigi/ |
 			grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar" '{print $1}')
 	else
 		CURRENT=$(fldigi --version | awk 'FNR == 1 {print $2}')
-		NEWVER=$(curl -s https://sourceforge.net/projects/fldigi/files/fldigi/ |
+		NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/fldigi/files/fldigi/ |
 			grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar" '{print $1}')
     fi
 

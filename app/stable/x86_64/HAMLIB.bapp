@@ -50,12 +50,12 @@ REMOVE(){
 VERSION(){
     if ! hash rigctl 2>/dev/null; then
 		CURRENT=0
-        	NEWVER=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download |
+        	NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/hamlib/files/latest/download |
 			grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] |
 			head -n 1 | awk -F "/" '{print $7}')
 	else
 		CURRENT=$(rigctl --version | awk '{print $3}')
-		NEWVER=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download |
+		NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/hamlib/files/latest/download |
 			grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] |
 			head -n 1 | awk -F "/" '{print $7}')
     fi

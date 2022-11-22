@@ -42,10 +42,10 @@ REMOVE(){
 VERSION(){
     if [ ! -f /usr/local/bin/gpsupdate ]; then
     	CURRENT=0
-        NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsupdate | grep VERSION= | sed 's/VERSION=//')
+        NEWVER=$(curl --max-time 20 -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsupdate | grep VERSION= | sed 's/VERSION=//')
     else
 	CURRENT=$(grep VERSION= /usr/local/bin/gpsupdate | sed 's/VERSION=//')
-	VERSION=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsupdate | grep VERSION= | sed 's/VERSION=//')
+	VERSION=$(curl --max-time 20 -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsupdate | grep VERSION= | sed 's/VERSION=//')
     fi
 }
 

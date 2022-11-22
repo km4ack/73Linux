@@ -69,9 +69,9 @@ REMOVE(){
 VERSION(){
     if [ ! -f /usr/bin/pat ]; then
         CURRENT=0
-        NEWVER=$(curl -s https://github.com/la5nta/pat/releases | grep armhf | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//' | sed 's/pat_//;s/_linux.*//')
+        NEWVER=$(curl --max-time 20 -s https://github.com/la5nta/pat/releases | grep armhf | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//' | sed 's/pat_//;s/_linux.*//')
     else
         CURRENT=$(/usr/bin/pat version | awk '{print $2}' | sed 's/v//')
-        NEWVER=$(curl -s https://github.com/la5nta/pat/releases | grep armhf | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//' | sed 's/pat_//;s/_linux.*//')
+        NEWVER=$(curl --max-time 20 -s https://github.com/la5nta/pat/releases | grep armhf | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//' | sed 's/pat_//;s/_linux.*//')
     fi
 }

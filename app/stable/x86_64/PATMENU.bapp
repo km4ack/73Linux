@@ -54,9 +54,9 @@ REMOVE(){
 VERSION(){
     if [ ! -d $HOME/patmenu2 ]; then
     CURRENT=0
-    NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/patmenu2/master/changelog | grep release | head -1 | sed 's/release=//')
+    NEWVER=$(curl --max-time 20 -s https://raw.githubusercontent.com/km4ack/patmenu2/master/changelog | grep release | head -1 | sed 's/release=//')
     else
     CURRENT=$(cat $HOME/patmenu2/changelog | grep release | head -1 | sed 's/release=//')
-    NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/patmenu2/master/changelog | grep release | head -1 | sed 's/release=//')
+    NEWVER=$(curl --max-time 20 -s https://raw.githubusercontent.com/km4ack/patmenu2/master/changelog | grep release | head -1 | sed 's/release=//')
     fi
 }

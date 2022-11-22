@@ -28,9 +28,9 @@ REMOVE(){
 VERSION(){
     if [ ! -d /usr/share/repeater-START ]; then
         CURRENT=0
-        NEWVER=$(curl -s https://sourceforge.net/projects/repeater-start/files/ | grep all.deb | head -1 | sed 's/.*repeater/repeater/;s/".*//' | sed 's/repeater-start_//;s/_all.*//')
+        NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/repeater-start/files/ | grep all.deb | head -1 | sed 's/.*repeater/repeater/;s/".*//' | sed 's/repeater-start_//;s/_all.*//')
     else
         CURRENT=$(dpkg --list | grep repeater-start | awk '{print $3}')
-        NEWVER=$(curl -s https://sourceforge.net/projects/repeater-start/files/ | grep all.deb | head -1 | sed 's/.*repeater/repeater/;s/".*//' | sed 's/repeater-start_//;s/_all.*//')
+        NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/repeater-start/files/ | grep all.deb | head -1 | sed 's/.*repeater/repeater/;s/".*//' | sed 's/repeater-start_//;s/_all.*//')
     fi
 }

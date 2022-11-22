@@ -23,10 +23,10 @@ INSTALL(){
 VERSION(){
     if [ ! -f /usr/bin/js8call ]; then
         CURRENT=0
-        NEWVER=$(curl -s http://files.js8call.com/latest.html | grep amd64 | head -1 | awk -F "/" '{print $4}')
+        NEWVER=$(curl --max-time 20 -s http://files.js8call.com/latest.html | grep amd64 | head -1 | awk -F "/" '{print $4}')
     else
         CURRENT=$(dpkg --list | grep js8call | awk '{print $3}')
-        NEWVER=$(curl -s http://files.js8call.com/latest.html | grep amd64 | head -1 | awk -F "/" '{print $4}')
+        NEWVER=$(curl --max-time 20 -s http://files.js8call.com/latest.html | grep amd64 | head -1 | awk -F "/" '{print $4}')
     fi
 }
 

@@ -77,13 +77,6 @@ INSTALL(){
 	sudo -A make clean
 }
 
-UPDATE(){
-    INSTALL
-}
-
-DEPENDS(){
-    NEEDED=FLXMLRPC
-}
 
 REMOVE(){
     sudo -A rm /usr/local/bin/flnet /usr/local/share/applications/flnet.desktop
@@ -92,11 +85,11 @@ REMOVE(){
 VERSION(){
 	if ! hash flnet 2>/dev/null; then
 		CURRENT=0
-		NEWVER=$(curl -s https://sourceforge.net/projects/fldigi/files/flnet/ |
+		NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/fldigi/files/flnet/ |
 			grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar" '{print $1}')
 	else
 		CURRENT=$(flnet --version | awk 'FNR == 1 {print $2}')
-		NEWVER=$(curl -s https://sourceforge.net/projects/fldigi/files/flnet/ |
+		NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/fldigi/files/flnet/ |
 			grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar" '{print $1}')
 
     fi

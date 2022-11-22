@@ -2,7 +2,7 @@ BAPP=4.0
 ID=SHOWLOG
 Name=ShowLog
 Comment="KM4ACK Log Viewer"
-Ver=Update:1
+Ver=
 localVer=
 W3=
 
@@ -23,6 +23,9 @@ EOF
 }
 
 INSTALL(){
+    if [ -f $HOME/bin/showlog ]; then
+        rm $HOME/bin/showlog
+    fi
     mkdir -p $HOME/bin
     cd $HOME/bin
     wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/showlog
@@ -38,20 +41,10 @@ REMOVE(){
 VERSION(){
     if [ -f $HOME/bin/showlog ]; then
         CURRENT=$(grep VERSION $HOME/bin/showlog | sed 's/VERSION=//')
-        NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/showlog | grep VERSION | sed 's/VERSION=//')
+        NEWVER=$(curl --max-time 20 -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/showlog | grep VERSION | sed 's/VERSION=//')
     else
         CURRENT=0
-        NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/showlog | grep VERSION | sed 's/VERSION=//')
+        NEWVER=$(curl --max-time 20 -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/showlog | grep VERSION | sed 's/VERSION=//')
     fi
-}
-
-UPDATE(){
-    cd $HOME/bin
-    if [ -f showlog ]; then
-        rm showlog
-    fi
-    wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/showlog
-    chmod +x showlog
-    MENU
 }
 
