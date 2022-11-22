@@ -21,23 +21,60 @@ export BUILDDIR
 export LOGO
 export BAPDIR
 
-echo "##########################################"
-echo "# checking for newer version of 73 linux #"
-echo "##########################################"
-CUR=$(grep version ${BAPDIR}/changelog | head -1 | sed 's/version=//')
-LATEST=$(curl -s https://raw.githubusercontent.com/km4ack/pi-build/master/changelog | grep version | head -1 | sed 's/version=//')
-if (($(echo "${LATEST} ${CUR}" | awk '{print ($1 > $2)}'))); then
-	echo "new version abailable"
+echo "#############################"
+echo "Checking for 73 Linux Updates"
+echo "#############################"
+LATEST=$(curl -s https://raw.githubusercontent.com/km4ack/73Linux/master/changelog | head -1 | sed 's/version=//')
+CURRENT=$(grep version ${BAPDIR}/changelog | head -1 | sed 's/version=//')
+
+if (($(echo "${LATEST} ${CURRENT}" | awk '{print ($1 > $2)}'))); then
+	echo "#################################"
+	echo "A newer version of 73 Linux Found"
+	echo "Current version is $CURRENT"
+	echo "Latest version is $LATEST"
+	echo "############################"
+	yad --width=300 --height=150 --fixed --text-align=center --center --title="73 Linux" \
+		--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+		--text "Updated version of 73 Linux found.\rInstalled - v${CURRENT}\rLatest - v${LATEST}\rWould you like to update?" \
+		--button="Yes":2 \
+		--button="No":3
+BUT=$?
+	if [ $BUT = 252 ]; then
+		exit
+	elif [ $BUT = 2 ]; then
+		cd $HOME
+		rm -rf 73Linux
+		git clone https://github.com/km4ack/73Linux.git
+		yad --width=300 --height=150 --fixed --text-align=center --center --title="73 Linux" \
+			--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+			--text "Update complete.\rPlease restart 73 Linux" \
+			--button=gtk-ok
+		exit
+	fi
+
+else
+	echo "73 Linux up to date. Version $CURRENT installed"
 fi
 
-echo "Checking for new bap files"
+echo "Checking for updated bap files"
 CUR=$(grep version ${BAPDIR}/app/.bap-version | sed 's/version=//')
-LATEST=$(curl -s https://raw.githubusercontent.com/km4ack/pi-build/master/changelog | grep version | head -1 | sed 's/version=//')
+LATEST=$(curl -s https://raw.githubusercontent.com/km4ack/73Linux/master/app/.bap-version | grep version | head -1 | sed 's/version=//')
 if (($(echo "${LATEST} ${CUR}" | awk '{print ($1 > $2)}'))); then
-echo "#######################################"
-echo "#    Downloading latest bap files     #"
-echo "#######################################"
-echo "updates not functioning yet but coming soon."
+	echo "#######################################"
+	echo "#    Downloading latest bap files     #"
+	echo "#######################################"
+	cd /run/user/$UID
+	git init 73Linux
+	cd 73Linux
+	git remote add -f origin https://github.com/km4ack/73Linux.git
+	git config pull.ff only
+	git config core.sparseCheckout true
+	echo "/app" >> .git/info/sparse-checkout
+	git pull origin master
+	cp -r /run/user/$UID/73Linux/app ~/Desktop/73-linux/
+	rm -rf /run/user/$UID/73Linux
+else
+	echo "bap files up to date"
 fi
 
 
