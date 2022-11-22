@@ -2,7 +2,7 @@
 # envioment checking
 
 #for first run
-BAPSYSINFO=cache/cpu.bap
+BAPSYSINFO=${BAPDIR}/cache/cpu.bap
 set -e #any errors stop now
 MYCALL=$(ls MYCALL.* | sed 's/MYCALL.//')
 CALL=$MYCALL
