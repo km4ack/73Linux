@@ -34,7 +34,8 @@ do
 	}
 
 	CHECKFILE=$(head -c6 $Job | sed 's/BAPP=//')
-	if [ $CHECKFILE == $BAPPVER ];then
+	CURBAPVER=$(grep version ${BAPDIR}/changelog | head -1 | sed 's/version=//' | cut -b 1)
+	if [ $CHECKFILE == $CURBAPVER ];then
 		#get the version function ran to have access here
 		source $Job
 		
