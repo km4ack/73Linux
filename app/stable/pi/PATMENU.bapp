@@ -42,10 +42,10 @@ INSTALL(){
 VERSION(){
 	if [ -d $HOME/patmenu2 ]; then
 		CURRENT=$(grep release $HOME/patmenu2/changelog | head -1 | sed 's/release=//')
-		NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/patmenu2/master/changelog | head -1 | sed 's/release=//')
+		NEWVER=$(curl --max-time 20 -s https://raw.githubusercontent.com/km4ack/patmenu2/master/changelog | head -1 | sed 's/release=//')
 	else
 		CURRENT=0
-		NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/patmenu2/master/changelog | head -1 | sed 's/release=//')
+		NEWVER=$(curl --max-time 20 -s https://raw.githubusercontent.com/km4ack/patmenu2/master/changelog | head -1 | sed 's/release=//')
 	fi
 }
 

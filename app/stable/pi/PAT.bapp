@@ -84,11 +84,11 @@ INSTALL(){
 VERSION(){
 	if ! hash pat 2>/dev/null; then
 		CURRENT=0
-		NEWPATV=$(curl -s https://github.com/la5nta/pat/releases | grep armhf | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//')
+		NEWPATV=$(curl --max-time 20 -s https://github.com/la5nta/pat/releases | grep armhf | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//')
 		NEWVER=$(echo ${NEWPATV} | sed 's/pat_//' | sed 's/_linux_armhf.deb//')
 	else
 		CURRENT=$(pat version | awk '{print $2}' | sed 's/v//')
-		NEWPATV=$(curl -s https://github.com/la5nta/pat/releases | grep armhf | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//')
+		NEWPATV=$(curl --max-time 20 -s https://github.com/la5nta/pat/releases | grep armhf | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//')
 		NEWVER=$(echo ${NEWPATV} | sed 's/pat_//' | sed 's/_linux_armhf.deb//')
 	fi		
 }

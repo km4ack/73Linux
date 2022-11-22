@@ -56,10 +56,10 @@ EOF
 VERSION(){
 	if [ -d ${HOME}/GridTracker ]; then
 		CURRENT=$(grep version ${HOME}/GridTracker/package.nw/package.json | sed 's/"version": "//;s/",//;s/ //g')
-		NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gt-download-links | grep arm32 | sed 's/.*GridTracker-//;s/-linux.*//')
+		NEWVER=$(curl --max-time 20 -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gt-download-links | grep arm32 | sed 's/.*GridTracker-//;s/-linux.*//')
 	else
 		CURRENT=0
-		NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gt-download-links | grep arm32 | sed 's/.*GridTracker-//;s/-linux.*//')
+		NEWVER=$(curl --max-time 20 -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gt-download-links | grep arm32 | sed 's/.*GridTracker-//;s/-linux.*//')
 	fi
 }
 

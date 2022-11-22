@@ -38,10 +38,10 @@ MENU
 VERSION(){
 if [ -f $HOME/bin/gpsupdate ]; then
 	CURRENT=$(grep VERSION= ${HOME}/bin/gpsupdate | sed 's/VERSION=//')
-	NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsupdate | grep VERSION= | sed 's/VERSION=//')
+	NEWVER=$(curl --max-time 20 -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsupdate | grep VERSION= | sed 's/VERSION=//')
 else
 	CURRENT=0
-	NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsupdate | grep VERSION= | sed 's/VERSION=//')
+	NEWVER=$(curl --max-time 20 -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsupdate | grep VERSION= | sed 's/VERSION=//')
 fi
 }
 

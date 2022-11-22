@@ -41,10 +41,10 @@ EOF
 VERSION(){
 	if ! hash xastir 2>/dev/null; then
 		CURRENT=0
-		NEWVER=$(curl -s https://github.com/Xastir/Xastir | grep Release- | head -1 | sed 's/.*Release-//;s/">//')
+		NEWVER=$(curl --max-time 20 -s https://github.com/Xastir/Xastir | grep Release- | head -1 | sed 's/.*Release-//;s/">//')
 	else		
 		CURRENT=$(/usr/local/bin/xastir -V | awk '{print $2}' | sed 's/V//' | sed '/^[[:space:]]*$/d')
-		NEWVER=$(curl -s https://github.com/Xastir/Xastir | grep Release- | head -1 | sed 's/.*Release-//;s/">//')
+		NEWVER=$(curl --max-time 20 -s https://github.com/Xastir/Xastir | grep Release- | head -1 | sed 's/.*Release-//;s/">//')
 	fi
 }
 

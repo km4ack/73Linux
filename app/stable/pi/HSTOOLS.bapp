@@ -37,10 +37,10 @@ REMOVE(){
 VERSION(){
 	if [ ! -d ${HOME}/hotspot-tools2 ]; then
 		CURRENT=0
-		NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/hotspot-tools2/master/changelog | grep version= | sed 's/version=//')
+		NEWVER=$(curl --max-time 20 -s https://raw.githubusercontent.com/km4ack/hotspot-tools2/master/changelog | grep version= | sed 's/version=//')
 	else
 		CURRENT=$(cat ${HOME}/hotspot-tools2/changelog | grep version= | sed 's/version=//')
-		NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/hotspot-tools2/master/changelog | grep version= | sed 's/version=//')
+		NEWVER=$(curl --max-time 20 -s https://raw.githubusercontent.com/km4ack/hotspot-tools2/master/changelog | grep version= | sed 's/version=//')
 
 	fi
 }
