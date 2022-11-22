@@ -75,7 +75,7 @@ if (($(echo "${LATEST} ${CUR}" | awk '{print ($1 > $2)}'))); then
 	git config core.sparseCheckout true
 	echo "/app" >> .git/info/sparse-checkout
 	git pull origin master
-	cp -r /run/user/$UID/73Linux/app ~/Desktop/73-linux/
+	cp -r /run/user/$UID/73Linux/app ${BAPDIR}/
 	rm -rf /run/user/$UID/73Linux
 else
 	echo "bap files up to date"
