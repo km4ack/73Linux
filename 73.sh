@@ -21,6 +21,10 @@ export BUILDDIR
 export LOGO
 export BAPDIR
 
+if [ ! -d ${BAPDIR}/cache ]; then
+	mkdir ${BAPDIR}/cache
+fi
+
 echo "#############################"
 echo "Checking for 73 Linux Updates"
 echo "#############################"
