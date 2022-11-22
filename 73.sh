@@ -208,7 +208,7 @@ BAPCPU=$(echo $(sed '3q;d' $BAPSYSINFO))
 BAPDIST=$(echo $(sed '4q;d' $BAPSYSINFO))
 BAPSRC=$(echo ${HOME}/.bap-source-files)
 echo $BAPDIR > $BAPINSTALL
-BAPCALL=$(ls ${BAPDIR} | grep MYCALL.* | sed 's/MYCALL.//')
+BAPCALL=$(ls ${BAPDIR}/cache | grep MYCALL.* | sed 's/MYCALL.//')
 MYCALL=$BAPCALL
 CALL=$BAPCALL
 
