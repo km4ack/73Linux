@@ -78,10 +78,10 @@ INSTALL(){
 VERSION(){
 		if ! hash fldigi 2>/dev/null; then
 			CURRENT=0
-			NEWVER=$(curl -s https://sourceforge.net/projects/fldigi/files/fldigi/ | grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar.gz" '{print $1}')
+			NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/fldigi/files/fldigi/ | grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar.gz" '{print $1}')
 		else		
 			CURRENT=$(fldigi --version | head -1 | sed 's/fldigi //')
-			NEWVER=$(curl -s https://sourceforge.net/projects/fldigi/files/fldigi/ | grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar.gz" '{print $1}')
+			NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/fldigi/files/fldigi/ | grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar.gz" '{print $1}')
 		fi
 }
 
