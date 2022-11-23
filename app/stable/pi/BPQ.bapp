@@ -2,8 +2,8 @@ BAPP=4.0
 ID=BPQ
 Name=LinBPQ
 Comment='BBS-Winlink Gateway'
-Ver=0
-localVer=0
+Ver=
+localVer=
 
 
 INSTALL(){
@@ -100,7 +100,13 @@ EOF
 
 
 VERSION(){
-	echo "$ID needs version checking"
+	if [ -d $HOME/linbpq ]; then
+		CURRENT=1
+		NEWVER=1
+	else
+		CURRENT=0
+		NEWVER=1
+	fi
 }
 
 REMOVE(){
