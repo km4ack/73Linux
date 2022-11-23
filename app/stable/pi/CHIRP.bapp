@@ -7,7 +7,7 @@ localVer=0
 
 
 INSTALL(){
-	cd ${DIR} || return
+	cd ${BAPSRC} || return
 	sudo apt install libfuse2
 	CHIRPDATE=$(curl -s https://github.com/goldstar611/chirp-appimage | grep "releases/tag/" | sed 's|.*releases/tag/||;s|">||')
 
