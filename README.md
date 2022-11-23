@@ -28,6 +28,10 @@ You can run 73 Linux right on top of your old Build a Pi install. ~~73 Linux wil
 any old installs of BAP during the initial run.~~ Coming soon.
 
 # Install
+
+**Note:** VARA may not install on the first run. If it doesn't, run 73 Linux again and just choose VARA
+on the second run. 
+
 Install is still super easy. Just run the following command:
 
      git clone https://github.com/km4ack/73Linux.git $HOME/73Linux && bash $HOME/73Linux/73.sh
