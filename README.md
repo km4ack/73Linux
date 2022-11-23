@@ -24,8 +24,8 @@ bapp files not included in the official 73 Linux package.
 So far 73 Linux has been tested on the Pi 4 running Pi OS 32bit and the Evolve Maestro
 laptop. 
 
-You can run 73 Linux right on top of your old Build a Pi install. 73 Linux will remove 
-any old installs of BAP during the initial run.
+You can run 73 Linux right on top of your old Build a Pi install. ~~73 Linux will remove 
+any old installs of BAP during the initial run.~~ Coming soon.
 
 # Install
 Install is still super easy. Just run the following command:
