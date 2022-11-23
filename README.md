@@ -38,7 +38,7 @@ https://github.com/km4ack/73Linux/issues
 
 # More documentation coming soon!
 
-#Credits
+# Credits
 
 A big thank you to Kelly Keaton for his huge contribution to the new menu system, the Patrons for their time testing early versions,
 and everyone who has reported bugs over the years. Each of you has helped make this project what it is today. Other code contributors include:
