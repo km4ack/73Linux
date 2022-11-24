@@ -214,16 +214,27 @@ MYCALL=$BAPCALL
 CALL=$BAPCALL
 
 #Determine if to include community apps
-if [ "$BAPCPU" = 'x86_64' ] && [ -n "$COMMUNITY_CK" ]; then
+#if [ "$BAPCPU" = 'x86_64' ] && [ -n "$COMMUNITY_CK" ]; then
+#	APPSFILES="${BAPDIR}/app/stable/x86_64/*.bapp ${BAPDIR}/app/community/x86_64/*.bapp"
+#elif [ "$BAPCPU" = 'x86_64' ]; then
+#	APPSFILES="${BAPDIR}/app/stable/x86_64/*.bapp"
+#elif [ "$BAPCPU" != 'x86_64' ] && [ -n "$COMMUNITY_CK" ]; then
+#	APPSFILES="${BAPDIR}/app/stable/pi/*.bapp ${BAPDIR}/app/community/pi/*.bapp"
+#elif [ "$BAPCPU" != 'x86_64' ]; then
+#	APPSFILES="${BAPDIR}/app/stable/pi/*.bapp"
+#fi
+
+LOAD_FILES=$(echo $BAPCPU | grep arm)
+#Determine if to include community apps
+if [ -z "$LOAD_FILES" ] && [ -n "$COMMUNITY_CK" ]; then
 	APPSFILES="${BAPDIR}/app/stable/x86_64/*.bapp ${BAPDIR}/app/community/x86_64/*.bapp"
-elif [ "$BAPCPU" = 'x86_64' ]; then
+elif [ -z $LOAD_FILES ]; then
 	APPSFILES="${BAPDIR}/app/stable/x86_64/*.bapp"
-elif [ "$BAPCPU" != 'x86_64' ] && [ -n "$COMMUNITY_CK" ]; then
+elif [ -n $LOAD_FILES ] && [ -n "$COMMUNITY_CK" ]; then
 	APPSFILES="${BAPDIR}/app/stable/pi/*.bapp ${BAPDIR}/app/community/pi/*.bapp"
-elif [ "$BAPCPU" != 'x86_64' ]; then
+elif [ -n $LOAD_FILES ]; then
 	APPSFILES="${BAPDIR}/app/stable/pi/*.bapp"
 fi
-
 
 
 export BAPCPU
