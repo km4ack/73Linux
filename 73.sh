@@ -81,6 +81,7 @@ else
 	echo "bap files up to date"
 fi
 
+cd ${BAPDIR}
 
 echo "#######################################"
 echo "#  Updating repository & verifying    #"
