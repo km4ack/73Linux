@@ -53,8 +53,7 @@ case "$distribution" in
         ls > /dev/null #nothing yet
         ;;
     *)
-        echo "Probably Unsupported: $distribution $version you have a $arch with $cpu cores"
-        exit 1
+        echo "Possibly Unsupported: $distribution $version you have a $arch with $cpu cores"
         ;;
 esac
 
