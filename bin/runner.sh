@@ -43,8 +43,9 @@ echo "@reboot sleep 10 && export DISPLAY=:0 && ${BAPDIR}/bin/.complete" >> $TEMP
 		rm $CONFIG
 	fi
 
-	#set wallpaper accoreding to CPU
-	if [ "$BAPCPU" = 'x86_64' ]; then
+	#set wallpaper accoreding to arch
+	ARCH_CK=$(echo $BAPCPU | grep arm)
+	if [ -z $ARCH_CK ]; then
 		gsettings set org.gnome.desktop.background picture-uri file:///${BAPDIR}/data/bap-wallpaper.jpg
 		CORE=${BAPDIR}/app/stable/x86_64/*.bapp
 	else
