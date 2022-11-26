@@ -12,8 +12,8 @@ cat >patmenu.desktop <<EOF
 Name=PatMenu
 GenericName=Pat Menu
 Comment=Helper application for Pat Winlink
-Exec=/home/km4ack/patmenu2/patmenu
-Icon=/home/km4ack/patmenu2/pmlogo.png
+Exec=$HOMEpatmenu2/patmenu
+Icon=$HOME/patmenu2/pmlogo.png
 Terminal=false
 Type=Application
 Categories=Network;HamRadio;
