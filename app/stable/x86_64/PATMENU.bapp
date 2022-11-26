@@ -41,6 +41,8 @@ INSTALL(){
 		git clone https://github.com/km4ack/patmenu2.git
 		cd $HOME/patmenu2
 		git checkout x86-dev
+		sed -i "s/N0CALL/${CALL}/" ${HOME}/patmenu2/config
+		sed -i 's/1,0/3,0/g' ${HOME}/patmenu2/config
 		sudo -A cp patmenu2.desktop /usr/local/share/applications/
 		MENU
 	fi
