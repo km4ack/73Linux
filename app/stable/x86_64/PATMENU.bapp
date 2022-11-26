@@ -12,7 +12,7 @@ cat >patmenu.desktop <<EOF
 Name=PatMenu
 GenericName=Pat Menu
 Comment=Helper application for Pat Winlink
-Exec=$HOMEpatmenu2/patmenu
+Exec=$HOME/patmenu2/patmenu
 Icon=$HOME/patmenu2/pmlogo.png
 Terminal=false
 Type=Application
