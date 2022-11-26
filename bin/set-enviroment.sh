@@ -22,7 +22,8 @@ eval "$(sed -n 's/^ID=/distribution=/p' /etc/os-release)"
 eval "$(sed -n 's/^VERSION_ID=/version=/p' /etc/os-release | tr -d '"')"
 arch=$(cat /tmp/bap-env-lscpu | grep Architecture: | awk '{print $2}')
 #eval "$(sed -n 's/^CPU(s):                          /cpu=/p' /tmp/bap-env-lscpu)"
-cpu=$(grep -m1 CPU /tmp/bap-env-lscpu | awk '{print $2}')
+cpu=$(grep processor /proc/cpuinfo | wc -l)
+
 
 case "$arch" in
     armv7l)
