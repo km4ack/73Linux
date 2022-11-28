@@ -110,7 +110,7 @@ fi
 #####################################
 #	Verify not run as root
 #####################################
-if [ "$WHO" = 'root' ]; then
+if [ `whoami` = 'root' ]; then
 	yad --form --width=500 --text-align=center --center --title="73 Linux" --text-align=center \
 		--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
 		--text="<b>ROOT DETECTED</b>\rDon't run this script as root. \
