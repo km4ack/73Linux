@@ -156,7 +156,7 @@ if [ ! -f "$BAPSYSINFO" ]; then
         #save
         MYCALL=$TMPCALL
         BAPCALL=$TMPCALL
-        touch MYCALL.$MYCALL
+        touch ${BAPDIR}/MYCALL.$MYCALL
         touch ${BAPDIR}/cache/MYCALL.$MYCALL
         echo "###################################"
         echo "#Registered $MYCALL to this host"
