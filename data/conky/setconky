@@ -3,8 +3,10 @@ CONKY_TMP=/tmp/conky.txt
 CPU=$(lscpu | grep Architecture | grep arm)
 if [ -z "$CPU" ]; then
 	CONFIG_FILES=${CONFIG_DIR}/*.86
+	TYPE=".86"
 else
 	CONFIG_FILES=${CONFIG_DIR}/*.pi
+	TYPE=".pi"
 fi
 
 CALL=$(cat ~/.conkyrc | grep "{color Yellow}" | sed s'/.*{alignc}//' | head -1)
@@ -34,7 +36,7 @@ if [ -z "$CK" ]; then
 fi
 
 NEW_CONKY=$(grep TRUE $CONKY_TMP | awk -F "|" '{print $2}')
-NEW_CONKY=${CONFIG_DIR}/${NEW_CONKY}
+NEW_CONKY=${CONFIG_DIR}/${NEW_CONKY}${TYPE}
 echo $NEW_CONKY
 cp $NEW_CONKY $HOME/.conkyrc
 WLAN=$(ifconfig | grep wl | awk '{print $1}' | sed 's/://')
