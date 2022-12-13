@@ -13,14 +13,18 @@ INSTALL(){
 	cd ${HOME} || return
 	sudo apt-get install -y libgconf-2-4
 
+	#move old directory before downloading the latest
+	if [ -d $HOME/GridTracker ]; then
+		mv $HOME/GridTracker "$HOME/GridTracker.old.`date`"
+	fi
+
 	#determine if 32/64 bit and set download link accordingly. issue #382
 	if [ `getconf LONG_BIT` = '32' ]; then
-	GRIDDLL=$(cat /run/user/$UID/gt-download-links | grep arm32 | sed 's/arm32=//')
-	GT_TAR_NAME=$(echo $GRIDDLL | sed 's/.*GridTracker/GridTracker/')
-
+		GRIDDLL=$(cat /run/user/$UID/gt-download-links | grep arm32 | sed 's/arm32=//')
+		GT_TAR_NAME=$(echo $GRIDDLL | sed 's/.*GridTracker/GridTracker/')
 	else
-	GRIDDLL=$(cat /run/user/$UID/gt-download-links | grep arm64 | sed 's/arm64=//')
-	GT_TAR_NAME=$(echo $GRIDDLL | sed 's/.*GridTracker/GridTracker/')
+		GRIDDLL=$(cat /run/user/$UID/gt-download-links | grep arm64 | sed 's/arm64=//')
+		GT_TAR_NAME=$(echo $GRIDDLL | sed 's/.*GridTracker/GridTracker/')
 	fi
 
 	wget --tries 2 --connect-timeout=60 $GRIDDLL
@@ -28,9 +32,9 @@ INSTALL(){
 	rm GridTracker*.gz
 	#determine if 32/64 bit and get correct directory name.
 	if [ `getconf LONG_BIT` = '32' ]; then
-	OLDFOLDER=$(ls | grep GridTracker*-linux-arm32)
+		OLDFOLDER=$(ls | grep GridTracker*-linux-arm32)
 	else
-	OLDFOLDER=$(ls | grep GridTracker*-linux-arm64)
+		OLDFOLDER=$(ls | grep GridTracker*-linux-arm64)
 	fi
 	mv "$OLDFOLDER" $HOME/GridTracker
 
