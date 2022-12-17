@@ -1,0 +1,63 @@
+BAPP=4.0
+ID=DIREWOLF
+Name=direwolf
+Comment='Software TNC'
+Ver=1.7
+localVer=1.7
+
+# Install current dev version (1.7) to enable DNS-SD / Zeroconf for KISS TNC service to work with MobileMail for iOS
+
+INSTALL(){
+
+	CLEANSOURCE(){
+		#this function removes any old source files before
+		#new files are downloaded for installation. This
+		#function is called by install functions below.
+		PACKAGE=$(ls $BUILDDIR | grep $PACKAGE)
+
+		if [ -d $BUILDDIR/$PACKAGE ]; then
+		   sudo rm -rf $BUILDDIR/$PACKAGE*
+		fi
+	
+	}
+
+    PACKAGE=direwolf
+    CLEANSOURCE
+    cd ${BUILDDIR} || return
+    # changed to included --branch dev
+    git clone --branch dev https://www.github.com/wb2osz/direwolf
+    cd ${BUILDDIR}/direwolf || return
+    mkdir build
+    cd build
+    sudo apt-get install -y libasound2-dev cmake libudev-dev
+    # Install libavahi-client-dev, as required for DNS-SD registration of service
+    sudo apt-get install libavahi-client-dev
+    cmake ..
+    make -j 4
+    sudo make install
+    make install-conf
+    sudo make clean
+    sed -i "s/N0CALL/${CALL}/" "${HOME}/direwolf.conf"
+    sed -i 's/# ADEVICE  plughw:1,0/ADEVICE  plughw:3,0/' ${HOME}/direwolf.conf
+    sed -i '/#PTT\ \/dev\/ttyUSB0\ RTS/a #Uncomment line below for PTT with CAT through FLRIG\n#PTT RIG 2 localhost:4532' ${HOME}/direwolf.conf
+
+}
+
+VERSION(){
+if ! hash direwolf 2>/dev/null; then
+    CURRENT=0
+    wget -P /tmp/ https://raw.githubusercontent.com/wb2osz/direwolf/master/CHANGES.md >/dev/null 2>&1
+    NEWVER=$(cat /tmp/CHANGES.md | head -5 | tail -1 | awk '{ print $3 }')
+else
+    CURRENT=$(direwolf -S -t 0 | head -1 | sed 's/Dire\ Wolf\ version\ //')
+    wget -P /tmp/ https://raw.githubusercontent.com/wb2osz/direwolf/master/CHANGES.md >/dev/null 2>&1
+    NEWVER=$(cat /tmp/CHANGES.md | head -5 | tail -1 | awk '{ print $3 }')
+fi
+}
+
+REMOVE(){
+	DIR=$(ls ${BUILDDIR} | grep direwolf)
+	cd ${BUILDDIR}/${DIR}/build
+	sudo make uninstall
+	rm ${HOME}/direwolf.conf ${HOME}/telem-balloon.conf ${HOME}/telem-m0xer-3.txt ${HOME}/telem-volts.conf ${HOME}/sdr.conf
+}
