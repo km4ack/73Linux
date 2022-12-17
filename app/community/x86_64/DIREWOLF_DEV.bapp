@@ -31,7 +31,7 @@ INSTALL(){
     cd build
     sudo apt-get install -y libasound2-dev cmake libudev-dev
     # Install libavahi-client-dev, as required for DNS-SD registration of service
-    sudo apt-get install libavahi-client-dev
+    sudo apt-get install -y libavahi-client-dev
     cmake ..
     make -j 4
     sudo make install
