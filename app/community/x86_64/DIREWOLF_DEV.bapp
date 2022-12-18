@@ -1,6 +1,6 @@
 BAPP=4.0
-ID=DIREWOLF
-Name=direwolf
+ID=DIREWOLF_DEV
+Name=direwolf_dev
 Comment='Software TNC'
 Ver=1.7
 localVer=1.7
@@ -21,7 +21,7 @@ INSTALL(){
 	
 	}
 
-    PACKAGE=direwolf
+    PACKAGE=direwolf_dev
     CLEANSOURCE
     cd ${BUILDDIR} || return
     # changed to included --branch dev
