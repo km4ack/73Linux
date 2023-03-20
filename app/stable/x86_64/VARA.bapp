@@ -95,7 +95,9 @@ rm VARA\ FM\ v4.2.3\ Setup.zip VARA\ HF\ v4.6.3\ Setup.zip
 APP="pdh.dll driver"
 HEADER
 cd $HOME/Downloads
-wget --tries 2 --connect-timeout=60 http://files.k6eta.com/pdh.dll.zip
+#k6eta site offline March 2023. Pull pdh.dll from my github
+#wget --tries 2 --connect-timeout=60 http://files.k6eta.com/pdh.dll.zip
+wget --tries 2 --connect-timeout=60 https://github.com/km4ack/pi-scripts/raw/master/pdh.dll.zip
 unzip pdh.dll.zip
 rm pdh.dll.zip
 mv pdh.dll $HOME/.wine/drive_c/windows/system32
