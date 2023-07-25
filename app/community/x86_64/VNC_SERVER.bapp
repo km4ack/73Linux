@@ -1,0 +1,36 @@
+BAPP=4.0
+ID=VNC_SERVER
+Name=VNC_SERVER
+Comment="VNC Server"
+Ver=
+localVer=
+W3=
+
+
+INSTALL(){
+    mkdir -p ${HOME}/bin
+    cd ${HOME}/bin
+    if [ -f ${HOME}/bin/monitor-check ]; then
+        rm ${HOME}/bin/monitor-check
+    fi
+    wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/monitor-check
+    $HOME/bin/monitor-check install
+}
+
+REMOVE(){
+	/usr/local/bin/monitor-check uninstall
+}
+
+VERSION(){     
+    if [ -f /usr/local/bin/monitor-check ]; then
+        CURRENT=$(grep VERSION= /usr/local/bin | sed 's/VERSION=//')
+        NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/monitor-check | grep VERSION | sed 's/VERSION=//')
+    else
+        CURRENT=0
+        NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/monitor-check | grep VERSION | sed 's/VERSION=//')
+    fi
+}
+
+UPDATE(){
+    INSTALL
+}
