@@ -1,5 +1,10 @@
-version=4
+version=4.0.1
 
+4.0.1		Add build-essential to all builds
+		add spot-pota to community apps x86 & pi
+		add VNC server to community apps x86
+		update conky.bapp
+		add libnova-0.16-0 to FLRIG.bapp in x86
 4.0.0		Changed name to 73 Linux		
 		Brand new menu
 		Dynamically load new app files in menu
