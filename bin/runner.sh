@@ -261,6 +261,7 @@ MYPASS
 	fi
 
 	sudo -A apt upgrade -y
+	sudo -A apt install build-essential -y
 	sudo -A mkdir -p /usr/local/share/applications
 	
 	mkdir -p ${HOME}/.config/autostart
