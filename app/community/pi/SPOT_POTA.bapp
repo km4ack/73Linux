@@ -1,0 +1,38 @@
+BAPP=4.0
+ID=POTA-SPOTS
+Name=POTA-SPOTS
+Comment="POTA Spots for Pat Winlink"
+Ver=Update:2
+localVer=0
+W3=
+
+
+INSTALL(){
+    mkdir -p ${HOME}/bin
+    cd ${HOME}/bin
+    if [ -f ${HOME}/bin/spot-pota ]; then
+        rm ${HOME}/bin/spot-pota
+    fi
+    wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/spot-pota
+    chmod +x spot-pota
+    $HOME/bin/spot-pota install
+}
+
+REMOVE(){
+    sudo -A rm /usr/local/share/applications/spot-pota.desktop
+    rm /usr/local/bin/spot-pota
+}
+
+VERSION(){     
+    if [ -f $HOME/bin/spot-pota ]; then
+        CURRENT=$(grep VERSION= $HOME/bin/spot-pota | sed 's/VERSION=//')
+        NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/spot-pota | grep VERSION= | sed 's/VERSION=//')
+    else
+        CURRENT=0
+        NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/spot-pota | grep VERSION= | sed 's/VERSION=//')
+    fi
+}
+
+UPDATE(){
+    INSTALL
+}
