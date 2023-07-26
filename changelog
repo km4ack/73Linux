@@ -5,6 +5,10 @@ version=4.0.1
 		add VNC server to community apps x86
 		update conky.bapp
 		add libnova-0.16-0 to FLRIG.bapp in x86
+		add internet check before updating 73Linux
+		remove princeton.edu links from WSJTX.bapp
+		update JS8.bapp
+		remove hamlib 4.4 hold
 4.0.0		Changed name to 73 Linux		
 		Brand new menu
 		Dynamically load new app files in menu
