@@ -17,6 +17,7 @@ INSTALL(){
     sudo -A dpkg -i $file
     sudo -A apt --fix-broken install -y
     sudo -A dpkg -i $file
+    sudo -A apt --fix-broken install -y
     rm $file
 }
 
