@@ -26,26 +26,13 @@ CLEANSOURCE(){
     sudo -A apt install libusb-1.0-0 libusb-1.0-0-dev
     cd ${BAPSRC}
     NEWRIG=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download |
-        grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] |
+        grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9].[0-9] |
         head -n 1 | awk -F "/" '{print $7}')
-    #HAMLIBLINK=https://sourceforge.net/projects/hamlib/files/hamlib/${NEWRIG}/hamlib-${NEWRIG}.tar.gz
-    
-    #section commented out so we can force 4.4 until issues with 4.5 are resolved
-    #HAMLIBLINK=https://sourceforge.net/projects/hamlib/files/hamlib/4.4/hamlib-4.4.tar.gz
-    #wget --tries 2 --connect-timeout=60 ${HAMLIBLINK}
-
-    #tar -xzf hamlib-${NEWRIG}.tar.gz
-    #rm hamlib-${NEWRIG}.tar.gz
-    #cd hamlib-${NEWRIG} || return
-
-	#force hamlib 4.4 download until issues with 4.5 are resolved.
-	HAMLIBLINK=https://sourceforge.net/projects/hamlib/files/hamlib/4.4/hamlib-4.4.tar.gz
-	wget --tries 2 --connect-timeout=60 ${HAMLIBLINK}
-    
-	tar -xzf hamlib-4.4.tar.gz
-	rm hamlib*.tar.gz
-	cd hamlib-4.4
-
+    HAMLIBLINK=https://sourceforge.net/projects/hamlib/files/hamlib/${NEWRIG}/hamlib-${NEWRIG}.tar.gz
+    wget --tries 2 --connect-timeout=60 ${HAMLIBLINK}
+    tar -xzf hamlib-${NEWRIG}.tar.gz
+    rm hamlib-${NEWRIG}.tar.gz
+    cd hamlib-${NEWRIG} || return
     ./configure
     make
     sudo -A make install
@@ -63,12 +50,12 @@ VERSION(){
     if ! hash rigctl 2>/dev/null; then
 		CURRENT=0
         	NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/hamlib/files/latest/download |
-			grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] |
+			grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9].[0-9] |
 			head -n 1 | awk -F "/" '{print $7}')
 	else
 		CURRENT=$(rigctl --version | awk '{print $3}')
 		NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/hamlib/files/latest/download |
-			grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] |
+			grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9].[0-9] |
 			head -n 1 | awk -F "/" '{print $7}')
     fi
 }
