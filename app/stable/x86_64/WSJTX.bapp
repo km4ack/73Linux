@@ -32,10 +32,10 @@ REMOVE(){
 VERSION(){
     if [ ! -f /usr/bin/wsjtx ]; then
         CURRENT=0
-        NEWVER=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep amd64 | head -1 | sed 's/href="//;s/ //g;s/">.*//' | sed 's/wsjtx_//;s/_amd.*//')
+        NEWVER=REPO
     else
         CURRENT=$(dpkg --list | grep wsjtx | head -1 | awk '{print $3}' | cut -b1-5)
-        NEWVER=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep amd64 | head -1 | sed 's/href="//;s/ //g;s/">.*//' | sed 's/wsjtx_//;s/_amd.*//')
+        NEWVER=REPO
     fi
 }
 
