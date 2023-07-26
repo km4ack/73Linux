@@ -46,6 +46,11 @@ BUT=$?
 	if [ $BUT = 252 ]; then
 		exit
 	elif [ $BUT = 2 ]; then
+		wget -q --tries=5 --timeout=10 --spider http://google.com #| yad --center --progress --pulsate --timeout-indicator=top --auto-close --no-buttons --text="Checking internet connection"
+		if [[ $? -eq 1 ]]; then
+			yad --center --timeout=3 --timeout-indicator=top --no-buttons --text="You are not connected to the internet"
+			exit
+		fi
 		cd $HOME
 		rm -rf 73Linux
 		git clone https://github.com/km4ack/73Linux.git
