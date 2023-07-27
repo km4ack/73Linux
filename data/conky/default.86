@@ -72,6 +72,7 @@ ${fs_bar /home}
 
 ${font Arial:bold:size=12}${color Yellow}NETWORK ${color DarkSlateGray}${hr 2}
 ${font Arial:bold:size=12}${color White}Wireless IP $alignr ${addr wlan0}
+${font Arial:bold:size=14}${color White}Wired IP address $alignr ${addr eth0}
 
 ${font Arial:bold:size=12}${color Yellow}RADIO TOOLS ${color DarkSlateGray}${hr 2}
 ${font Arial:size=10}${if_running ardopc64}${color green}ARDOP ACTIVE${else}${color red}ARDOP OFF$endif \
