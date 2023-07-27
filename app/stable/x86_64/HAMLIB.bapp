@@ -42,7 +42,15 @@ CLEANSOURCE(){
 
 
 REMOVE(){
-    echo "hamlib needs removal tool"
+    DIR=$(ls $HOME/.bap-source-files)
+    if [ -z "$DIR" ]; then
+        echo "#############################################################"
+        echo "# ERROR::Source files not found for hamlib. Can't uninstall #"
+        echo "#############################################################"
+    else
+        cd $HOME/.bap-source-files/$DIR
+        echo "uninstalling hamlib"
+        sudo -A make uninstall
 }
 
 
