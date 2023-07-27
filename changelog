@@ -1,6 +1,7 @@
 version=4.0.1
 
 4.0.1		Add build-essential to all builds
+		add git install before running bapps
 		add spot-pota to community apps x86 & pi
 		add VNC server to community apps x86
 		update conky.bapp
