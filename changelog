@@ -11,6 +11,7 @@ version=4.0.1
 		remove hamlib 4.4 hold
 		add uninstall to hamlib.bapp
 		add ethernet to .conkyrc in x86
+		auto set card names in .conkyrc file
 4.0.0		Changed name to 73 Linux		
 		Brand new menu
 		Dynamically load new app files in menu
