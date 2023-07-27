@@ -31,6 +31,15 @@ INSTALL(){
     cp -r ${BAPDIR}/data/conky/ ${HOME}/bin/
     cp ${HOME}/bin/conky/default.86 ${HOME}/.conkyrc
     sed -i "s/N0CALL/${BAPCALL}/" ${HOME}/.conkyrc
+    #set wifi/eth card names in .conkyrc file
+    WIFI=$(nmcli --get-values GENERAL.DEVICE,GENERAL.TYPE device show | grep -B1 wifi | sed '/wifi/d' | head -1)
+    ETH=$(nmcli --get-values GENERAL.DEVICE,GENERAL.TYPE device show | grep -B1 ethernet | sed '/ethernet/d' | head -1)
+    if [ -n "$WIFI" ]; then
+        sed -i "s/wlan0/${WIFI}/" ${HOME}/.conkyrc
+    fi
+    if [ -n "$ETH" ]; then
+        sed -i "s/eth0/${ETH}/" ${HOME}/.conkyrc
+    fi
     #Line below is for https://github.com/km4ack/pi-build/issues/198
     echo "#Update GPS maidenhead for conky" >>${TEMPCRON}
     echo "*/1 * * * * /home/`whoami`/bin/conky/grid" >>${TEMPCRON}
