@@ -261,7 +261,8 @@ MYPASS
 	fi
 
 	sudo -A apt upgrade -y
-	sudo -A apt install build-essential git -y
+	#below may be needed on x86 builds and does no harm if already installed.
+	sudo -A apt install build-essential git curl -y
 	sudo -A mkdir -p /usr/local/share/applications
 	
 	mkdir -p ${HOME}/.config/autostart
