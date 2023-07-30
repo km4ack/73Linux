@@ -218,29 +218,41 @@ BAPCALL=$(ls ${BAPDIR}/cache | grep MYCALL.* | sed 's/MYCALL.//')
 MYCALL=$BAPCALL
 CALL=$BAPCALL
 
+#LOAD_FILES=$(echo $BAPCPU | grep arm)
 #Determine if to include community apps
-#if [ "$BAPCPU" = 'x86_64' ] && [ -n "$COMMUNITY_CK" ]; then
+#if [ -z "$LOAD_FILES" ] && [ -n "$COMMUNITY_CK" ]; then
 #	APPSFILES="${BAPDIR}/app/stable/x86_64/*.bapp ${BAPDIR}/app/community/x86_64/*.bapp"
-#elif [ "$BAPCPU" = 'x86_64' ]; then
+#elif [ -z $LOAD_FILES ]; then
 #	APPSFILES="${BAPDIR}/app/stable/x86_64/*.bapp"
-#elif [ "$BAPCPU" != 'x86_64' ] && [ -n "$COMMUNITY_CK" ]; then
+#elif [ -n $LOAD_FILES ] && [ -n "$COMMUNITY_CK" ]; then
 #	APPSFILES="${BAPDIR}/app/stable/pi/*.bapp ${BAPDIR}/app/community/pi/*.bapp"
-#elif [ "$BAPCPU" != 'x86_64' ]; then
+#elif [ -n $LOAD_FILES ]; then
 #	APPSFILES="${BAPDIR}/app/stable/pi/*.bapp"
 #fi
 
-LOAD_FILES=$(echo $BAPCPU | grep arm)
-#Determine if to include community apps
-if [ -z "$LOAD_FILES" ] && [ -n "$COMMUNITY_CK" ]; then
-	APPSFILES="${BAPDIR}/app/stable/x86_64/*.bapp ${BAPDIR}/app/community/x86_64/*.bapp"
-elif [ -z $LOAD_FILES ]; then
-	APPSFILES="${BAPDIR}/app/stable/x86_64/*.bapp"
-elif [ -n $LOAD_FILES ] && [ -n "$COMMUNITY_CK" ]; then
-	APPSFILES="${BAPDIR}/app/stable/pi/*.bapp ${BAPDIR}/app/community/pi/*.bapp"
-elif [ -n $LOAD_FILES ]; then
-	APPSFILES="${BAPDIR}/app/stable/pi/*.bapp"
-fi
+LOAD_FILES=$(lscpu | grep Architecture: | awk '{print $2}')
 
+case $LOAD_FILES in
+	armv7l)
+		if [ -n "$COMMUNITY_CK" ]; then
+			APPSFILES="${BAPDIR}/app/stable/pi/*.bapp ${BAPDIR}/app/community/pi/*.bapp"
+		else
+			APPSFILES="${BAPDIR}/app/stable/pi/*.bapp"
+		fi;;
+	aarch64)
+		if [ -n "$COMMUNITY_CK" ]; then
+			APPSFILES="${BAPDIR}/app/stable/pi/*.bapp ${BAPDIR}/app/community/pi/*.bapp"
+		else
+			APPSFILES="${BAPDIR}/app/stable/pi/*.bapp"
+		fi;;
+	x86_64)
+		if [ -n "$COMMUNITY_CK" ]; then
+			APPSFILES="${BAPDIR}/app/stable/x86_64/*.bapp ${BAPDIR}/app/community/x86_64/*.bapp"
+		else
+			APPSFILES="${BAPDIR}/app/stable/x86_64/*.bapp"
+		fi;;
+
+esac
 
 export BAPCPU
 export BAPCORE
