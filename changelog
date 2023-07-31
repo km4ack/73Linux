@@ -15,6 +15,7 @@ version=4.0.1
 		add ethernet to .conkyrc in x86
 		auto set card names in .conkyrc file
 		fix 64bit Pi OS not setting correct .bapp files https://github.com/km4ack/73Linux/issues
+		fix links for wsjtx on Pi platform
 4.0.0		Changed name to 73 Linux		
 		Brand new menu
 		Dynamically load new app files in menu
