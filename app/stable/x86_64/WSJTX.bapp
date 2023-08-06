@@ -6,21 +6,39 @@ Ver=
 localVer=
 W3=
 
+CLEAN(){
+    #remove previous downloads
+    CK=$(ls $HOME/.bap-source-files/| grep wsjtx)
+    if [ -n "$CK" ]; then
+        echo "###############################################"
+        echo "wsjtx file found in .bap-source-files. removing"  
+        echo "###############################################"     
+        rm $HOME/.bap-source-files/${CK}
+    fi
+}
+
 INSTALL(){
     CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
     mkdir -p ${BAPSRC}
 
-    sudo -A apt install -y wsjtx
-    sudo -A apt install -y --fix-broken
-    sudo -A apt install -y wsjtx
-
-
-    #PKG=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep amd64 | head -1 | sed 's/href="//;s/ //g;s/">.*//')
-    #cd ${BAPSRC}
-    #wget https://physics.princeton.edu/pulsar/k1jt/$PKG
-    #sudo -A dpkg -i $PKG
+    #sudo -A apt install -y wsjtx
     #sudo -A apt install -y --fix-broken
-    #sudo -A dpkg -i $PKG
+    #sudo -A apt install -y wsjtx
+
+    cd ${BAPSRC}
+    PKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep amd64.deb | grep https | sed 's/.*href="//' | sed 's/.deb.*/.deb/')
+    PKGNAME=$(echo $PKG | awk -F "/" '{print $NF}')
+    echo "downloading WSJTX"
+    wget ${PKG}
+    if [ $? = 0 ]; then
+        echo "#################################"
+        echo "wsjtx download appears successful"
+        echo "#################################"
+    fi
+    sudo -A apt purge wsjtx-doc wsjtx-data -y
+    sudo -A dpkg -i ${PKGNAME}
+    sudo -A apt install -y --fix-broken
+    sudo -A dpkg -i ${PKGNAME}
 }
 
 REMOVE(){
@@ -30,12 +48,11 @@ REMOVE(){
 }
 
 VERSION(){
-    if [ ! -f /usr/bin/wsjtx ]; then
-        CURRENT=0
-        NEWVER=REPO
-    else
-        CURRENT=$(dpkg --list | grep wsjtx | head -1 | awk '{print $3}' | cut -b1-5)
-        NEWVER=REPO
+    NEWVER=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep amd64.deb | grep https | sed 's/.*href="//' | sed 's/.deb.*/.deb/' \
+    | awk -F "/" '{print $NF}' | sed 's/_amd.*//;s/wsjtx_//')
+
+    CURRENT=$(ls $HOME/.bap-source-files/| grep wsjtx | sed 's/wsjtx_//' | sed 's/_amd64.deb//')
+    if [ -z "$CURRENT" ]; then
+    CURRENT=0
     fi
 }
-
