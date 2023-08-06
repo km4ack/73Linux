@@ -51,6 +51,7 @@ REMOVE(){
         cd $HOME/.bap-source-files/$DIR
         echo "uninstalling hamlib"
         sudo -A make uninstall
+    fi
 }
 
 
