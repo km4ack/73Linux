@@ -8,14 +8,16 @@ version=4.0.1
 		update conky.bapp https://github.com/km4ack/73Linux/issues/25
 		add libnova-0.16-0 to FLRIG.bapp in x86
 		add internet check before updating 73Linux
-		remove princeton.edu links from WSJTX.bapp
+		remove princeton.edu links from x86 WSJTX.bapp
 		update JS8.bapp
 		remove hamlib 4.4 hold
 		add uninstall to hamlib.bapp
 		add ethernet to .conkyrc in x86
 		auto set card names in .conkyrc file
-		fix 64bit Pi OS not setting correct .bapp files https://github.com/km4ack/73Linux/issues
+		fix 64bit Pi OS not setting correct .bapp files https://github.com/km4ack/73Linux/issues/29
 		fix links for wsjtx on Pi platform
+		update wsjtx.bapp x86 to get latest version
+		update wsjtx.bapp pi to get latest version
 4.0.0		Changed name to 73 Linux		
 		Brand new menu
 		Dynamically load new app files in menu
