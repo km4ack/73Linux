@@ -2,41 +2,59 @@ BAPP=4.0
 ID=WSJTX
 Name=WSJTX
 Comment='Weak Signal Digital Software'
-Ver=Update:1
-localVer=0
+Ver=
+localVer=
 
 
 INSTALL(){
-	sudo apt install -y build-essential git cmake gfortran fftw3-dev qtbase5-dev qttools5-dev libqt5serialport5-dev  qtmultimedia5-dev libqt5multimedia5-plugins libqt5sql5-sqlite autoconf automake libtool texinfo libusb-1.0-0-dev libudev-dev libboost-all-dev asciidoctor
-
-	FT8PKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep .tgz | sed 's|.*">\(.*\.tgz\)</.*|\1|' | head -1)
-	FT8DIR=$(echo $FT8PKG | sed 's/.tgz//')
 	cd ${BUILDDIR}
-	wget --tries 2 --connect-timeout=60 https://sourceforge.net/projects/wsjt/files/$FT8PKG
-	tar -xvf $FT8PKG
-	rm $FT8PKG
-	cd $FT8DIR
-	cmake -D CMAKE_INSTALL_PREFIX=${BUILDDIR}/$FT8DIR
-	cmake -DWSJT_SKIP_MANPAGES=ON -DWSJT_GENERATE_DOCS=OFF
-	sudo cmake --build . --target install -j4
-	sudo mv ${BUILDDIR}/${FT8DIR}/bin/* /usr/local/bin/
-	sudo cp ${BUILDDIR}/${FT8DIR}/share/applications/wsjtx.desktop /usr/share/applications/
-	sudo cp ${BUILDDIR}/${FT8DIR}/share/pixmaps/wsjtx_icon.png /usr/share/pixmaps/
+	sudo apt install -y build-essential git cmake gfortran fftw3-dev qtbase5-dev qttools5-dev libqt5serialport5-dev  qtmultimedia5-dev libqt5multimedia5-plugins libqt5sql5-sqlite autoconf automake libtool texinfo libusb-1.0-0-dev libudev-dev libboost-all-dev asciidoctor
+	#remove old install
+	if [ -f /usr/local/bin/wsjtx ]; then
+		sudo rm /usr/local/bin/wsjtx*
+	fi
+	
+	#remove existing source files
+	sudo rm -rf $HOME/.bap-source-files/wsjtx*
+	if [ `getconf LONG_BIT` = '64' ]; then
+		#64 bit link
+		FT8PKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep arm64 | grep https | sed 's/.*href="//' | sed 's/arm64.deb.*/arm64.deb/')
+	else
+		#32bit link
+		FT8PKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep armhf | grep https | sed 's/.*href="//' | sed 's/_armhf.deb".*/_armhf.deb/')
+	fi
+
+
+	PKGNAME=$(echo $FT8PKG | awk -F "/" '{print $NF}')
+	wget --tries 2 --connect-timeout=60 $FT8PKG
+	sudo dpkg -i $PKGNAME
+	sudo apt install --fix-broken -y
+	sudo dpkg -i $PKGNAME
 }
 
 
 VERSION(){
-	if [ -f /usr/local/bin/wsjtx ]; then
-		CURRENT=1
-		NEWVER=1
+		#64bit
+	if [ `getconf LONG_BIT` = '64' ]; then
+		NEWVER=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep arm64.deb | grep https | sed 's/.*href="//' \
+		| sed 's/.deb.*/.deb/' | awk -F "/" '{print $NF}' | sed 's/wsjtx_//' | sed 's/_arm.*//')
+
+		CURRENT=$(ls $HOME/.bap-source-files/| grep wsjtx | sed 's/wsjtx_//' | sed 's/_arm.*//')
+		if [ -z "$CURRENT" ]; then
+			CURRENT=0
+		fi
 	else
-		CURRENT=0
-		NEWVER=1
+		#32bit
+		NEWVER=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep armhf | grep https | sed 's/.*href="//' \
+		| sed 's/_armhf.deb".*/_armhf.deb/' | awk -F "/" '{print $NF}' | sed 's/wsjtx_//' | sed 's/_arm.*//')
+
+		CURRENT=$(ls $HOME/.bap-source-files/| grep wsjtx | sed 's/wsjtx_//' | sed 's/_arm.*//')
+		if [ -z "$CURRENT" ]; then
+			CURRENT=0
+		fi
 	fi
 }
 
 REMOVE(){
-	sudo rm /usr/local/bin/jt4code /usr/local/bin/jt65code /usr/local/bin/jt9
-	sudo rm /usr/local/bin/jt9code /usr/local/bin/wsjtx /usr/local/bin/wsjtx_app_version
-	sudo rm /usr/share/applications/wsjtx.desktop
+	sudo dpkg --remove wsjtx
 }
