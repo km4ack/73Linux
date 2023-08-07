@@ -23,7 +23,7 @@ REMOVE(){
 
 VERSION(){     
     if [ -f /usr/local/bin/monitor-check ]; then
-        CURRENT=$(grep VERSION= /usr/local/bin | sed 's/VERSION=//')
+        CURRENT=$(grep VERSION= /usr/local/bin/monitor-check | sed 's/VERSION=//')
         NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/monitor-check | grep VERSION | sed 's/VERSION=//')
     else
         CURRENT=0
