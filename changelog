@@ -6,7 +6,7 @@ version=4.0.1
 		add spot-pota to community apps x86 & pi
 		add VNC server to community apps x86
 		update conky.bapp https://github.com/km4ack/73Linux/issues/25
-		add libnova-0.16-0 to FLRIG.bapp in x86
+		add libnova-0.16-0 to HAMLIB.bapp in x86
 		add internet check before updating 73Linux
 		remove princeton.edu links from x86 WSJTX.bapp
 		update JS8.bapp
