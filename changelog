@@ -1,5 +1,7 @@
-version=4.0.1
+version=4.0.2
 
+4.0.2		Update pi chirp to "next" version of chirp
+		Update x86 chrip to "next" version of chirp
 4.0.1		Add build-essential to all builds
 		add git install before running bapps
 		add curl to all builds https://github.com/km4ack/73Linux/issues/28
