@@ -40,8 +40,6 @@ INSTALL(){
 	#lines below configure pat with user info
 	pat http &
 	sudo killall pat
-	sed -i "s/\"mycall\": \".*\",/\"mycall\": \"${CALL}\",/" ${FIG}
-	sudo systemctl start pat@${WHO}
 	sudo systemctl enable pat@${WHO}
 	cd ${DIR}
 	PAT_VERSION=$(pat version | awk '{print $2}' | sed 's/v0.//;s/.0//')
@@ -54,7 +52,7 @@ INSTALL(){
 	FIG=$HOME/.wl2k/config.json
 	else
 	echo "pat version 12 or greater detected"
-	FIG=$XDG_CONFIG_HOME/pat/config.json
+	FIG=$HOME/.config/pat/config.json
 	fi
 	#set callsign
 	sed -i "s/\"mycall\": \".*\",/\"mycall\": \"${CALL}\",/" ${FIG}
@@ -73,6 +71,7 @@ INSTALL(){
 	jq '.hamlib_rigs = {'\"my-rig\"': {"address": "127.0.0.1:4532", "network": "tcp"}}' >~/Desktop/config.json	
 	mv ${HOME}/Desktop/config.json ${FIG}
 	sed -i 's/"enable_http": false,/"enable_http": true,/' ${FIG}
+	sudo systemctl start pat@${WHO}
 
 	if [ -f ${DIR}/config.json ]; then
 		mv ${DIR}/config.json ${HOME}/.wl2k/
