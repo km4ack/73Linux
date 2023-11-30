@@ -15,6 +15,15 @@ catch() {
 echo -e "\nCRITICAL: parsing error on:"
 }
 
+pi_check(){
+	#check is Pi OS is 32 or 64 bit
+	if [ `getconf LONG_BIT` = 32 ]; then
+		CPU=32
+	elif [ `getconf LONG_BIT` = 64 ]; then
+		CPU=64
+	fi
+}
+
 #lscpu to pull out args with sed to share to script.
 rm -f /tmp/bap-env-*
 lscpu > /tmp/bap-env-lscpu
@@ -27,10 +36,10 @@ cpu=$(grep processor /proc/cpuinfo | wc -l)
 
 case "$arch" in
     armv7l)
-        CPU=32
+        pi_check
         ;;
     aarch64)
-        CPU=64
+        pi_check
         ;;
     x86_64)
         CPU=64
