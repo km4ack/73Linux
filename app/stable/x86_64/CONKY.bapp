@@ -12,7 +12,7 @@ MENU(){
 Name=Conky Prefs
 GenericName=Conky Prefs
 Comment=Update Conky Layout
-Exec=${HOME}/bin/conky/set-conky
+Exec=${HOME}/bin/conky/setconky
 Icon=${BAPDIR}/data/ico/conky.png
 Terminal=false
 Type=Application
