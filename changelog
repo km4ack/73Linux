@@ -2,6 +2,20 @@ version=4.0.2
 
 4.0.2		Update pi chirp to "next" version of chirp
 		Update x86 chrip to "next" version of chirp
+		update pi/pat.bapp for wayland
+		fix depends for piqttermtcp
+		update EES.bapp to php8.2 (issue 48)
+		update TQSL.bapp to libwxgtk3.2-dev (issue 48)
+		update XASTIR.bapp to python-dev-is-python3 (issue 48)
+		update CQRLOG.bapp depends (issue 48)
+		fix BPQ.bapp. remove legacy code. (issue 47)
+		add python binding to HAMLIB.bapp Pi (issue 45)
+		fixed set-conky. Thanks Bill, AA6BD! (issue 52)
+		add python binding to HAMLIB.bapp x86 (issue 45)
+		remove direwolf-dev from community since V1.7 is stable now
+		fix conky menu for x86 (issue 42)
+		ressolve issue 40 32/64bit OS check
+		Update WSJTX on Pi (issue 39)
 4.0.1		Add build-essential to all builds
 		add git install before running bapps
 		add curl to all builds https://github.com/km4ack/73Linux/issues/28
