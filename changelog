@@ -16,6 +16,8 @@ version=4.0.2
 		fix conky menu for x86 (issue 42)
 		ressolve issue 40 32/64bit OS check
 		Update WSJTX on Pi (issue 39)
+		add libfftw3-bin:armhf depends for piqtterm
+		add libfftw3-bin:armhf depends for piqtsoundmodem
 4.0.1		Add build-essential to all builds
 		add git install before running bapps
 		add curl to all builds https://github.com/km4ack/73Linux/issues/28
