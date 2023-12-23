@@ -27,7 +27,8 @@ INSTALL(){
 
 	PACKAGE=tqsl
 	CLEANSOURCE
-	sudo apt install -y cmake g++ libexpat1-dev libssl-dev libdb++-dev libcurl4-openssl-dev libwxgtk3.2-dev
+	sudo apt install -y cmake g++ libexpat1-dev libssl-dev libdb++-dev libcurl4-openssl-dev libwxgtk3.2-dev sqlite3 libsqlite3-dev
+	sudo ldconfig
 	cd ${BUILDDIR} || return
 	CUR=$(curl -s http://www.arrl.org/tqsl-download | grep "for Linux" | sed 's/.*TQSL //' | awk '{print $1}')
 	wget --tries 2 --connect-timeout=60 http://www.arrl.org/tqsl/tqsl-${CUR}.tar.gz
