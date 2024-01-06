@@ -6,14 +6,30 @@ Ver=
 localVer=
 W3='https://chirp.danplanet.com/projects/chirp/wiki/Home'
 
+MENU(){
+    cat >chirp.desktop <<EOF
+[Desktop Entry]
+Name=CHIRP
+GenericName=CHIRP
+Comment=Radio Programming
+Exec=${HOME}/.local/bin/chirp
+Terminal=false
+Type=Application
+Categories=HamRadio;
+EOF
+
+    sudo -A mv chirp.desktop /usr/local/share/applications/
+}
+
 INSTALL(){
     CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-    sudo -A apt install python-wxtools -y
+    sudo -A apt install python-wxtools python3-pip -y
     cd ${BAPSRC}
     date=$(curl -s https://trac.chirp.danplanet.com/chirp_next/ | grep href=\"next | head -1 | sed 's/.*href="//' | sed 's/\/">.*//' | sed 's/next-//')
     wheel=https://trac.chirp.danplanet.com/chirp_next/next-${date}/chirp-${date}-py3-none-any.whl
     wget ${wheel}
     pip install ${wheel} --force-reinstall
+    MENU
 
 }
 
