@@ -6,30 +6,47 @@ Ver=
 localVer=
 W3='https://chirp.danplanet.com/projects/chirp/wiki/Home'
 
+MENU(){
+    cat >chirp.desktop <<EOF
+[Desktop Entry]
+Name=CHIRP
+GenericName=CHIRP
+Comment=Radio Programming
+Exec=${HOME}/.local/bin/chirp
+Terminal=false
+Type=Application
+Categories=HamRadio;
+EOF
+
+    sudo -A mv chirp.desktop /usr/local/share/applications/
+}
+
 INSTALL(){
     CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-
-    sudo -A apt install -y flatpak
+    sudo -A apt install python-wxtools python3-pip -y
     cd ${BAPSRC}
-    LATEST=$(curl -s https://trac.chirp.danplanet.com/chirp_daily/LATEST/ | grep flatpak | sed 's/.*href="//;s/">.*//' | head -1)
-    wget https://trac.chirp.danplanet.com/chirp_daily/LATEST/$LATEST
-    sudo -A flatpak install -y $LATEST
+    date=$(curl -s https://trac.chirp.danplanet.com/chirp_next/ | grep href=\"next | head -1 | sed 's/.*href="//' | sed 's/\/">.*//' | sed 's/next-//')
+    wheel=https://trac.chirp.danplanet.com/chirp_next/next-${date}/chirp-${date}-py3-none-any.whl
+    wget ${wheel}
+    pip install ${wheel} --force-reinstall
+    MENU
+
 }
 
 
 REMOVE(){
-    sudo flatpak uninstall -y chirp
+    pkg=$(ls ${BAPSRC} | grep chirp)
+    pip uninstall ${pkg} -y
+    cd ${BAPSRC}
+    rm ${pkg}
 }
 
 VERSION(){
-    CHECK=$(flatpak list | grep chirp)
-    if [ -z "${CHECK}" ]; then
+    if ! hash chirp 2>/dev/null; then
         CURRENT=0
-        NEWVER=$(curl -s https://trac.chirp.danplanet.com/chirp_daily/LATEST/ |
-			grep .tar.gz | awk -F 'chirp-daily-' '{print $2}' | head -c 8)
+        NEWVER=$(curl -s https://trac.chirp.danplanet.com/chirp_next/ | grep href=\"next | head -1 | sed 's/.*href="//' | sed 's/\/">.*//' | sed 's/next-//')
     else
-        CURRENT=$(flatpak run com.danplanet.chirp --version | awk '{print $2}' | sed 's/daily-//')
-        NEWVER=$(curl -s https://trac.chirp.danplanet.com/chirp_daily/LATEST/ |
-			grep .tar.gz | awk -F 'chirp-daily-' '{print $2}' | head -c 8)
+        CURRENT=$(chirp --version | awk '{print $2}' | sed 's/next-//')
+        NEWVER=$(curl -s https://trac.chirp.danplanet.com/chirp_next/ | grep href=\"next | head -1 | sed 's/.*href="//' | sed 's/\/">.*//' | sed 's/next-//')
     fi
 }

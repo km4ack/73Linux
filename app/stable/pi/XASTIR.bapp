@@ -8,7 +8,7 @@ localVer=2.1.7
 
 INSTALL(){
 	sudo apt-get -y install build-essential automake git xorg-dev libmotif-dev graphicsmagick \
-		gv libcurl4-openssl-dev shapelib libshp-dev libpcre3-dev libproj-dev libdb-dev python-dev \
+		gv libcurl4-openssl-dev shapelib libshp-dev libpcre3-dev libproj-dev libdb-dev python-dev-is-python3 \
 		libax25-dev libwebp-dev libwebp-dev libgraphicsmagick1-dev festival festival-dev
 
 	cd ${BUILDDIR} || return

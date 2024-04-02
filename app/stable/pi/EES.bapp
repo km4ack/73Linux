@@ -9,8 +9,8 @@ localVer=0
 INSTALL(){
 	#install PHP7.4 if not installed
 	#this will also install apache2
-	if ! hash php7.4 2>/dev/null; then
-		sudo apt install -y php7.4
+	if ! hash php8.2 2>/dev/null; then
+		sudo apt install -y php8.2
 	fi
 	#install ghostwriter if needed
 	#this is used to mod the new index.html

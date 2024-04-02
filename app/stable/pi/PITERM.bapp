@@ -14,7 +14,7 @@ INSTALL(){
     else
     sudo dpkg --add-architecture armhf
     sudo apt update
-    sudo apt install -y libqt5widgets5:armhf libqt5serialport5:armhf libasound2:armhf libasound2-plugins:armhf
+    sudo apt install -y libqt5widgets5:armhf libqt5serialport5:armhf libasound2:armhf libasound2-plugins:armhf libqt5multimedia5:armhf libfftw3-bin:armhf
     fi
     wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/piQtTermTCP
     sudo chmod +x piQtTermTCP

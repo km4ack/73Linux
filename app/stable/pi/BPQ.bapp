@@ -7,7 +7,6 @@ localVer=
 
 
 INSTALL(){
-    source ${HOME}/pi-build/config || return
     #install LinBPQ
     cd || return
     ##########################################################################

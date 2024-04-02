@@ -18,14 +18,14 @@ INSTALL(){
 	sudo rm -rf $HOME/.bap-source-files/wsjtx*
 	if [ `getconf LONG_BIT` = '64' ]; then
 		#64 bit link
-		FT8PKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep arm64 | grep https | sed 's/.*href="//' | sed 's/arm64.deb.*/arm64.deb/')
+		FT8PKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep arm64 | head -1 | sed 's/.*">//;s/<\/.*//')
 	else
 		#32bit link
-		FT8PKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep armhf | grep https | sed 's/.*href="//' | sed 's/_armhf.deb".*/_armhf.deb/')
+		FT8PKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep armhf | head -1 | sed 's/.*">//;s/<\/.*//')
 	fi
 
 
-	PKGNAME=$(echo $FT8PKG | awk -F "/" '{print $NF}')
+	PKGNAME="https://wsjt.sourceforge.io/downloads/${FT8PKG}"
 	wget --tries 2 --connect-timeout=60 $FT8PKG
 	sudo dpkg -i $PKGNAME
 	sudo apt install --fix-broken -y

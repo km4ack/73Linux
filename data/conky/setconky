@@ -1,6 +1,6 @@
 CONFIG_DIR=$HOME/bin/conky
 CONKY_TMP=/tmp/conky.txt
-CPU=$(lscpu | grep Architecture | grep arm)
+CPU=$(lscpu | grep "Vendor ID" | grep ARM)
 if [ -z "$CPU" ]; then
 	CONFIG_FILES=${CONFIG_DIR}/*.86
 	TYPE=".86"
