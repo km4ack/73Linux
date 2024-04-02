@@ -19,6 +19,7 @@ version=4.0.2
 		add libfftw3-bin:armhf depends for piqtterm
 		add libfftw3-bin:armhf depends for piqtsoundmodem
 		add sqlite to TQSL.bapp (issue 56) Thanks KO4HXC
+		resolve wsjtx update error (issue 61)
 4.0.1		Add build-essential to all builds
 		add git install before running bapps
 		add curl to all builds https://github.com/km4ack/73Linux/issues/28
