@@ -37,7 +37,7 @@ INSTALL(){
     sudo -A make clean
     sed -i "s/N0CALL/${CALL}/" "${HOME}/direwolf.conf"
     sed -i 's/# ADEVICE  plughw:1,0/ADEVICE  plughw:3,0/' ${HOME}/direwolf.conf
-    sed -i '/#PTT\ \/dev\/ttyUSB0\ RTS/a #Uncomment line below for PTT with CAT through FLRIG\n#PTT RIG 2 localhost:4532' ${HOME}/direwolf.conf
+    sed -i '/#PTT\ \/dev\/ttyUSB0\ RTS/a #Uncomment line below for PTT with CAT through FLRIG\n#PTT RIG 4 localhost:12345' ${HOME}/direwolf.conf
 }
 
 
