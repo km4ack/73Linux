@@ -1,6 +1,7 @@
 version=4.0.3
 
 4.0.3		Resolve YAD error (issue 60)
+		Fix PTT statement for direwolf (issue #58)
 4.0.2		Update pi chirp to "next" version of chirp
 		Update x86 chrip to "next" version of chirp
 		update pi/pat.bapp for wayland
