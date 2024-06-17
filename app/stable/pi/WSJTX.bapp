@@ -37,18 +37,18 @@ VERSION(){
 		#64bit
 	if [ `getconf LONG_BIT` = '64' ]; then
 		NEWVER=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep arm64.deb | grep https | sed 's/.*href="//' \
-		| sed 's/.deb.*/.deb/' | awk -F "/" '{print $NF}' | sed 's/wsjtx_//' | sed 's/_arm.*//')
+		| sed 's/.deb.*/.deb/' | awk -F "/" '{print $NF}' | tail -1 | sed 's/wsjtx[-_]//;s/_arm.*//')
 
-		CURRENT=$(ls $HOME/.bap-source-files/| grep wsjtx | sed 's/wsjtx_//' | sed 's/_arm.*//')
+		CURRENT=$(ls $HOME/.bap-source-files/| grep wsjtx | tail -1 | sed 's/wsjtx[-_]//;s/_arm.*//')
 		if [ -z "$CURRENT" ]; then
 			CURRENT=0
 		fi
 	else
 		#32bit
 		NEWVER=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep armhf | grep https | sed 's/.*href="//' \
-		| sed 's/_armhf.deb".*/_armhf.deb/' | awk -F "/" '{print $NF}' | sed 's/wsjtx_//' | sed 's/_arm.*//')
+		| sed 's/_armhf.deb".*/_armhf.deb/' | awk -F "/" '{print $NF}' | tail -1 | sed 's/wsjtx[-_]//;s/_arm.*//')
 
-		CURRENT=$(ls $HOME/.bap-source-files/| grep wsjtx | sed 's/wsjtx_//' | sed 's/_arm.*//')
+		CURRENT=$(ls $HOME/.bap-source-files/| grep wsjtx | sed 's/wsjtx[-_]//;s/_arm.*//')
 		if [ -z "$CURRENT" ]; then
 			CURRENT=0
 		fi

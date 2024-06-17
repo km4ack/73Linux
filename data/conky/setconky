@@ -22,7 +22,7 @@ CALL=$(cat ~/.conkyrc | grep "{color Yellow}" | sed s'/.*{alignc}//' | head -1)
 CALL=$(echo ${INFO} | awk -F "|" '{print $1}')
 
 for files in ${CONFIG_FILES}; do
-	echo -e "\n$files" | awk -F "/" '{print $NF}' | sed 's/.pi//'
+	echo -e "\n$files" | awk -F "/" '{print $NF}' | sed 's/'$TYPE'//'
 done | yad --width=550 --height=400 --title="Conky Prefs" --image=$LOGO \
             --center --list --print-all --checklist --grid-lines=hor \
             --column="" --column="File Name" \
