@@ -54,9 +54,8 @@ INSTALL(){
 		sudo make clean
 	fi
 
-sudo -A apt install -y flwrap
+#sudo -A apt install -y flwrap
 
-NOTWORKING(){
     CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
     mkdir -p ${BAPSRC}
     PACKAGE=flwrap
@@ -78,7 +77,7 @@ NOTWORKING(){
 	sudo -A make install
 	sudo -A ldconfig
 	sudo -A make clean
-} #closes notworking function
+
 } #closes install function
 
 REMOVE(){
