@@ -49,9 +49,9 @@ REMOVE(){
 
 VERSION(){
     NEWVER=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep amd64.deb | grep https | sed 's/.*href="//' | sed 's/.deb.*/.deb/' \
-    | awk -F "/" '{print $NF}' | sed 's/_amd.*//;s/wsjtx_//' | tail -1)
+    | awk -F "/" '{print $NF}' | sed 's/_amd.*//;s/wsjtx[-_]//' | tail -1)
 
-    CURRENT=$(ls $HOME/.bap-source-files/| grep wsjtx | sed 's/wsjtx_//' | sed 's/_amd64.deb//' | tail -1)
+    CURRENT=$(ls $HOME/.bap-source-files/| grep wsjtx | sed 's/wsjtx[-_]//' | sed 's/_amd64.deb//' | tail -1)
     if [ -z "$CURRENT" ]; then
     CURRENT=0
     fi

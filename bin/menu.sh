@@ -24,7 +24,7 @@ for f in $APPSFILES; do
         grep -m 1 -e '^[[:blank:]]*Ver' $f | cut -d = -f 2
         grep -m 1 -e '^[[:blank:]]*localVer' $f | cut -d = -f 2
     fi
-done | yad --width=750 --height=500 --title="73 Linux - $BAPCALL" --image=$LOGO \
+done | yad 2> /dev/null --width=750 --height=500 --title="73 Linux - $BAPCALL" --image=$LOGO \
             --center --list --print-all --search-column=2 --multiple --checklist --grid-lines=hor \
             --column="" --column="ID" --column="App" --column="description" --column="available version" --column="installed version"\
             --text="Select apps to install you can sort, or search by typing. Detected: $BAPARCH bit $BAPDIST" --button="Cancel":1 --button="Build It":2 | \
