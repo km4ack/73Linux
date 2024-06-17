@@ -5,6 +5,8 @@ version=4.0.3
 		Fix Chirp not downloading/updating (issue #73)
 		Fix FLWRAP not updating (issue #70)
 		add swig4.0 for pi hamlib (issue #68)
+		merge pull request to fix WSJTX (issue #61)
+		merge pull request to fix hard coded .PI
 4.0.2		Update pi chirp to "next" version of chirp
 		Update x86 chrip to "next" version of chirp
 		update pi/pat.bapp for wayland
