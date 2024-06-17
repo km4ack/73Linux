@@ -25,7 +25,7 @@ INSTALL(){
     CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
     sudo -A apt install python-wxtools python3-pip -y
     cd ${BAPSRC}
-    date=$(curl -s https://trac.chirp.danplanet.com/chirp_next/ | grep href=\"next | head -1 | sed 's/.*href="//' | sed 's/\/">.*//' | sed 's/next-//')
+    date=$(curl -s https://archive.chirpmyradio.com/chirp_next/ | grep href=\"next | head -1 | sed 's/.*href="//' | sed 's/\/">.*//' | sed 's/next-//')
     wheel=https://trac.chirp.danplanet.com/chirp_next/next-${date}/chirp-${date}-py3-none-any.whl
     wget ${wheel}
     pip install ${wheel} --force-reinstall
