@@ -26,7 +26,7 @@ INSTALL(){
 
     PACKAGE=hamlib
     CLEANSOURCE
-    sudo apt install libusb-1.0-0 libusb-1.0-0-dev swig
+    sudo apt install libusb-1.0-0 libusb-1.0-0-dev swig swig4.0
     pyver=$(python3 -V | awk '{print $2}' | awk -F. '{print $1"."$2}')
     cd ${BUILDDIR} || return
     NEWRIG=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download |
