@@ -1,5 +1,6 @@
-version=4.0.3
+version=4.0.4
 
+4.0.4		Change internet check in 73.sh
 4.0.3		Resolve YAD error (issue 60)
 		Fix PTT statement for direwolf (issue #58)
 		Fix Chirp not downloading/updating (issue #73)
