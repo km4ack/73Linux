@@ -18,10 +18,10 @@ INSTALL(){
 	sudo rm -rf $HOME/.bap-source-files/wsjtx*
 	if [ `getconf LONG_BIT` = '64' ]; then
 		#64 bit link
-		FT8PKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep arm64 | head -1 | sed 's/.*">//;s/<\/.*//')
+		FT8PKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep arm64 | tail -1 | sed 's/.*">//;s/<\/.*//')
 	else
 		#32bit link
-		FT8PKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep armhf | head -1 | sed 's/.*">//;s/<\/.*//')
+		FT8PKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep armhf | tail -1 | sed 's/.*">//;s/<\/.*//')
 	fi
 
 
