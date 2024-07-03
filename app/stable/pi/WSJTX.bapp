@@ -2,13 +2,13 @@ BAPP=4.0
 ID=WSJTX
 Name=WSJTX
 Comment='Weak Signal Digital Software'
-Ver=
-localVer=
+Ver=Update:2.7.0-rc5
+localVer=0
 
 
 INSTALL(){
 	cd ${BUILDDIR}
-	sudo apt install -y build-essential git cmake gfortran fftw3-dev qtbase5-dev qttools5-dev libqt5serialport5-dev  qtmultimedia5-dev libqt5multimedia5-plugins libqt5sql5-sqlite autoconf automake libtool texinfo libusb-1.0-0-dev libudev-dev libboost-all-dev asciidoctor
+	sudo apt install -y build-essential git cmake gfortran libfftw3-dev qtbase5-dev qttools5-dev libqt5serialport5-dev  qtmultimedia5-dev libqt5multimedia5-plugins libqt5sql5-sqlite autoconf automake libtool texinfo libusb-1.0-0-dev libudev-dev libboost-all-dev asciidoctor
 	#remove old install
 	if [ -f /usr/local/bin/wsjtx ]; then
 		sudo rm /usr/local/bin/wsjtx*
@@ -18,18 +18,18 @@ INSTALL(){
 	sudo rm -rf $HOME/.bap-source-files/wsjtx*
 	if [ `getconf LONG_BIT` = '64' ]; then
 		#64 bit link
-		FT8PKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep arm64 | tail -1 | sed 's/.*">//;s/<\/.*//')
+		ft8pkg=$(curl -s https://sourceforge.net/projects/wsjt/files/wsjtx-2.7.0-rc5/ | grep arm64.deb | head -1 | sed 's/.*title="//' | sed 's/".*//')
 	else
 		#32bit link
-		FT8PKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep armhf | tail -1 | sed 's/.*">//;s/<\/.*//')
+		ft8pkg=$(curl -s https://sourceforge.net/projects/wsjt/files/wsjtx-2.7.0-rc5/ | grep armhf.deb | head -1 | sed 's/.*title="//' | sed 's/".*//')
 	fi
 
 
-	PKGNAME="https://wsjt.sourceforge.io/downloads/${FT8PKG}"
-	wget --tries 2 --connect-timeout=60 $FT8PKG
-	sudo dpkg -i $PKGNAME
+	wsjtx_version=$(curl -s https://sourceforge.net/projects/wsjt/files/ | grep wsjtx-2 | head -1 | sed 's/.*title="\///' | sed 's/\/.*//')
+	wget --tries 2 --connect-timeout=60 https://sourceforge.net/projects/wsjt/files/${wsjtx_version}/${ft8pkg}
+	sudo dpkg -i ${ft8pkg}
 	sudo apt install --fix-broken -y
-	sudo dpkg -i $PKGNAME
+	sudo dpkg -i ${ft8pkg}
 }
 
 
