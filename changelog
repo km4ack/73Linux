@@ -1,5 +1,6 @@
-version=4.0.4
+version=4.0.5
 
+4.0.5		Fix FT8 installer for Pi (again!)
 4.0.4		Change internet check in 73.sh
 		Fix FT8 Installer for Pi
 4.0.3		Resolve YAD error (issue 60)
