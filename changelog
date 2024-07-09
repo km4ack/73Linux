@@ -1,5 +1,6 @@
-version=4.0.5
+version=4.0.6
 
+4.0.6		merge PR #80 to address direwolf DNS
 4.0.5		Fix FT8 installer for Pi (again!)
 4.0.4		Change internet check in 73.sh
 		Fix FT8 Installer for Pi
