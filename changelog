@@ -1,6 +1,6 @@
-version=4.0.6
+version=4.1.0
 
-4.0.6		merge PR #80 to address direwolf DNS
+4.1.0		merge PR #80 to address direwolf DNS
 		merge PR #95
 		merge PR #96
 		remove python binding for hamlib (issue #99)
@@ -8,6 +8,7 @@ version=4.0.6
 		fix conky not installing Mint 22 (issue #97)
 		update VARA for Pi-Apps install (issue #92)
 		Add icons chirp, yaac, gpsupdate
+		Add hamdashboard community bapp (issue #86)
 4.0.5		Fix FT8 installer for Pi (again!)
 4.0.4		Change internet check in 73.sh
 		Fix FT8 Installer for Pi
