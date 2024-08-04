@@ -28,7 +28,7 @@ GenericName=Checklist Generator
 Comment=Checklist Generator
 Exec=/usr/local/bin/checklist-generator
 Terminal=false
-Icon=/usr/share/icons/HighContrast/48x48/stock/gtk-apply.png
+Icon=${HOME}/73Linux/data/ico/checkmark.png
 Type=Application
 Categories=Utility
 EOF
