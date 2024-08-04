@@ -34,7 +34,8 @@ CLEANSOURCE(){
     tar -xzf hamlib-${NEWRIG}.tar.gz
     rm hamlib-${NEWRIG}.tar.gz
     cd hamlib-${NEWRIG} || return
-    ./configure --with-python-binding PYTHON_VERSION=$pyver
+    #./configure --with-python-binding PYTHON_VERSION=$pyver #(see issue #99)
+    ./configure
     make
     sudo -A make install
     sudo -A ldconfig
