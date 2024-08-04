@@ -5,6 +5,7 @@ version=4.0.6
 		merge PR #96
 		remove python binding for hamlib (issue #99)
 		fix chirp not installing on Mint 22 (issue #98)
+		fix conky not installing Mint 22 (issue #97)
 4.0.5		Fix FT8 installer for Pi (again!)
 4.0.4		Change internet check in 73.sh
 		Fix FT8 Installer for Pi
