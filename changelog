@@ -7,6 +7,7 @@ version=4.0.6
 		fix chirp not installing on Mint 22 (issue #98)
 		fix conky not installing Mint 22 (issue #97)
 		update VARA for Pi-Apps install (issue #92)
+		Add icons chirp, yaac, gpsupdate
 4.0.5		Fix FT8 installer for Pi (again!)
 4.0.4		Change internet check in 73.sh
 		Fix FT8 Installer for Pi
