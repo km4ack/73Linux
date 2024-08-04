@@ -42,6 +42,20 @@ cp $NEW_CONKY $HOME/.conkyrc
 WLAN=$(ifconfig | grep wl | awk '{print $1}' | sed 's/://')
 sed -i "s/wlan0/$WLAN/" $HOME/.conkyrc
 sed -i "s/N0CALL/${CALL}/" $HOME/.conkyrc
+
+#Lines below are for https://github.com/km4ack/pi-build/issues/53
+WINDOWMGMT=$(echo $XDG_SESSION_TYPE)
+if [[ $WINDOWMGMT == "wayland" ]]; then
+	COUNTOUTX=$(grep -c 'out_to_x' $HOME/.conkyrc)
+	COUNTOUTWYLD=$(grep -c 'out_to_wayland' $HOME/.conkyrc)
+	if [[ $COUNTOUTX == 0 ]]; then
+		sed -i '/.*conky.config = {/a \\tout_to_x = false,' $HOME/.conkyrc
+	fi
+	if [[ $COUNTOUTWYLD == 0 ]]; then
+		sed -i '/.*out_to_x = .*/a \\tout_to_wayland = true,' $HOME/.conkyrc
+	fi
+fi
+
 CONKY_PID=$(pidof conky)
 kill -9 $CONKY_PID
 /usr/bin/conky
