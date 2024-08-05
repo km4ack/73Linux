@@ -36,6 +36,11 @@ Install is still super easy. Just run the following command:
 
      git clone https://github.com/km4ack/73Linux.git $HOME/73Linux && bash $HOME/73Linux/73.sh
 
+If the above command fails, you may be missing git. If so, run
+     sudo apt install git
+
+and then run the above command again.
+
 # Issue reporting  and feature Requests
 
 https://github.com/km4ack/73Linux/issues
