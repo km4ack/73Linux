@@ -152,7 +152,7 @@ if [ -n "${GPSCK}" ]; then
 
 	yad --center --height="300" --width="300" --form --separator="|" --item-separator="|" --title="GPS" \
 		--image ${LOGO} --window-icon=${LOGO} --image-on-top \
-		--text="\r\r\r\r\r<b><big>Connect your GPS to the pi</big></b>" \
+		--text="\r\r\r\r\r<b><big>Connect your GPS to the computer</big></b>" \
 		--button="Continue":2
 
 	BUT=$?
