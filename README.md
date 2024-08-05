@@ -40,7 +40,7 @@ If the above command fails, you may be missing git. If so, run
 
      sudo apt install git
 
-and then run the above command again.
+and then run the git clone command again.
 
 # Issue reporting  and feature Requests
 
