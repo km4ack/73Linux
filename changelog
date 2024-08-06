@@ -9,6 +9,8 @@ version=4.1.0
 		update VARA for Pi-Apps install (issue #92)
 		Add icons chirp, yaac, gpsupdate
 		Add hamdashboard community bapp (issue #86)
+		Add simplenote community bapp
+		Add localsend community bapp
 4.0.5		Fix FT8 installer for Pi (again!)
 4.0.4		Change internet check in 73.sh
 		Fix FT8 Installer for Pi
