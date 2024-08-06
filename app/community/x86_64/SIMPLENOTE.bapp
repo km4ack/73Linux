@@ -13,7 +13,7 @@ INSTALL(){
   search_term="x86_64.AppImage"
 
   cd ${BUILDDIR}
-  pkg_name=$(curl -s https://api.github.com/repos/${user}/${repo}/releases/latest | grep ${search_term} | grep name | sed 's/.*"Si/Si/;s/",//')
+  pkg_name=$(curl -s https://api.github.com/repos/${user}/${repo}/releases/latest | grep ${search_term} | grep name | sed 's/.*"Si/Si/;s/",//;s/ //g')
   version=$(echo ${pkg_name} | sed 's/Simplenote-linux-//;s/-x86_64.AppImage//')
 
   wget https://github.com/${user}/${repo}/releases/download/v${version}/${pkg_name}
