@@ -25,7 +25,7 @@ INSTALL(){
 Name=SimpleNote
 GenericName=SimpleNote
 Comment=Note taking application
-Exec=/usr/local/bin/${}
+Exec=/usr/local/bin/${pkg_name}
 Terminal=false
 Icon=${HOME}/73Linux/data/ico/simplenote.png
 Type=Application
@@ -47,8 +47,8 @@ VERSION(){
 
   pkg_name=$(curl -s https://api.github.com/repos/${user}/${repo}/releases/latest | grep ${search_term} | grep name | sed 's/.*"Si/Si/;s/",//')
   version=$(echo ${pkg_name} | sed 's/Simplenote-linux-//;s/-x86_64.AppImage//')
-  if [ -f /usr/local/bin/simplenote ]; then
-	  CURRENT="ukn"
+  if [ `ls /usr/local/bin | grep Simple` ]; then
+	  CURRENT=$(ls /usr/local/bin | grep Simple | sed 's/Simplenote-linux-//;s/-x86_64.AppImage//')
 	  NEWVER=${version}
   else
 	  CURRENT=0
