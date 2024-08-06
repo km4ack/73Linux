@@ -18,14 +18,14 @@ INSTALL(){
 
   wget https://github.com/${user}/${repo}/releases/download/v${version}/${pkg_name}
   chmod +x ${pkg_name}
-  sudo -A mv ${pkg_name} /usr/local/bin/simplenote
+  sudo -A mv ${pkg_name} /usr/local/bin/
 
 	cat <<EOF > /run/user/$UID/simplenote.desktop
 [Desktop Entry]
 Name=SimpleNote
 GenericName=SimpleNote
 Comment=Note taking application
-Exec=/usr/local/bin/simplenote
+Exec=/usr/local/bin/${pkg_name}
 Terminal=false
 Icon=${HOME}/73Linux/data/ico/simplenote.png
 Type=Application
