@@ -18,14 +18,14 @@ INSTALL(){
 
   wget https://github.com/${user}/${repo}/releases/download/v${version}/${pkg_name}
   chmod +x ${pkg_name}
-  sudo -A mv ${pkg_name} /usr/local/bin/localsend
+  sudo -A mv ${pkg_name} /usr/local/bin/
 
 	cat <<EOF > /run/user/$UID/localsend.desktop
 [Desktop Entry]
 Name=LocalSend
 GenericName=LocalSend
 Comment=File transfer
-Exec=/usr/local/bin/localsend
+Exec=/usr/local/bin/${pkg_name}
 Terminal=false
 Icon=${HOME}/73Linux/data/ico/localsend.png
 Type=Application
@@ -47,8 +47,8 @@ VERSION(){
 
   pkg_name=$(curl -s https://api.github.com/repos/${user}/${repo}/releases/latest | grep ${search_term} | head -1 | sed 's/"name": "//;s/",.*//')
   version=$(echo ${pkg_name} | sed 's/LocalSend-//;s/-linux-x86-64.AppImage//')
-  if [ -f /usr/local/bin/localsend ]; then
-	  CURRENT="ukn"
+  if [ `ls /usr/local/bin | grep LocalSend` ]; then
+	  CURRENT=$(ls /usr/local/bin | grep LocalSend | sed 's/LocalSend-//;s/-linux-x86-64.AppImage//')
 	  NEWVER=${version}
   else
 	  CURRENT=0
