@@ -24,6 +24,8 @@ INSTALL(){
 }
 
 VERSION(){
+    user=pflarue
+    repo=ardop
     if [ -f /usr/local/bin/ardopcf ]; then
     CURRENT=$(cat $HOME/73Linux/cache/.ardop_version | sed 's/version=//')
     NEWVER=$(curl -s https://api.github.com/repos/${user}/${repo}/releases/latest | grep tag_name | sed 's/"tag_name": "//;s/",//;s/ //g')
