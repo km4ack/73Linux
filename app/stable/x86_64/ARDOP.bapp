@@ -20,7 +20,7 @@ INSTALL(){
   wget https://github.com/${user}/${repo}/releases/download/${version}/${pkg_name}
   chmod +x ${pkg_name}
   mv ${pkg_name} ardopcf
-  mv ${BAPSRC}/ardopcf /usr/local/bin 
+  sudo -A mv ${BAPSRC}/ardopcf /usr/local/bin 
 }
 
 VERSION(){
