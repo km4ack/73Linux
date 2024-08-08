@@ -12,6 +12,7 @@ version=4.1.0
 		Add simplenote community bapp
 		Add localsend community bapp
 		Update ARDOP x86 to new ARDOPCF (issue #93)
+		Update ARDOP pi to new ARDOPCF (issue #93)
 4.0.5		Fix FT8 installer for Pi (again!)
 4.0.4		Change internet check in 73.sh
 		Fix FT8 Installer for Pi
