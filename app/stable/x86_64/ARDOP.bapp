@@ -15,9 +15,9 @@ INSTALL(){
   cd ${BAPSRC}
   pkg_name=$(curl -s https://api.github.com/repos/${user}/${repo}/releases/latest | grep ${search_term} | head -1 | sed 's/.*ardop/ardop/;s/",//')
   version=$(curl -s https://api.github.com/repos/${user}/${repo}/releases/latest | grep tag_name | sed 's/"tag_name": "//;s/",//;s/ //g')
-  echo "version=${version} > $HOME/73Linux/cache/.ardop_version
+  echo "version=${version}" > $HOME/73Linux/cache/.ardop_version
 
-  wget "https://github.com/${user}/${repo}/releases/download/${version}/${pkg_name}"
+  wget https://github.com/${user}/${repo}/releases/download/${version}/${pkg_name}
   chmod +x ${pkg_name}
   mv ${pkg_name} ardopcf
   mv ${BAPSRC}/ardopcf /usr/local/bin 
