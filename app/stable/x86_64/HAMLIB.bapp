@@ -23,7 +23,7 @@ CLEANSOURCE(){
 
     PACKAGE=hamlib
     CLEANSOURCE
-    sudo -A apt install -y libusb-1.0-0 libusb-1.0-0-dev libnova-0.16-0 libnova-dev swig libindi-dev libindi-data libindi-plugins
+    sudo -A apt install -y libusb-1.0-0 libusb-1.0-0-dev libnova-0.16-0 libnova-dev swig libindi-dev libindi-data libindi-plugins libgd-dev
     pyver=$(python3 -V | awk '{print $2}' | awk -F. '{print $1"."$2}')
     cd ${BAPSRC}
     NEWRIG=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download |
@@ -34,7 +34,8 @@ CLEANSOURCE(){
     tar -xzf hamlib-${NEWRIG}.tar.gz
     rm hamlib-${NEWRIG}.tar.gz
     cd hamlib-${NEWRIG} || return
-    ./configure --with-python-binding PYTHON_VERSION=$pyver
+    #./configure --with-python-binding PYTHON_VERSION=$pyver #(see issue #99)
+    ./configure
     make
     sudo -A make install
     sudo -A ldconfig

@@ -1,30 +1,37 @@
 BAPP=4.0
 ID=ARDOP
-Name=ardopc64
+Name=ardopcf
 Comment="ARDOP Sound Modem"
 Ver=
 localVer=
 W3='https://www.cantab.net/users/john.wiseman/Documents/'
 
 INSTALL(){
-    CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-    if [ -f /usr/local/bin/ardopc64 ]; then
-        sudo -A rm /usr/local/bin/ardopc64
-    fi
-    mkdir -p ${BAPSRC}
-    cd ${BAPSRC}
-    wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/ardopc64
-    chmod +x ${BAPSRC}/ardopc64
-    sudo -A mv ${BAPSRC}/ardopc64 /usr/local/bin/
+  #define github variables
+  user=pflarue
+  repo=ardop
+  search_term="ardopcf_amd64_Linux_64"
+
+  cd ${BAPSRC}
+  pkg_name=$(curl -s https://api.github.com/repos/${user}/${repo}/releases/latest | grep ${search_term} | head -1 | sed 's/.*ardop/ardop/;s/",//')
+  version=$(curl -s https://api.github.com/repos/${user}/${repo}/releases/latest | grep tag_name | sed 's/"tag_name": "//;s/",//;s/ //g')
+  echo "version=${version}" > $HOME/73Linux/cache/.ardop_version
+
+  wget https://github.com/${user}/${repo}/releases/download/${version}/${pkg_name}
+  chmod +x ${pkg_name}
+  mv ${pkg_name} ardopcf
+  sudo -A mv ${BAPSRC}/ardopcf /usr/local/bin 
 }
 
 VERSION(){
-    if [ -f /usr/local/bin/ardopc64 ]; then
-    CURRENT=1
-    NEWVER=1
+    user=pflarue
+    repo=ardop
+    if [ -f /usr/local/bin/ardopcf ]; then
+    CURRENT=$(cat $HOME/73Linux/cache/.ardop_version | sed 's/version=//')
+    NEWVER=$(curl -s https://api.github.com/repos/${user}/${repo}/releases/latest | grep tag_name | sed 's/"tag_name": "//;s/",//;s/ //g')
     else
     CURRENT=0
-    NEWVER=1
+    NEWVER=$(curl -s https://api.github.com/repos/${user}/${repo}/releases/latest | grep tag_name | sed 's/"tag_name": "//;s/",//;s/ //g')
     fi
 }
 

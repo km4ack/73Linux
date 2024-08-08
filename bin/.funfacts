@@ -1,6 +1,7 @@
 #!/bin/bash
 
 #20200515 km4ack
+#04AUG2024 last edit
 
 MYPATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 LOGO=${MYPATH}/../data/logo.png
@@ -8,6 +9,22 @@ LOGO=${MYPATH}/../data/logo.png
 yad --width=400 --height=200 --title="KM4ACK Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
     --wrap --no-buttons --center --window-icon=${LOGO} --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
 Build a Pi was renamed to 73 Linux in late 2022"
+
+yad --width=400 --height=200 --title="KM4ACK Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+His fav HTs in 2024 are the Kenwood D75 and Yaesu VX6"
+
+yad --width=400 --height=200 --title="KM4ACK Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+x86 machines are his primary field computers"
+
+yad --width=400 --height=200 --title="KM4ACK Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+Pi's are now used for applications like an APRS digipeater"
+
+yad --width=400 --height=200 --title="KM4ACK Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+His F250 truck is equipped with an FTM500"
 
 yad --width=400 --height=200 --title="KM4ACK Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
     --wrap --no-buttons --center --window-icon=${LOGO} --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
@@ -47,19 +64,11 @@ His favorite HF rig in 2022 is the Icom 705"
 
 yad --width=400 --height=200 --title="KM4ACK Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
     --wrap --no-buttons --center --window-icon=${LOGO} --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
-His favorite HT is the Yaesu FT5d"
-
-yad --width=400 --height=200 --title="KM4ACK Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
-    --wrap --no-buttons --center --window-icon=${LOGO} --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
 Due to the chip shortage in 2022, he started playing with Linux Mint on the inexpensive Evolve Maestro laptop"
 
 yad --width=400 --height=200 --title="KM4ACK Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
     --wrap --no-buttons --center --window-icon=${LOGO} --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
 The Evolve Maestro is now his primary portable computer for radio"
-
-yad --width=400 --height=200 --title="KM4ACK Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
-    --wrap --no-buttons --center --window-icon=${LOGO} --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
-He still keeps a Pi 4 as a backup to the laptop"
 
 yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
     --wrap --no-buttons --center --window-icon=${LOGO} --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
@@ -111,7 +120,7 @@ He built a copper J-Pole as his first 2M 440 antenna"
 
 yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
     --wrap --no-buttons --center --window-icon=${LOGO} --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
-The J-Pole is still in use today"
+The J-Pole is still in use as of 2024"
 
 yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
     --wrap --no-buttons --center --window-icon=${LOGO} --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
@@ -135,11 +144,7 @@ His first radio was a Baofeng that he purchased before he had a license"
 
 yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
     --wrap --no-buttons --center --window-icon=${LOGO} --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
-As of June 2020 he owns 9 Raspberry Pi's. All but 1 is in use."
-
-yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
-    --wrap --no-buttons --center --window-icon=${LOGO} --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
-One pi runs a PBX server over AREDN serving roughly 40 hams VOIP phone service"
+As of June 2020 he owns 9 Raspberry Pi's"
 
 yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
     --wrap --no-buttons --center --window-icon=${LOGO} --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
@@ -160,12 +165,8 @@ work machine and Raspberry Pi's for all things ham radio"
 
 yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
     --wrap --no-buttons --center --window-icon=${LOGO} --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
-Two of his favorite ham YouTubers are Ham Radio Crash Course and K8MRD Radio"
+Two of his favorite ham YouTubers are Ham Radio Crash Course and Ham Radio Tube"
 
 yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
     --wrap --no-buttons --center --window-icon=${LOGO} --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
-His favorite non ham Youtuber is Wranglerstar"
-
-yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
-    --wrap --no-buttons --center --window-icon=${LOGO} --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
-Enough about KM4ACK! Go grab a coffee or do something fun while your pi is built"
+Enough about KM4ACK! Go grab a coffee or do something fun while your computer is built"

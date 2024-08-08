@@ -13,6 +13,7 @@ Name=CHIRP
 GenericName=CHIRP
 Comment=Radio Programming
 Exec=${HOME}/.local/bin/chirp
+Icon=$HOME/73Linux/data/ico/chirp.png
 Terminal=false
 Type=Application
 Categories=HamRadio;
@@ -28,7 +29,7 @@ INSTALL(){
     date=$(curl -s https://archive.chirpmyradio.com/chirp_next/ | grep href=\"next | head -1 | sed 's/.*href="//' | sed 's/\/">.*//' | sed 's/next-//')
     wheel=https://trac.chirp.danplanet.com/chirp_next/next-${date}/chirp-${date}-py3-none-any.whl
     wget ${wheel}
-    pip install ${wheel} --force-reinstall
+    PIP_BREAK_SYSTEM_PACKAGES=1 pip install ${wheel} --force-reinstall
     MENU
 
 }

@@ -12,7 +12,7 @@ INSTALL(){
 	fi
 	touch ${HOME}/Documents/mylog.txt  #conky will fail to load if this file doesn't exist
 	touch /var/lib/misc/dnsmasq.leases #conky will fail to load if this file doesn't exist
-	sudo apt-get install -y ruby2.7
+	sudo apt-get install -y ruby
 	sudo gem install gpsd_client
 	sudo gem install maidenhead
 	mkdir -p ${HOME}/bin/conky

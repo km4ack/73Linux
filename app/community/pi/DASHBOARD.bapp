@@ -1,0 +1,58 @@
+BAPP=4.0
+ID=DASHBOARD
+Name=Dashboard
+Comment='Ham Dashboard'
+Ver=0
+localVer=0
+
+
+INSTALL(){
+
+if [ -d ${HOME}/hamdashboard ]; then
+  #backup current config
+  mkdir -p ${HOME}/Desktop/dashboard_config_backup
+  cp ${HOME}/hamdashboard/config.js ${HOME}/Desktop/dashboard_config_backup
+	rm -rf ${HOME}/hamdashboard
+fi
+
+cd
+git clone https://github.com/VA3HDL/hamdashboard.git
+
+#restore config if backed up
+if [ -d ${HOME}/Desktop/dashboard_config_backup ]; then
+  mv ${HOME}/Desktop/dashboard_config_backup/config.js ${HOME}/hamdashboard/
+  rm -rf ${HOME}/Desktop/dashboard_config_backup/
+fi
+
+cat >${HOME}/Desktop/hamdashboard_readme.txt <<EOF
+Hamdashboard has been installed. To launch, open the file
+browser and navigate to ~/hamdashboard. Double click hamdash.html
+to launch. Once launched, you can bookmark the page in your
+browser. To configure hamdashboard, modify the config.js
+file located in the hamdashboard directory. More details
+can be found in this video:
+https://youtu.be/9ZZXg60tN-o?si=Bh74d-W7yb0bMg2_
+EOF
+
+}
+
+REMOVE(){
+if [ -d ${HOME}/hamdashboard ]; then
+	rm -rf ${HOME}/hamdashboard
+fi
+
+if [ -f ${HOME}/Desktop/hamdashboard_readme.txt ]; then
+  rm ${HOME}/Desktop/hamdashboard_readme.txt
+fi
+
+}
+
+VERSION(){
+if [ -d ${HOME}/hamdashboard ]; then
+	CURRENT=$(grep -i changelog ${HOME}/hamdashboard/README.md | head -1 | sed 's/### //;s/Changelog://')
+	NEWVER=$(curl -s https://raw.githubusercontent.com/VA3HDL/hamdashboard/main/README.md | grep -i changelog | head -1 | sed 's/### //;s/Changelog://')
+else
+	CURRENT=0
+	NEWVER=$(curl -s https://raw.githubusercontent.com/VA3HDL/hamdashboard/main/README.md | grep -i changelog | head -1 | sed 's/### //;s/Changelog://')
+fi
+}

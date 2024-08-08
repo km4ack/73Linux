@@ -1,0 +1,57 @@
+BAPP=4.0
+ID=LOCALSEND
+Name=LocalSend
+Comment='File Transfers'
+Ver=0
+localVer=0
+
+
+INSTALL(){
+  #define github variables
+  user=localsend
+  repo=localsend
+  search_term="x86-64.AppImage"
+
+  cd ${BUILDDIR}
+  pkg_name=$(curl -s https://api.github.com/repos/${user}/${repo}/releases/latest | grep ${search_term} | head -1 | sed 's/"name": "//;s/",.*//;s/ //g')
+  version=$(echo ${pkg_name} | sed 's/LocalSend-//;s/-linux-x86-64.AppImage//')
+
+  wget https://github.com/${user}/${repo}/releases/download/v${version}/${pkg_name}
+  chmod +x ${pkg_name}
+  sudo -A mv ${pkg_name} /usr/local/bin/
+
+	cat <<EOF > /run/user/$UID/localsend.desktop
+[Desktop Entry]
+Name=LocalSend
+GenericName=LocalSend
+Comment=File transfer
+Exec=/usr/local/bin/${pkg_name}
+Terminal=false
+Icon=${HOME}/73Linux/data/ico/localsend.png
+Type=Application
+Categories=Utility
+EOF
+	sudo -A mv /run/user/$UID/localsend.desktop /usr/local/share/applications/
+
+}
+
+REMOVE(){
+  sudo -A rm /usr/local/bin/localsend
+}
+
+VERSION(){
+  #define github variables
+  user=localsend
+  repo=localsend
+  search_term="x86-64.AppImage"
+
+  pkg_name=$(curl -s https://api.github.com/repos/${user}/${repo}/releases/latest | grep ${search_term} | head -1 | sed 's/"name": "//;s/",.*//')
+  version=$(echo ${pkg_name} | sed 's/LocalSend-//;s/-linux-x86-64.AppImage//')
+  if [ `ls /usr/local/bin | grep LocalSend` ]; then
+	  CURRENT=$(ls /usr/local/bin | grep LocalSend | sed 's/LocalSend-//;s/-linux-x86-64.AppImage//')
+	  NEWVER=${version}
+  else
+	  CURRENT=0
+	  NEWVER=${version}
+  fi
+}
