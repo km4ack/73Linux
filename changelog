@@ -1,5 +1,7 @@
-version=4.1.0
+version=4.1.1
 
+4.1.1 Fix wsjtx install
+    Update conky for ardopcf
 4.1.0		merge PR #80 to address direwolf DNS
 		merge PR #95
 		merge PR #96
