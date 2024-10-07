@@ -300,9 +300,11 @@ EOF
 
 	#setup bin dir and put in path
 	mkdir -p ${HOME}/bin
-	CK=$(grep $HOME/bin $HOME/.bashrc)
-	if [ -z "$CK" ]; then
-		echo "export PATH=$PATH:${HOME}/bin" >>${HOME}/.bashrc
+	# Add $HOME/bin to PATH
+	# Prevent adding it more than once
+	# Prevent adding it if already added elswhere
+	if ! grep -q 'export PATH=$PATH:$HOME/bin' "${HOME}/.bashrc" && [[ ! "${PATH}" =~ "${HOME}/bin" ]]; then
+		echo 'export PATH=$PATH:$HOME/bin' >> "${HOME}/.bashrc"
 	fi
 
 	##################################
