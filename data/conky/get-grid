@@ -2,22 +2,21 @@
 
 require 'gpsd_client'
 require 'maidenhead'
-require 'socket'
-require 'json'
 
-ft8call_port = 2237
+output = "No GPS"
 
-gpsd = GpsdClient::Gpsd.new()
-gpsd.start()
-apicmd = {}
+begin
+  gpsd = GpsdClient::Gpsd.new()
+  gpsd.start()
 
-# get maidenhead if gps is ready
-if gpsd.started?
-  pos = gpsd.get_position
-  maid = Maidenhead.to_maidenhead(pos[:lat], pos[:lon], precision = 5)
-#  puts "lat = #{pos[:lat]}, lon = #{pos[:lon]}, grid = #{maid}"
-  apicmd = {:type => "STATION.SET_GRID", :value => maid}
+  if gpsd.started?
+    pos = gpsd.get_position
+    unless pos[:lat].nil? or pos[:lon].nil?
+      output = Maidenhead.to_maidenhead(pos[:lat], pos[:lon], precision = 4)
+    end
+  end
+
+  gpsd.stop()
 end
 
-puts "#{maid}"
-
+File.write(File.join("/run/user", Process.uid.to_s, "gridinfo.txt"), output)
