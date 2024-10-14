@@ -21,36 +21,19 @@ INSTALL(){
     CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
     mkdir -p ${BAPSRC}
 
-    #sudo -A apt install -y wsjtx
-    #sudo -A apt install -y --fix-broken
-    #sudo -A apt install -y wsjtx
-
-    cd ${BAPSRC}
-    PKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep amd64.deb | grep https | sed 's/.*href="//' | sed 's/.deb.*/.deb/')
-    PKGNAME=$(echo $PKG | awk -F "/" '{print $NF}')
-    echo "downloading WSJTX"
-    wget ${PKG}
-    if [ $? = 0 ]; then
-        echo "#################################"
-        echo "wsjtx download appears successful"
-        echo "#################################"
-    fi
-    sudo -A apt purge wsjtx-doc wsjtx-data -y
-    sudo -A dpkg -i ${PKGNAME}
-    sudo -A apt install -y --fix-broken
-    sudo -A dpkg -i ${PKGNAME}
+    #PKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep amd64.deb | grep https | sed 's/.*href="//' | sed 's/.deb.*/.deb/')
+    #PKGNAME=$(echo $PKG | awk -F "/" '{print $NF}')
+    sudo -A apt install wsjtx -y
 }
 
 REMOVE(){
     sudo -A dpkg --remove wsjtx
-    sudo -A dpkg --remove wsjtx-data
-    sudo -A dpkg --remove wsjtx-doc
 }
 
 VERSION(){
     NEWVER=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep amd64.deb | grep https | sed 's/.*href="//' | sed 's/.deb.*/.deb/' \
     | awk -F "/" '{print $NF}' | sed 's/_amd.*//;s/wsjtx[-_]//' | tail -1)
-
+    NEWVER=repo
     CURRENT=$(ls $HOME/.bap-source-files/| grep wsjtx | sed 's/wsjtx[-_]//' | sed 's/_amd64.deb//' | tail -1)
     if [ -z "$CURRENT" ]; then
     CURRENT=0
