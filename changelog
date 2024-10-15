@@ -1,7 +1,10 @@
-version=4.1.1
+version=4.1.2
 
-4.1.1 Fix wsjtx install
-    Update conky for ardopcf
+4.1.2		Change wsjtx to repo install (issue #87)
+		deprecate hotspot tools (issue #107)
+		fix gridtracker update check
+4.1.1           Fix wsjtx install on Pi
+	        Update conky for ardopcf
 4.1.0		merge PR #80 to address direwolf DNS
 		merge PR #95
 		merge PR #96
