@@ -33,7 +33,7 @@ VERSION(){
         CURRENT=0
         NEWVER=$(curl --max-time 20 -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gt-download-links | grep deb= | sed 's/.*gridtracker_//;s/_all.*//')
     else
-        CURRENT=$(dpkg --list | grep grid | awk '{print $3}')
+        CURRENT=$(dpkg --list | grep gridtracker | awk '{print $3}')
         NEWVER=$(curl --max-time 20 -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gt-download-links | grep deb= | sed 's/.*gridtracker_//;s/_all.*//')
     fi
 echo $CURRENT $NEWVER
