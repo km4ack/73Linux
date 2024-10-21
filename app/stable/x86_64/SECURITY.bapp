@@ -58,6 +58,11 @@ INSTALL(){
     sudo -A mv ssefencgui.jar /usr/local/bin/ssefencgui.jar
     rm -rf SSEFilePC
     MENU
+
+    #install pgp
+    sudo -A apt install nemo-seahorse
+    sudo -A apt install caja-seahorse
+    sudo -A apt install seahorse-nautilus	#for mint 21
 }
 
 REMOVE(){
