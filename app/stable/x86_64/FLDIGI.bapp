@@ -62,7 +62,7 @@ INSTALL(){
 	#Determine latest FLDIGI
 	FLTAR=$(curl -s http://www.w1hkj.com/files/fldigi/ | grep .tar.gz | sed 's/.*fldigi/fldigi/;s/.gz.*$/.gz/')
 	FLPKG=$(echo ${FLTAR} | sed 's/.tar.gz//')
-  sudo -A apt install -y libfltk1.3-dev libfltk1.3-compat-headers
+  sudo -A apt install -y libfltk1.3-dev libfltk1.3-compat-headers libsndfile1-dev portaudio19-dev
 
 	#Download latest FLDIGI tar file
 	cd ${BAPSRC}
