@@ -1,5 +1,8 @@
-version=4.1.2
+version=4.1.3
 
+4.1.3		Fix FL Suite of tools (issue #117)
+		Add kleopatra to security bapp
+		remove HSTOOLS.bapp from Pi. 
 4.1.2		Change wsjtx to repo install (issue #87)
 		deprecate hotspot tools (issue #107)
 		fix gridtracker update check

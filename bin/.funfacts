@@ -161,7 +161,7 @@ He got interested in EMCOMM because he lost cell service after a tornado outbrea
 yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
     --wrap --no-buttons --center --window-icon=${LOGO} --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
 He used Windows from 3.1 to WIN10. He now runs a Mac as his \
-work machine and Raspberry Pi's for all things ham radio"
+work machine and Linux for all things ham radio"
 
 yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
     --wrap --no-buttons --center --window-icon=${LOGO} --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \

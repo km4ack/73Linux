@@ -62,6 +62,7 @@ INSTALL(){
 	#determine lastest FLNET
 	NETTAR=$(curl -s http://www.w1hkj.com/files/flnet/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
 	NETPKG=$(echo ${NETTAR} | sed 's/.tar.gz//')
+  sudo -A apt install -y libfltk1.3-dev libfltk1.3-compat-headers
 
 	#download FLNET
 	cd ${BAPSRC}

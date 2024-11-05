@@ -64,6 +64,7 @@ INSTALL(){
 	#Determine latest FLWRAP
 	WRAPTAR=$(curl -s http://www.w1hkj.com/files/flwrap/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//')
 	WRAPPKG=$(echo ${WRAPTAR} | sed 's/.tar.gz//')
+  sudo -A apt install -y libfltk1.3-dev libfltk1.3-compat-headers
 
 	#Download latest FLWRAP
 	cd ${BAPSRC}

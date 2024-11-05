@@ -62,6 +62,8 @@ INSTALL(){
 	#Determine latest FLRIG
 	RIGTAR=$(curl -s http://www.w1hkj.com/files/flrig/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//')
 	RIGPKG=$(echo ${RIGTAR} | sed 's/.tar.gz//')
+  sudo -A apt install -y libfltk1.3-dev libfltk1.3-compat-headers
+
 
 	#Download latest FLRIG
 	cd ${BAPSRC}
