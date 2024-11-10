@@ -2,12 +2,9 @@ BAPP=4.0
 ID=GARIM
 Name=GARIM
 Comment="File Transfer Program"
-Ver=Update:1.7
+Ver=
 localVer=0
 W3=
-
-#needs version, remove
-#update needs second look. Remove org build dir?
 
 INSTALL(){
 
@@ -32,11 +29,12 @@ INSTALL(){
     PACKAGE=garim
     CLEANSOURCE
 
-	GPKG=$(curl -s https://www.whitemesa.net/garim/src/ | grep tar.gz | tail -1 | sed 's/^.*garim/garim/' | sed 's/tar.gz.*$/tar.gz/')
+	GPKG=$(curl -s https://www.whitemesa.net/garim/garim.html | grep tar.gz | head -1 | sed 's/"//g;s/gz.*/gz/')
+  zip_file=$(echo $GPKG | awk -F "/" '{print $NF}')
 	cd ${BAPSRC}
-	wget --tries 2 --connect-timeout=60 https://www.whitemesa.net/garim/src/$GPKG
-	tar -xzvf $GPKG
-	DIRR=$(echo $GPKG | sed 's/.tar.gz//')
+	wget --tries 2 --connect-timeout=60 ${GPKG}
+	tar -xzvf ${zip_file}
+	DIRR=$(echo ${zip_file} | sed 's/.tar.gz//')
 	cd ${DIRR} || return
 	./configure
 	make
@@ -45,17 +43,7 @@ INSTALL(){
 }
 
 UPDATE(){
-	GPKG=$(curl -s https://www.whitemesa.net/garim/src/ | grep tar.gz | tail -1 | sed 's/^.*garim/garim/' | sed 's/tar.gz.*$/tar.gz/')
-	cd ${BAPSRC} || return
-	wget --tries 2 --connect-timeout=60 https://www.whitemesa.net/garim/src/$GPKG
-	tar -xzvf $GPKG
-	DIRR=$(echo $GPKG | sed 's/.tar.gz//')
-	cd ${DIRR} || return
-	./configure
-	make
-	sudo -A make install
-	sudo -A make clean
-	cd ${BAPSRC}
+  INSTALL
 }
 
 REMOVE(){
@@ -65,11 +53,9 @@ REMOVE(){
 VERSION(){
 	if ! hash garim 2>/dev/null; then
 		CURRENT=0
-		NEWVER=$(curl --max-time 20 -s https://www.whitemesa.net/garim/garim.html | grep -m 1 \
-			"armv7l.tar.gz" | awk -F '-' '{print $2}')
+		NEWVER=1
 	else
 		CURRENT=$(garim --version | head -n1 | awk -F ' ' '{print $2}')
-		NEWVER=$(curl --max-time 20 -s https://www.whitemesa.net/garim/garim.html | grep -m 1 \
-			"armv7l.tar.gz" | awk -F '-' '{print $2}')
+		NEWVER=ukn
     fi
 }
