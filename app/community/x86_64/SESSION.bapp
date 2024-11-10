@@ -1,0 +1,56 @@
+BAPP=4.0
+ID=SESSION
+Name=Session
+Comment='Private Messenger'
+Ver=0
+localVer=0
+
+
+INSTALL(){
+
+if [ -f /usr/local/bin/session.AppImage ]; then
+	sudo -A rm /usr/local/bin/session.AppImage
+fi
+
+
+cd ${BUILDDIR}
+app=$(curl -s https://github.com/oxen-io/session-desktop/releases | grep AppImage | head -1 | awk '{print $1}')
+ver=$(echo ${app} | sed 's/session-desktop-linux-x86_64-//;s/.AppImage//')
+wget https://github.com/oxen-io/session-desktop/releases/download/v${ver}/session-desktop-linux-x86_64-${ver}.AppImage
+chmod +x ${app}
+
+sudo -A mv ${app} /usr/local/bin/session.AppImage
+
+
+	cat <<EOF > /run/user/$UID/session.desktop
+[Desktop Entry]
+Name=Session Messenger
+GenericName=Session Messenger
+Comment=Session Private Messenger
+Exec=/usr/local/bin/session.AppImage
+Terminal=false
+Icon=${HOME}/73Linux/data/ico/session.png
+Type=Application
+Categories=Utility
+EOF
+	sudo -A mv /run/user/$UID/session.desktop /usr/local/share/applications/
+
+}
+
+REMOVE(){
+if [ -f /usr/local/bin/session.AppImage ]; then
+	sudo -A rm /usr/local/bin/session.AppImage
+	sudo -A rm /usr/local/share/applications/session.desktop
+fi
+
+}
+
+VERSION(){
+if [ -f /usr/local/bin/session.AppImage ]; then
+	CURRENT=1
+	NEWVER=1
+else
+	CURRENT=0
+	NEWVER=1
+fi
+}

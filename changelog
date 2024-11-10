@@ -1,5 +1,10 @@
-version=4.1.3
+version=4.1.4
 
+4.1.4		add session community bapp
+		add gtkhash to security bapp
+		add varim (VARA file transfer)
+		fix garim installer (issue #88)
+		merge PR #111
 4.1.3		Fix FL Suite of tools (issue #117)
 		Add kleopatra to security bapp
 		remove HSTOOLS.bapp from Pi. 
