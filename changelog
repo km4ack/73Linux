@@ -1,5 +1,6 @@
-version=4.1.4
+version=4.1.5
 
+4.1.5		fix german language issue (PR #147/149)
 4.1.4		add session community bapp
 		add gtkhash to security bapp
 		add varim (VARA file transfer)
