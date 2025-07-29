@@ -40,7 +40,7 @@ INSTALL(){
     CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
     source ${CUR_PATH}/config
     mkdir -p ${BAPSRC}
-
+    sudo -A apt install -y librxtx-java openjdk-17-dbg
     #download PTE & move
     cd $HOME/Downloads
     wget --tries 2 --connect-timeout=60 https://paranoiaworks.mobi/download/files/PTE-PC.zip
