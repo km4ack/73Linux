@@ -1,0 +1,114 @@
+BAPP=4.0
+ID=PATMENU_3
+Name=PATMENU_3
+Comment="Helper app for Pat Winlink"
+Ver=
+localVer=
+W3=
+
+DEPENDS(){
+    #voacap
+    if ! hash voacapl 2>/dev/null; then
+        sudo -A apt install build-essential gfortran -y
+        cd ${HOME}/Downloads
+        wget https://github.com/jawatson/voacapl/archive/refs/tags/v.0.7.6.zip
+        unzip v.0.7.6.zip
+        cd voacapl-v.0.7.6
+        ./configure
+        make
+        sudo -A make install
+        makeitshfbc
+    fi
+
+    #wwl
+    if ! hash locator 2>/dev/null; then
+        cd ${HOME}/Downloads
+        wget http://db.net/downloads/wwl+db-1.3.tgz
+        tar -xvzf wwl+db-1.3.tgz
+        cd wwl+db-1.3
+        make
+        sudo -A make install
+    fi
+}
+
+MENU(){
+cat >patmenu3.desktop <<EOF
+[Desktop Entry]
+Name=PatMenu 3
+GenericName=Pat Menu 3
+Comment=Helper application for Pat Winlink
+Exec=$HOME/patmenu3/patmenu
+Icon=$HOME/patmenu3/pmlogo.png
+Terminal=false
+Type=Application
+Categories=Network;HamRadio;
+EOF
+
+sudo -A mv patmenu3.desktop /usr/local/share/applications
+}
+
+INSTALL(){
+    DEPENDS
+	if [ -d $HOME/patmenu3 ]; then
+		#backup existing config files
+		mkdir -p /run/user/$UID/patmenu_config
+		cp -r $HOME/patmenu3/data/* /run/user/$UID/patmenu_config/
+		rm -rf $HOME/patmenu3
+        #install
+		cd $HOME
+		git clone https://github.com/km4ack/patmenu3.git && bash $HOME/patmenu3/install
+        #make files executable
+        chmod +x $HOME/patmenu3/patmenu
+        chmod +x $HOME/patmenu3/bin/getgrid $HOME/patmenu3/bin/pat-contacts \
+        $HOME/patmenu3/bin/getardoplist $HOME/patmenu3/bin/stats $HOME/patmenu3/bin/.getardoplist-cron
+        chmod +x $HOME/patmenu3/bin/catelog/*
+        chmod +x $HOME/patmenu3/bin/config/*
+        chmod +x $HOME/patmenu3/bin/find-gateways/*
+        chmod +x $HOME/patmenu3/bin/manage_mail/*
+        chmod +x $HOME/patmenu3/bin/modems/*
+        chmod +x $HOME/patmenu3/bin/pat_admin/*
+        chmod +x $HOME/patmenu3/bin/pos/*
+        chmod +x $HOME/patmenu3/bin/sms/add-carrier $HOME/patmenu3/bin/sms/current-carriers \
+        chmod +x $HOME/patmenu3/bin/voacap/rel.ph $HOME/patmenu3/bin/voacap/voa.sh $HOME/patmenu3/bin/voacap/voacap \
+        $HOME/patmenu3/bin/sms/manage-sms $HOME/patmenu3/bin/sms/remove-carrier $HOME/patmenu3/bin/sms/winlink2sms
+		MENU
+        #restore data files
+		cp -r /run/user/$UID/patmenu_config/* $HOME/patmenu3/data/
+	else
+		cd $HOME
+		git clone https://github.com/km4ack/patmenu3.git && bash $HOME/patmenu3/install
+		cd $HOME/patmenu3
+		sed -i "s/N0CALL/${CALL}/" ${HOME}/patmenu3/data/config
+		sed -i 's/1,0/3,0/g' ${HOME}/patmenu3/data/config
+        #make files executable
+        chmod +x $HOME/patmenu3/patmenu
+        chmod +x $HOME/patmenu3/bin/getgrid $HOME/patmenu3/bin/pat-contacts \
+        $HOME/patmenu3/bin/getardoplist $HOME/patmenu3/bin/stats $HOME/patmenu3/bin/.getardoplist-cron
+        chmod +x $HOME/patmenu3/bin/catelog/*
+        chmod +x $HOME/patmenu3/bin/config/*
+        chmod +x $HOME/patmenu3/bin/find-gateways/*
+        chmod +x $HOME/patmenu3/bin/manage_mail/*
+        chmod +x $HOME/patmenu3/bin/modems/*
+        chmod +x $HOME/patmenu3/bin/pat_admin/*
+        chmod +x $HOME/patmenu3/bin/pos/*
+        chmod +x $HOME/patmenu3/bin/sms/add-carrier $HOME/patmenu3/bin/sms/current-carriers \
+        chmod +x $HOME/patmenu3/bin/voacap/rel.ph $HOME/patmenu3/bin/voacap/voa.sh $HOME/patmenu3/bin/voacap/voacap \
+        $HOME/patmenu3/bin/sms/manage-sms $HOME/patmenu3/bin/sms/remove-carrier $HOME/patmenu3/bin/sms/winlink2sms
+		MENU
+	fi
+}
+
+REMOVE(){
+    rm -rf $HOME/patmenu3
+    sudo -A rm /usr/local/share/applications/patmenu3.desktop
+}
+
+VERSION(){
+    if [ ! -d $HOME/patmenu3 ]; then
+    CURRENT=0
+    NEWVER=$(curl --max-time 20 -s https://raw.githubusercontent.com/km4ack/patmenu3/master/changelog | grep release | head -1 | sed 's/release=//')
+    else
+    CURRENT=$(cat $HOME/patmenu3/changelog | grep release | head -1 | sed 's/release=//')
+    NEWVER=$(curl --max-time 20 -s https://raw.githubusercontent.com/km4ack/patmenu3/master/changelog | grep release | head -1 | sed 's/release=//')
+    fi
+}
