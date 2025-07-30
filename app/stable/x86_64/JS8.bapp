@@ -60,6 +60,6 @@ fi
 
 REMOVE(){
 file=$(ls /usr/bin | grep js8call)
-sudo -A rm ${file}s /usr/local/share/applications/js8call.desktop    #removes appimage
+sudo -A rm ${file} /usr/local/share/applications/js8call.desktop    #removes appimage
 sudo -A rm /usr/bin/js8call /usr/share/applications/js8call.desktop #removes older version
 }
