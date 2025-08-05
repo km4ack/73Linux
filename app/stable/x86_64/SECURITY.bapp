@@ -40,7 +40,7 @@ INSTALL(){
     CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
     source ${CUR_PATH}/config
     mkdir -p ${BAPSRC}
-
+    sudo -A apt install -y librxtx-java openjdk-17-dbg
     #download PTE & move
     cd $HOME/Downloads
     wget --tries 2 --connect-timeout=60 https://paranoiaworks.mobi/download/files/PTE-PC.zip
@@ -60,11 +60,11 @@ INSTALL(){
     MENU
 
     #install pgp and hash
-    sudo -A apt install nemo-seahorse
-    sudo -A apt install caja-seahorse
-    sudo -A apt install seahorse-nautilus	#for mint 21
-    sudo -A apt install kleopatra
-    sudo -A apt install gtkhash
+    sudo -A apt install nemo-seahorse -y
+    sudo -A apt install caja-seahorse -y
+    sudo -A apt install seahorse-nautilus	-y #for mint 21
+    sudo -A apt install kleopatra -y
+    sudo -A apt install gtkhash -y
 }
 
 REMOVE(){
