@@ -1,4 +1,5 @@
-version=4.1.6
+version=4.1.7
+4.1.7   Fix FLDIGI Suite (issue 168)
 4.1.6   migrate js8call install to appimage (x86)
         fix gridtracker links (x86)
         fix depends SecureFile & SecureText (x86)
