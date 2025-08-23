@@ -38,10 +38,10 @@ INSTALL(){
 		sudo -A apt install -y libfltk1.3-dev $LIBJPG libxft-dev libxinerama-dev libxcursor-dev libsndfile1-dev libsamplerate0-dev portaudio19-dev libpulse-dev libusb-1.0-0-dev texinfo libudev-dev libnova-0.16-0
 
 		#determine latest FLXMLRPC & download
-		FLXM=$(curl -s http://www.w1hkj.com/files/flxmlrpc/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
+		FLXM=$(curl -s https://www.w1hkj.org/files/flxmlrpc/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
 		XMPKG=$(echo ${FLXM} | sed 's/.tar.gz//')
 		cd ${BUILDDIR} || return
-		wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flxmlrpc/${FLXM}
+		wget --tries 2 --connect-timeout=60 https://www.w1hkj.org/files/flxmlrpc/${FLXM}
 		tar -zxvf ${FLXM}
 
 		#build FLXMLRPC
@@ -60,14 +60,14 @@ INSTALL(){
     CLEANSOURCE
 
 	#Determine latest FLRIG
-	RIGTAR=$(curl -s http://www.w1hkj.com/files/flrig/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//')
+	RIGTAR=$(curl -s https://www.w1hkj.org/files/flrig/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//')
 	RIGPKG=$(echo ${RIGTAR} | sed 's/.tar.gz//')
   sudo -A apt install -y libfltk1.3-dev libfltk1.3-compat-headers
 
 
 	#Download latest FLRIG
 	cd ${BAPSRC}
-	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flrig/${RIGTAR}
+	wget --tries 2 --connect-timeout=60 https://www.w1hkj.org/files/flrig/${RIGTAR}
 	tar -zxvf ${RIGTAR}
 
 	#Build FLRIG
