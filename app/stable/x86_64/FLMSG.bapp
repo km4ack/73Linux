@@ -39,10 +39,10 @@ INSTALL(){
 		sudo -A apt install -y libfltk1.3-dev $LIBJPG libxft-dev libxinerama-dev libxcursor-dev libsndfile1-dev libsamplerate0-dev portaudio19-dev libpulse-dev libusb-1.0-0-dev texinfo libudev-dev
 
 		#determine latest FLXMLRPC & download
-		FLXM=$(curl -s http://www.w1hkj.com/files/flxmlrpc/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
+		FLXM=$(curl -s https://www.w1hkj.org/files/flxmlrpc/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
 		XMPKG=$(echo ${FLXM} | sed 's/.tar.gz//')
 		cd ${BUILDDIR} || return
-		wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flxmlrpc/${FLXM}
+		wget --tries 2 --connect-timeout=60 https://www.w1hkj.org/files/flxmlrpc/${FLXM}
 		tar -zxvf ${FLXM}
 
 		#build FLXMLRPC
@@ -60,13 +60,13 @@ INSTALL(){
     CLEANSOURCE
 
 	#Determine latest FLMSG
-	MSGTAR=$(curl -s http://www.w1hkj.com/files/flmsg/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
+	MSGTAR=$(curl -s https://www.w1hkj.org/files/flmsg/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
 	MSGPKG=$(echo ${MSGTAR} | sed 's/.tar.gz//')
   sudo -A apt install -y libfltk1.3-dev libfltk1.3-compat-headers
 
 	#download FLMSG
 	cd ${BUILDDIR} || return
-	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flmsg/${MSGTAR}
+	wget --tries 2 --connect-timeout=60 https://www.w1hkj.org/files/flmsg/${MSGTAR}
 	tar -zxvf ${MSGTAR}
 
 	#Build FLMSG
