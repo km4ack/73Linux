@@ -39,10 +39,10 @@ INSTALL(){
 		sudo -A apt install -y libfltk1.3-dev $LIBJPG libxft-dev libxinerama-dev libxcursor-dev libsndfile1-dev libsamplerate0-dev portaudio19-dev libpulse-dev libusb-1.0-0-dev texinfo libudev-dev
 
 		#determine latest FLXMLRPC & download
-		FLXM=$(curl -s http://www.w1hkj.com/files/flxmlrpc/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
+		FLXM=$(curl -s https://www.w1hkj.org/files/flxmlrpc/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
 		XMPKG=$(echo ${FLXM} | sed 's/.tar.gz//')
 		cd ${BUILDDIR} || return
-		wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flxmlrpc/${FLXM}
+		wget --tries 2 --connect-timeout=60 https://www.w1hkj.org/files/flxmlrpc/${FLXM}
 		tar -zxvf ${FLXM}
 
 		#build FLXMLRPC
@@ -62,13 +62,13 @@ INSTALL(){
     CLEANSOURCE
 
 	#Determine latest FLWRAP
-	WRAPTAR=$(curl -s http://www.w1hkj.com/files/flwrap/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//')
+	WRAPTAR=$(curl -s https://www.w1hkj.org/files/flwrap/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//')
 	WRAPPKG=$(echo ${WRAPTAR} | sed 's/.tar.gz//')
   sudo -A apt install -y libfltk1.3-dev libfltk1.3-compat-headers
 
 	#Download latest FLWRAP
 	cd ${BAPSRC}
-	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flwrap/${WRAPTAR}
+	wget --tries 2 --connect-timeout=60 https://www.w1hkj.org/files/flwrap/${WRAPTAR}
 	tar -zxvf ${WRAPTAR}
 
 	#Build FLWRAP
@@ -88,9 +88,9 @@ REMOVE(){
 VERSION(){
 	if ! hash flwrap 2>/dev/null; then
 		CURRENT=0
-		NEWVER=$(curl --max-time 20 -s http://www.w1hkj.com/files/flwrap/ | grep .tar.gz | sed 's/.*href="flwrap-//;s/.tar.*//')
+		NEWVER=$(curl --max-time 20 -s https://www.w1hkj.org/files/flwrap/ | grep .tar.gz | sed 's/.*href="flwrap-//;s/.tar.*//')
 	else
 		CURRENT=$(flwrap --version | awk 'FNR == 1 {print $2}')
-		NEWVER=$(curl --max-time 20 -s http://www.w1hkj.com/files/flwrap/ | grep .tar.gz | sed 's/.*href="flwrap-//;s/.tar.*//')
+		NEWVER=$(curl --max-time 20 -s https://www.w1hkj.org/files/flwrap/ | grep .tar.gz | sed 's/.*href="flwrap-//;s/.tar.*//')
     fi
 }
