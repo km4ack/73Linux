@@ -1,4 +1,6 @@
-version=4.1.7
+version=4.1.8
+4.1.8   Fix Gridtracker install (Thanks W7DON!)
+	Fix Direwolf version checking (Thanks KD7UM)
 4.1.7   Fix FLDIGI Suite (issue 168)
 4.1.6   migrate js8call install to appimage (x86)
         fix gridtracker links (x86)
