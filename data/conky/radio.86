@@ -71,7 +71,7 @@ ${font Arial:bold:size=12}${color Yellow}NETWORK ${color DarkSlateGray}${hr 2}
 ${font Arial:bold:size=12}${color White}Wireless IP $alignr ${addr wlan0}
 
 ${font Arial:bold:size=12}${color Yellow}RADIO TOOLS ${color DarkSlateGray}${hr 2}
-${font Arial:size=10}${if_running ardopc64}${color green}ARDOP ACTIVE${else}${color red}ARDOP OFF$endif \
+${font Arial:size=10}${if_running ardopcf}${color green}ARDOP ACTIVE${else}${color red}ARDOP OFF$endif \
 ${alignr}${if_running rigctld}${color green}RIGCTL ACTIVE${else}${color red}RIGCTL OFF$endif
 ${if_running kissattach}${color green}KISSATCH ACTIVE${else}${color red}KISSATCH OFF$endif \
 ${alignr}${if_running direwolf}${color green}DIREWOLF ACTIVE${else}${color red}DIREWOLF OFF$endif

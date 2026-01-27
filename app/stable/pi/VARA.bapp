@@ -2,28 +2,33 @@ BAPP=4.0
 ID=VARA
 Name=vara
 Comment='vara modem'
-Ver=Update:4.6.4
+Ver=
 localVer=0
 
 
 INSTALL(){
-    cd ${HOME}/Downloads || return
-    curl -O https://raw.githubusercontent.com/WheezyE/Winelink/main/install_winelink.sh && bash install_winelink.sh bap
-    rm ${HOME}/Downloads/install_winelink.sh
+cat >$HOME/Desktop/VARA_README.txt <<EOF 
+Installing VARA on the Pi now requires the
+use of Pi-Apps. Pi-Apps has been installed
+on your system. Open Pi-Apps to install 
+VARA. As of 04AUG2024 only VARA HF is 
+available in Pi-Apps.
 
-	sudo sed -i "/Type=Application/i Icon=${BUILDDIR}\/data\/ico\/vara.png" /usr/share/applications/resetwine.desktop
-	sudo sed -i "/Type=Application/i Icon=${BUILDDIR}\/data\/ico\/vara.png" /usr/share/applications/vara-update.desktop
-	sudo sed -i "/Type=Application/i Icon=${BUILDDIR}\/data\/ico\/vara.png" /usr/share/applications/vara-soundcardsetup.desktop
+EOF
+
+echo "Installing Pi-Apps"
+cd ${BUILDDIR}
+wget -qO- https://raw.githubusercontent.com/Botspot/pi-apps/master/install | bash
 }
 
 VERSION(){
 
- 	if [ -d ${HOME}/.wine/drive_c/VARA ]; then
-		CURRENT=$(cat ${HOME}/.wine/drive_c/VARA/ChangeLog.txt | head -2 | grep v | awk '{print $1}' | sed 's/v//')
-		NEWVER=4.3.0
+	if [ -d ${HOME}/.wine/drive_c/VARA ]; then
+		CURRENT=1
+		NEWVER=1
 	else
 		CURRENT=0
-		NEWVER=4.3.0
+		NEWVER=1
 	fi
 }
 

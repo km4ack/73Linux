@@ -1,42 +1,46 @@
 BAPP=4.0
 ID=ARDOP
-Name=ardop
+Name=ardopcf
 Comment='ARDOP Modem'
-Ver=Update:1
+Ver=0
 localVer=0
 
 
 INSTALL(){
-	if [ -f ${HOME}/ardop/piardopc; then
-		rm ${HOME}/ardop/piardopc
-	fi
-
-	mkdir -p ${HOME}/ardop
-	cd ${HOME}/ardop || return
+  #define github variables
+  user=pflarue
+  repo=ardop
 	#determine if 64 bit and install correct dependencies.
 	if [ `getconf LONG_BIT` = '64' ]; then
-		sudo dpkg --add-architecture armhf
-		sudo apt update
-		sudo apt install -y libqt5widgets5:armhf libqt5serialport5:armhf libasound2:armhf libasound2-plugins:armhf
+    search_term="ardopcf_arm_Linux_64"
+  else
+    search_term="ardopcf_arm_Linux_32"
 	fi
 
-	wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/piardopc
-	sudo chmod +x ${HOME}/ardop/piardopc
+  pkg_name=$(curl -s https://api.github.com/repos/${user}/${repo}/releases/latest | grep ${search_term} | head -1 | sed 's/.*ardop/ardop/;s/",//')
+  version=$(curl -s https://api.github.com/repos/${user}/${repo}/releases/latest | grep tag_name | sed 's/"tag_name": "//;s/",//;s/ //g')
+  echo "version=${version}" > $HOME/73Linux/cache/.ardop_version
+  wget "https://github.com/${user}/${repo}/releases/download/${version}/${pkg_name}"
+  chmod +x ${pkg_name}
+  mv ${pkg_name} ardopcf
+  sudo -A mv ardopcf /usr/local/bin/
 }
 
 VERSION(){
-	if [ -f ${HOME}/ardop/piardopc ]; then
-		CURRENT=1
-		NEWVER=1
+  user=pflarue
+  repo=ardop
+	if [ -f /usr/local/bin/ardopcf ]; then
+		CURRENT=$(cat $HOME/73Linux/cache/.ardop_version | sed 's/version=//')
+		NEWVER=$(curl -s https://api.github.com/repos/${user}/${repo}/releases/latest | grep tag_name | sed 's/"tag_name": "//;s/",//;s/ //g')
 	else
 		CURRENT=0
-		NEWVER=1
+		NEWVER=$(curl -s https://api.github.com/repos/${user}/${repo}/releases/latest | grep tag_name | sed 's/"tag_name": "//;s/",//;s/ //g')
 
 	fi
 }
 
 REMOVE(){
-	if [ -f ${HOME}/ardop/piardopc ]; then
-		rm ${HOME}/ardop/piardopc
+	if [ -f /usr/local/bin/ardopcf ]; then
+		rm /usr/local/bin/ardopcf
 	fi	
 }

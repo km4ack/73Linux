@@ -1,5 +1,11 @@
 #! /bin/bash
 
+# Localization can do weird things.
+# See https://github.com/km4ack/73Linux/issues/144 and https://github.com/km4ack/73Linux/issues/71.
+# 73Linux is not translated in any other languages and does change behaviour based on locale settings.
+# Forcing to use the default locale prevents any of those localization issues.
+export LC_ALL=C
+
 echo "#######################################"
 echo "#        Welcome to 73 Linux          #"
 echo "#######################################"

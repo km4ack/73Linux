@@ -2,8 +2,24 @@ BAPP=4.0
 ID=JS8
 Name=JS8Call
 Comment="Weak Signal Digital Mode Software"
-Ver=Update:2.2.0
-localVer=0
+Ver=
+localVer=
+
+MENU(){
+    cat >js8call.desktop <<EOF
+[Desktop Entry]
+Name=JS8Call
+GenericName=JS8Call
+Comment=Weak Signal Digital Mode Software
+Exec=${file}
+Icon=
+Terminal=false
+Type=Application
+Categories=Utility
+EOF
+
+    sudo -A mv js8call.desktop /usr/local/share/applications/
+}
 
 INSTALL(){
 
@@ -11,26 +27,39 @@ INSTALL(){
     mkdir -p ${BAPSRC}
 
     cd ${BAPSRC}
-    sudo -A apt install libqt5multimedia5-plugins
-    wget --tries 2 --connect-timeout=60 http://files.js8call.com/2.2.0/js8call_2.2.0_20.04_amd64.deb
+    REPO="js8call/js8call"
+    API_URL="https://api.github.com/repos/${REPO}/releases/latest"
+    response=$(curl -s "$API_URL")
+    appimage_url=$(echo "$response" | jq -r '.assets[] | select(.name | test("(?i)AppImage$")) | .browser_download_url')
+    wget ${appimage_url}
     file=$(ls | grep js8call)
-    sudo -A dpkg -i $file
-    sudo -A apt --fix-broken install -y
-    sudo -A dpkg -i $file
-    sudo -A apt --fix-broken install -y
-    rm $file
+    chmod +x ${file}
+    sudo -A mv ${file} /usr/bin
+    MENU
+
 }
 
 VERSION(){
-    if [ ! -f /usr/bin/js8call ]; then
+ck=$(ls /usr/bin/ | grep js8call)
+
+if [ -z "${ck}" ]; then
         CURRENT=0
-        NEWVER=$(curl --max-time 20 -s http://files.js8call.com/latest.html | grep amd64 | head -1 | awk -F "/" '{print $4}')
-    else
-        CURRENT=$(dpkg --list | grep js8call | awk '{print $3}')
-        NEWVER=$(curl --max-time 20 -s http://files.js8call.com/latest.html | grep amd64 | head -1 | awk -F "/" '{print $4}')
-    fi
+        REPO="js8call/js8call"
+        API_URL="https://api.github.com/repos/${REPO}/releases/latest"
+        response=$(curl -s "$API_URL")
+        NEWVER=$(echo "$response" | jq -r .tag_name | sed 's/v//')
+else
+        CURRENT=$(ls /usr/bin/| grep js8 | sed 's/js8call_//' | sed 's/-x86.*//')
+        REPO="js8call/js8call"
+        API_URL="https://api.github.com/repos/${REPO}/releases/latest"
+        response=$(curl -s "$API_URL")
+        NEWVER=$(echo "$response" | jq -r .tag_name | sed 's/v//')
+fi
+
 }
 
 REMOVE(){
-sudo -A rm /usr/bin/js8call /usr/share/applications/js8call.desktop
+file=$(ls /usr/bin | grep js8call)
+sudo -A rm ${file} /usr/local/share/applications/js8call.desktop    #removes appimage
+sudo -A rm /usr/bin/js8call /usr/share/applications/js8call.desktop #removes older version
 }

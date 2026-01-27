@@ -48,11 +48,9 @@ echo "$ID needs remove function"
 VERSION(){
 	if ! hash direwolf 2>/dev/null; then
 		CURRENT=0
-		wget -P /tmp/ https://raw.githubusercontent.com/wb2osz/direwolf/master/CHANGES.md >/dev/null 2>&1
-		NEWVER=$(cat /tmp/CHANGES.md | head -5 | tail -1 | awk '{ print $3 }')
+		NEWVER=$(curl -s https://raw.githubusercontent.com/wb2osz/direwolf/master/CHANGES.md | grep Version | head -1 | awk '{print $3}')
 	else
 		CURRENT=$(direwolf -S -t 0 | head -1 | sed 's/Dire\ Wolf\ version\ //')
-		wget -P /tmp/ https://raw.githubusercontent.com/wb2osz/direwolf/master/CHANGES.md >/dev/null 2>&1
-		NEWVER=$(cat /tmp/CHANGES.md | head -5 | tail -1 | awk '{ print $3 }')
+		NEWVER=$(curl -s https://raw.githubusercontent.com/wb2osz/direwolf/master/CHANGES.md | grep Version | head -1 | awk '{print $3}')
     fi
 }

@@ -1,7 +1,7 @@
 BAPP=4.0
-ID=GARIM
-Name=GARIM
-Comment="File Transfer Program"
+ID=VARIM
+Name=VARIM
+Comment="VARA File Transfer Program"
 Ver=
 localVer=0
 W3=
@@ -9,10 +9,11 @@ W3=
 INSTALL(){
 
 	CLEANSOURCE(){
+    PACKAGE=varim
 		#this function removes any old source files before
 		#new files are downloaded for installation. This
 		#function is called by install functions below.
-		PACKAGE=$(ls ${HOME}/.bap-source-files | grep ${PACKAGE})
+		PACKAGE=$(ls ${HOME}/.bap-source-files | grep ${PACKAGE} | head -1)
 		echo "package is $PACKAGE"
 		if [ -z $PACKAGE ]; then
 			echo "no old package found"
@@ -29,7 +30,7 @@ INSTALL(){
     PACKAGE=garim
     CLEANSOURCE
 
-	GPKG=$(curl -s https://www.whitemesa.net/garim/garim.html | grep tar.gz | head -1 | sed 's/"//g;s/gz.*/gz/')
+	GPKG=$(curl -s https://www.whitemesa.net/varim/varim.html | grep tar.gz | head -1 | sed 's/"//g;s/gz.*/gz/')
   zip_file=$(echo $GPKG | awk -F "/" '{print $NF}')
 	cd ${BAPSRC}
 	wget --tries 2 --connect-timeout=60 ${GPKG}
@@ -40,6 +41,7 @@ INSTALL(){
 	make
 	sudo -A make install
 	sudo -A make clean
+  rm ${BAPSRC}/${zip_file}
 }
 
 UPDATE(){
@@ -47,11 +49,11 @@ UPDATE(){
 }
 
 REMOVE(){
-    echo "$ID needs remove tool"
+    sudo -A rm /usr/local/bin/varim
 }
 
 VERSION(){
-	if ! hash garim 2>/dev/null; then
+	if ! hash varim 2>/dev/null; then
 		CURRENT=0
 		NEWVER=1
 	else

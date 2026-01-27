@@ -56,7 +56,7 @@ echo "@reboot sleep 10 && export DISPLAY=:0 && ${BAPDIR}/bin/.complete" >> $TEMP
 
 #define core apps
 echo "ARDOP ARDOPGUI AX25 BATT BPQ CHIRP CONKY CQRLOG DIPOLE DIREWOLF EES FLAMP FLDIGI FLMSG FLNET FLRIG FLWRAP GARIM \
-	GPREDICT GPS GPSUPDATE GRIDCALC GRIDTRACKER HAMCLOCK HAMLIB HAMRS HOTSPOT HSTOOLS JS8 M0IAX PAT PATMENU PIAPRS PIQSO PISTATS \
+	GPREDICT GPS GPSUPDATE GRIDCALC GRIDTRACKER HAMCLOCK HAMLIB HAMRS HOTSPOT HSTOOLS JS8 M0IAX PAT PATMENU PATMENU3 PIAPRS PIQSO PISTATS \
 	PITERM QTSOUND REPEAT SECURITY SHOWLOG TQSL VARA VNC WSJTX XASTIR XYGRIB YAAC" > ${BAPDIR}/cache/core.bapps
 
 	for file in ${CORE}; do
@@ -152,7 +152,7 @@ if [ -n "${GPSCK}" ]; then
 
 	yad --center --height="300" --width="300" --form --separator="|" --item-separator="|" --title="GPS" \
 		--image ${LOGO} --window-icon=${LOGO} --image-on-top \
-		--text="\r\r\r\r\r<b><big>Connect your GPS to the pi</big></b>" \
+		--text="\r\r\r\r\r<b><big>Connect your GPS to the computer</big></b>" \
 		--button="Continue":2
 
 	BUT=$?
@@ -300,9 +300,11 @@ EOF
 
 	#setup bin dir and put in path
 	mkdir -p ${HOME}/bin
-	CK=$(grep $HOME/bin $HOME/.bashrc)
-	if [ -z "$CK" ]; then
-		echo "export PATH=$PATH:${HOME}/bin" >>${HOME}/.bashrc
+	# Add $HOME/bin to PATH
+	# Prevent adding it more than once
+	# Prevent adding it if already added elswhere
+	if ! grep -q 'export PATH=$PATH:$HOME/bin' "${HOME}/.bashrc" && [[ ! "${PATH}" =~ "${HOME}/bin" ]]; then
+		echo 'export PATH=$PATH:$HOME/bin' >> "${HOME}/.bashrc"
 	fi
 
 	##################################

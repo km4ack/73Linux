@@ -24,6 +24,7 @@ EOF
 
 INSTALL(){
     sudo -A apt install -y conky
+    sudo -A apt install -y conky-all
     sudo -A apt install -y ruby-full
     sudo -A gem install gpsd_client
     sudo -A gem install maidenhead

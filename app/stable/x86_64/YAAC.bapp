@@ -12,6 +12,7 @@ Name=YAAC
 GenericName=YAAC
 Comment=APRS Client
 Exec=${HOME}/YAAC/YAAC
+Icon=${HOME}/YAAC/images/yaaclogo32.ico
 Terminal=false
 Type=Application
 Categories=Network;HamRadio;

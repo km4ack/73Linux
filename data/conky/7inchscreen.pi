@@ -72,7 +72,7 @@ ${font Arial:bold:size=8}${color Yellow}DHCP ADDRESSES FOR HOTSPOT ${color DarkS
 ${font Arial:bold:size=8}${color White}${execi 5 cat /var/lib/misc/dnsmasq.leases | awk '{ print $3"   "$4 }'}
 ${voffset 25}
 ${font Arial:bold:size=8}${color Yellow}RADIO TOOLS ${color DarkSlateGray}${hr 2}
-${font Arial:size=08}${if_running piardopc}${color green}ARDOP ACTIVE${else}${color red}ARDOP OFF$endif \
+${font Arial:size=08}${if_running ardopcf}${color green}ARDOP ACTIVE${else}${color red}ARDOP OFF$endif \
 ${alignr}${if_running rigctld}${color green}RIGCTL ACTIVE${else}${color red}RIGCTL OFF$endif
 ${if_running kissattach}${color green}KISSATCH ACTIVE${else}${color red}KISSATCH OFF$endif \
 ${alignr}${if_running direwolf}${color green}DIREWOLF ACTIVE${else}${color red}DIREWOLF OFF$endif

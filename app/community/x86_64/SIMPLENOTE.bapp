@@ -1,0 +1,57 @@
+BAPP=4.0
+ID=SIMPLENOTE
+Name=SimpleNote
+Comment='Note Taking Application'
+Ver=0
+localVer=0
+
+
+INSTALL(){
+  #define github variables
+  user=Automattic
+  repo=simplenote-electron
+  search_term="x86_64.AppImage"
+
+  cd ${BUILDDIR}
+  pkg_name=$(curl -s https://api.github.com/repos/${user}/${repo}/releases/latest | grep ${search_term} | grep name | sed 's/.*"Si/Si/;s/",//;s/ //g')
+  version=$(echo ${pkg_name} | sed 's/Simplenote-linux-//;s/-x86_64.AppImage//')
+
+  wget https://github.com/${user}/${repo}/releases/download/v${version}/${pkg_name}
+  chmod +x ${pkg_name}
+  sudo -A mv ${pkg_name} /usr/local/bin/
+
+	cat <<EOF > /run/user/$UID/simplenote.desktop
+[Desktop Entry]
+Name=SimpleNote
+GenericName=SimpleNote
+Comment=Note taking application
+Exec=/usr/local/bin/${pkg_name}
+Terminal=false
+Icon=${HOME}/73Linux/data/ico/simplenote.png
+Type=Application
+Categories=Utility
+EOF
+	sudo -A mv /run/user/$UID/simplenote.desktop /usr/local/share/applications/
+
+}
+
+REMOVE(){
+  sudo -A rm /usr/local/bin/simplenote
+}
+
+VERSION(){
+  #define github variables
+  user=Automattic
+  repo=simplenote-electron
+  search_term="x86_64.AppImage"
+
+  pkg_name=$(curl -s https://api.github.com/repos/${user}/${repo}/releases/latest | grep ${search_term} | grep name | sed 's/.*"Si/Si/;s/",//')
+  version=$(echo ${pkg_name} | sed 's/Simplenote-linux-//;s/-x86_64.AppImage//')
+  if [ `ls /usr/local/bin | grep Simple` ]; then
+	  CURRENT=$(ls /usr/local/bin | grep Simple | sed 's/Simplenote-linux-//;s/-x86_64.AppImage//')
+	  NEWVER=${version}
+  else
+	  CURRENT=0
+	  NEWVER=${version}
+  fi
+}

@@ -16,16 +16,17 @@ INSTALL(){
 	
 	#remove existing source files
 	sudo rm -rf $HOME/.bap-source-files/wsjtx*
+	wsjtx_version=$(curl -s https://sourceforge.net/projects/wsjt/files/ | grep wsjtx-2 | head -1 | sed 's/.*title="\///' | sed 's/\/.*//')
 	if [ `getconf LONG_BIT` = '64' ]; then
 		#64 bit link
-		ft8pkg=$(curl -s https://sourceforge.net/projects/wsjt/files/wsjtx-2.7.0-rc5/ | grep arm64.deb | head -1 | sed 's/.*title="//' | sed 's/".*//')
+		ft8pkg=$(curl -s https://sourceforge.net/projects/wsjt/files/${wsjtx_version}/ | grep arm64.deb | head -1 | sed 's/.*title="//' | sed 's/".*//')
 	else
 		#32bit link
-		ft8pkg=$(curl -s https://sourceforge.net/projects/wsjt/files/wsjtx-2.7.0-rc5/ | grep armhf.deb | head -1 | sed 's/.*title="//' | sed 's/".*//')
+		ft8pkg=$(curl -s https://sourceforge.net/projects/wsjt/files/${wsjtx_version}/ | grep armhf.deb | head -1 | sed 's/.*title="//' | sed 's/".*//')
 	fi
 
 
-	wsjtx_version=$(curl -s https://sourceforge.net/projects/wsjt/files/ | grep wsjtx-2 | head -1 | sed 's/.*title="\///' | sed 's/\/.*//')
+
 	wget --tries 2 --connect-timeout=60 https://sourceforge.net/projects/wsjt/files/${wsjtx_version}/${ft8pkg}
 	sudo dpkg -i ${ft8pkg}
 	sudo apt install --fix-broken -y
