@@ -1,8 +1,7 @@
 #73Linux
 ## Description
 
-73 Linux is the next evolution of Build a Pi. Not only does 73 Linux support Raspberry Pi
-but it also supports x86_64 Debian based systems. Now you can load up a laptop running
+73 Linux supports x86_64 Debian based systems. Now you can load up a laptop running
 Ubuntu or Mint with the same ease as previously on the Pi. To keep with the Build a Pi
 traditions, you have **FULL** control over the build unlike pre-built images. It allows you to 
 choose the applications you  want to install and skip the ones you don’t need. This keeps 
@@ -22,11 +21,8 @@ bapp files not included in the official 73 Linux package.
 
 # Compatibility
 
-So far 73 Linux has been tested on the Pi 4 running Pi OS 32bit and the Evolve Maestro
-laptop. 
-
-You can run 73 Linux right on top of your old Build a Pi install. ~~73 Linux will remove 
-any old installs of BAP during the initial run.~~ Coming soon.
+73 Linux is built and tested on Linux Mint. It should work equally well on Ubuntu.
+If you run into issues with Ubuntu and sudo, see https://github.com/km4ack/73Linux/issues/183
 
 # Install
 

@@ -3,8 +3,8 @@ ID=CHIRP
 Name=Chirp
 Comment="Radio Programming"
 Ver=
-localVer=
-W3='https://chirp.danplanet.com/projects/chirp/wiki/Home'
+localVer=0
+W3=''
 
 MENU(){
     cat >chirp.desktop <<EOF
@@ -23,31 +23,41 @@ EOF
 }
 
 INSTALL(){
-    CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-    sudo -A apt install python-wxtools python3-pip -y
-    cd ${BAPSRC}
-    date=$(curl -s https://archive.chirpmyradio.com/chirp_next/ | grep href=\"next | head -1 | sed 's/.*href="//' | sed 's/\/">.*//' | sed 's/next-//')
-    wheel=https://trac.chirp.danplanet.com/chirp_next/next-${date}/chirp-${date}-py3-none-any.whl
-    wget ${wheel}
-    PIP_BREAK_SYSTEM_PACKAGES=1 pip install ${wheel} --force-reinstall
+
+ck=$(ls $HOME/Downloads | grep chirp)
+
+if [ -z ${ck} ]; then
+    echo "Chirp file not found in downloads"
+    cat >$HOME/Desktop/chirp.readme <<EOF
+The Chirp website has changed and blocks downloads from scripts
+like 73Linux. To install Chirp, go to:
+https://archive.chirpmyradio.com/download?stream=next
+and download the "whl" file. Once downloaded, run 73Linux again
+and tell it to install Chirp. It will check the downloads folder
+and install the application. This cycle must be completed each 
+time you want 73Linux to install or update Chirp.
+EOF
+else
+    PIP_BREAK_SYSTEM_PACKAGES=1 pip install websockets --force-reinstall    
+    PIP_BREAK_SYSTEM_PACKAGES=1 pip install $HOME/Downloads/${ck} --force-reinstall
+    rm $HOME/Downloads/${ck}
+fi
     MENU
 
 }
 
 
 REMOVE(){
-    pkg=$(ls ${BAPSRC} | grep chirp)
-    pip uninstall ${pkg} -y
-    cd ${BAPSRC}
-    rm ${pkg}
+    rm $HOME/.local/bin/chirp*
+    sudo -A rm /usr/local/share/applications/
 }
 
 VERSION(){
     if ! hash chirp 2>/dev/null; then
         CURRENT=0
-        NEWVER=$(curl -s https://trac.chirp.danplanet.com/chirp_next/ | grep href=\"next | head -1 | sed 's/.*href="//' | sed 's/\/">.*//' | sed 's/next-//')
+        NEWVER=unknown
     else
         CURRENT=$(chirp --version | awk '{print $2}' | sed 's/next-//')
-        NEWVER=$(curl -s https://trac.chirp.danplanet.com/chirp_next/ | grep href=\"next | head -1 | sed 's/.*href="//' | sed 's/\/">.*//' | sed 's/next-//')
+        NEWVER=unknown
     fi
 }

@@ -14,9 +14,9 @@ fi
 
 
 cd ${BUILDDIR}
-app=$(curl -s https://github.com/oxen-io/session-desktop/releases | grep AppImage | head -1 | awk '{print $1}')
+app=$(curl -s https://github.com/session-foundation/session-desktop/releases | grep AppImage | head -1 | awk '{print $2}')
 ver=$(echo ${app} | sed 's/session-desktop-linux-x86_64-//;s/.AppImage//')
-wget https://github.com/oxen-io/session-desktop/releases/download/v${ver}/session-desktop-linux-x86_64-${ver}.AppImage
+wget https://github.com/session-foundation/session-desktop/releases/download/v${ver}/session-desktop-linux-x86_64-${ver}.AppImage
 chmod +x ${app}
 
 sudo -A mv ${app} /usr/local/bin/session.AppImage

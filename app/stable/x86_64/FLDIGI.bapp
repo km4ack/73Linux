@@ -60,7 +60,7 @@ INSTALL(){
     CLEANSOURCE
 
 	#Determine latest FLDIGI
-	FLTAR=$(curl -s https://www.w1hkj.org/files/fldigi/ | grep .tar.gz | sed 's/.*fldigi/fldigi/;s/.gz.*$/.gz/')
+	FLTAR=$(curl -s https://www.w1hkj.org/files/fldigi/ | grep .tar.gz | sed 's/.*fldigi/fldigi/;s/.gz.*$/.gz/' | sort | tail -n1)
 	FLPKG=$(echo ${FLTAR} | sed 's/.tar.gz//')
   sudo -A apt install -y libfltk1.3-dev libfltk1.3-compat-headers libsndfile1-dev portaudio19-dev
 
