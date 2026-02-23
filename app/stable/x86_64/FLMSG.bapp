@@ -69,6 +69,11 @@ INSTALL(){
 	wget --tries 2 --connect-timeout=60 https://www.w1hkj.org/files/flmsg/${MSGTAR}
 	tar -zxvf ${MSGTAR}
 
+  #workaround for https://github.com/km4ack/73Linux/issues/174 
+  #until flmsg gets fixed. Also see https://groups.io/g/KM4ACK-Pi/topic/115190176#msg14206
+  #this section of code should be removed once flmsg is updated with fix
+  sed -i '/debug.h/a #include \"pthread.h\"' ${MSGPKG}/src/widgets/font_browser.cxx
+
 	#Build FLMSG
 	cd ${MSGPKG} || return
 	./configure --prefix=/usr/local --enable-static --without-flxmlrpc
