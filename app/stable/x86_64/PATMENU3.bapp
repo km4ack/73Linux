@@ -7,19 +7,6 @@ localVer=
 W3=
 
 DEPENDS(){
-    #voacap
-    if ! hash voacapl 2>/dev/null; then
-        sudo -A apt install build-essential gfortran -y
-        cd ${HOME}/Downloads
-        wget https://github.com/jawatson/voacapl/archive/refs/tags/v.0.7.6.zip
-        unzip v.0.7.6.zip
-        cd voacapl-v.0.7.6
-        ./configure
-        make
-        sudo -A make install
-        makeitshfbc
-    fi
-
     #wwl
     if ! hash locator 2>/dev/null; then
         cd ${HOME}/Downloads
