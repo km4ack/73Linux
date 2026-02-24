@@ -2,8 +2,8 @@ BAPP=4.0
 ID=GRIDTRACKER
 Name=GridTracker
 Comment="Track grids in WSJTX"
-Ver=Update:2.250914.1
-localVer=0
+Ver=
+localVer=
 Maintainer=KM4ACK
 
 INSTALL(){
@@ -29,12 +29,11 @@ REMOVE(){
 }
 
 VERSION(){
-    if ! hash gridtracker 2>/dev/null; then
+    if ! hash gridtracker2 2>/dev/null; then
         CURRENT=0
         NEWVER=$(curl --max-time 20 -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gt-download-links | grep ^deb= | sed 's/.*GridTracker2-//;s/-amd64.*//')
     else
-        CURRENT=$(dpkg --list | grep gridtracker | awk '{print $3}')
+        CURRENT=$(dpkg -l | grep -i gridtracker | awk '{print $3}' | sed 's/-.*//')
         NEWVER=$(curl --max-time 20 -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gt-download-links | grep ^deb= | sed 's/.*GridTracker2-//;s/-amd64.*//')
     fi
-echo $CURRENT $NEWVER
 }

@@ -23,7 +23,7 @@ EOF
 }
 
 INSTALL(){
-
+sudo -A apt install python3-wxgtk4.0 -y
 ck=$(ls $HOME/Downloads | grep chirp)
 
 if [ -z ${ck} ]; then

@@ -1,4 +1,7 @@
-version=4.1.10
+version=4.1.11
+4.1.11  Add dependancy required for chirp
+        Fix Gridtracker not reporting correctly. (issue #204)
+        Fix WSJTX not reporting correctly. (issue #205)
 4.1.10  Update funfacts
         Remove Pat Menu 2 from 73Linux
         Fix Pat Menu 3 bapp file
