@@ -1,9 +1,14 @@
-version=4.1.9
+version=4.1.10
+4.1.10  Update funfacts
+        Remove Pat Menu 2 from 73Linux
+        Fix Pat Menu 3 bapp file
+        Update chirp.bapp
 4.1.9   Fix Chirp installer
         update README
         drop support for Raspberry Pi
         update session messenger to correct repo
         fix FLDIGI when multiple versions appear. (Thanks  mmirabent)
+        add workaround for issue 174
 4.1.8   Fix Gridtracker install (Thanks W7DON!)
 	      Fix Direwolf version checking (Thanks KD7UM)
 4.1.7   Fix FLDIGI Suite (issue 168)
