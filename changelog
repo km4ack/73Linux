@@ -1,4 +1,5 @@
 version=4.1.11
+4.1.12  Fix Pat installer
 4.1.11  Add dependancy required for chirp
         Fix Gridtracker not reporting correctly. (issue #204)
         Fix WSJTX not reporting correctly. (issue #205)
