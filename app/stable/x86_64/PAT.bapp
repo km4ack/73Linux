@@ -21,10 +21,8 @@ INSTALL(){
     #download pat
 	cd ${BAPSRC}
 	NEWPATV=$(curl -s https://github.com/la5nta/pat/releases | grep amd64 | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//')
-	NEWPAT=$(echo ${NEWPATV} | sed 's/pat_//' | sed 's/_linux_amd64.deb//' | sed 's/0\.//')
-	echo "new pat v ${NEWPATV}"
-	echo "new pat ${NEWPAT}"
-	wget --tries 2 --connect-timeout=60 https://github.com/la5nta/pat/releases/download/v0.${NEWPAT}/${NEWPATV}
+	NEWPAT=$(echo ${NEWPATV} | sed 's/pat_//' | sed 's/_linux_amd64.deb//')
+	wget --tries 2 --connect-timeout=60 https://github.com/la5nta/pat/releases/download/v${NEWPAT}/${NEWPATV}
 	sudo -A dpkg -i ${BAPSRC}/${NEWPATV}
 	rm ${BAPSRC}/${NEWPATV}
 
