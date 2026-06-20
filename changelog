@@ -1,4 +1,5 @@
-version=4.1.12
+version=4.1.13
+4.1.13  Fix graywolf download link
 4.1.12  Fix Pat installer
         Add Graywolf to community apps - https://github.com/chrissnell/graywolf/
         Add pip to Chrip installer
