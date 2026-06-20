@@ -21,16 +21,21 @@ INSTALL(){
     CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
     mkdir -p ${BAPSRC}
 
-    #fetch latest release tag from the GitHub API
-    TAG=$(curl --max-time 20 -s https://api.github.com/repos/chrissnell/graywolf/releases/latest \
-        | grep '"tag_name":' | head -1 | sed 's/.*"tag_name":[[:space:]]*"//;s/".*//')
+    #Discover the actual amd64 .deb asset URL from the GitHub API rather
+    #than constructing it. Upstream has renamed the asset pattern more
+    #than once (graywolf_<ver>_linux_amd64.deb -> graywolf_<ver>_amd64.deb),
+    #so matching any URL ending in amd64.deb or x86_64.deb keeps this
+    #working across naming changes.
+    URL=$(curl --max-time 20 -s https://api.github.com/repos/chrissnell/graywolf/releases/latest \
+        | grep '"browser_download_url":' \
+        | grep -E '(amd64|x86_64)\.deb"' \
+        | head -1 \
+        | sed 's/.*"browser_download_url":[[:space:]]*"//;s/".*//')
 
-    if [ -z "${TAG}" ]; then
-        echo "ERROR: failed to determine latest graywolf release tag from GitHub"
+    if [ -z "${URL}" ]; then
+        echo "ERROR: could not find an amd64 .deb asset URL on the latest graywolf release"
     else
-        GWVER=${TAG#v}
-        PKG="graywolf_${GWVER}_linux_amd64.deb"
-        URL="https://github.com/chrissnell/graywolf/releases/download/${TAG}/${PKG}"
+        PKG=$(basename "${URL}")
 
         CLEAN
 
@@ -46,7 +51,7 @@ INSTALL(){
 
 
 REMOVE(){
-    sudo -A dpkg --purge graywolf
+    sudo -A dpkg --remove graywolf
 }
 
 VERSION(){
