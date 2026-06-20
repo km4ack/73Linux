@@ -1,0 +1,63 @@
+BAPP=4.0
+ID=GRAYWOLF
+Name=graywolf
+Comment="APRS digipeater/iGate/beacon with modern web UI"
+Ver=
+localVer=
+W3=https://github.com/chrissnell/graywolf/
+
+CLEAN(){
+    #remove previous downloads
+    CK=$(ls ${BAPSRC} 2>/dev/null | grep graywolf_.*\.deb)
+    if [ -n "$CK" ]; then
+        echo "###############################################"
+        echo "graywolf .deb found in ${BAPSRC}. removing"
+        echo "###############################################"
+        rm -f ${BAPSRC}/graywolf_*.deb
+    fi
+}
+
+INSTALL(){
+    CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+    mkdir -p ${BAPSRC}
+
+    #fetch latest release tag from the GitHub API
+    TAG=$(curl --max-time 20 -s https://api.github.com/repos/chrissnell/graywolf/releases/latest \
+        | grep '"tag_name":' | head -1 | sed 's/.*"tag_name":[[:space:]]*"//;s/".*//')
+
+    if [ -z "${TAG}" ]; then
+        echo "ERROR: failed to determine latest graywolf release tag from GitHub"
+    else
+        GWVER=${TAG#v}
+        PKG="graywolf_${GWVER}_linux_amd64.deb"
+        URL="https://github.com/chrissnell/graywolf/releases/download/${TAG}/${PKG}"
+
+        CLEAN
+
+        wget --tries 2 --connect-timeout=60 -P "${BAPSRC}" "${URL}"
+
+        if [ ! -f "${BAPSRC}/${PKG}" ]; then
+            echo "ERROR: failed to download ${PKG} from ${URL}"
+        else
+            sudo -A apt install -y "${BAPSRC}/${PKG}"
+        fi
+    fi
+}
+
+
+REMOVE(){
+    sudo -A dpkg --purge graywolf
+}
+
+VERSION(){
+    if ! hash graywolf 2>/dev/null; then
+        CURRENT=0
+        NEWVER=$(curl --max-time 20 -s https://api.github.com/repos/chrissnell/graywolf/releases/latest \
+            | grep '"tag_name":' | head -1 | sed 's/.*"tag_name":[[:space:]]*"v\{0,1\}//;s/".*//')
+    else
+        CURRENT=$(dpkg-query -W -f='${Version}' graywolf 2>/dev/null)
+        [ -z "${CURRENT}" ] && CURRENT=0
+        NEWVER=$(curl --max-time 20 -s https://api.github.com/repos/chrissnell/graywolf/releases/latest \
+            | grep '"tag_name":' | head -1 | sed 's/.*"tag_name":[[:space:]]*"v\{0,1\}//;s/".*//')
+    fi
+}
