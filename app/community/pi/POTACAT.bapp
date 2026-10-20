@@ -1,0 +1,69 @@
+BAPP=4.0
+ID=POTACAT
+Name=POTACAT
+Comment="POTA/SOTA/DX spot aggregator with one-click CAT tuning (64-bit OS only)"
+Ver=
+localVer=
+W3=https://github.com/Waffleslop/POTACAT
+
+CLEAN(){
+    #remove previous downloads
+    CK=$(ls ${BAPSRC} 2>/dev/null | grep potacat_.*\.deb)
+    if [ -n "$CK" ]; then
+        echo "###############################################"
+        echo "POTACAT .deb found in ${BAPSRC}. removing"
+        echo "###############################################"
+        rm -f ${BAPSRC}/potacat_*.deb
+    fi
+}
+
+INSTALL(){
+    #POTACAT only publishes an arm64 .deb. Check the userland architecture
+    #rather than lscpu, since 32-bit Pi OS can run on a 64-bit kernel.
+    ARCH=$(dpkg --print-architecture)
+    if [ "${ARCH}" != "arm64" ]; then
+        echo "###############################################"
+        echo "POTACAT requires a 64-bit OS (arm64)."
+        echo "This system is ${ARCH}. Skipping install."
+        echo "###############################################"
+        return
+    fi
+
+    mkdir -p ${BAPSRC}
+
+    #Discover the arm64 .deb asset URL from the GitHub API
+    URL=$(curl --max-time 20 -s https://api.github.com/repos/Waffleslop/POTACAT/releases/latest \
+        | grep '"browser_download_url":' \
+        | grep -E 'arm64\.deb"' \
+        | head -1 \
+        | sed 's/.*"browser_download_url":[[:space:]]*"//;s/".*//')
+
+    if [ -z "${URL}" ]; then
+        echo "ERROR: could not find an arm64 .deb asset URL on the latest POTACAT release"
+    else
+        PKG=$(basename "${URL}")
+
+        CLEAN
+
+        wget --tries 2 --connect-timeout=60 -P "${BAPSRC}" "${URL}"
+
+        if [ ! -f "${BAPSRC}/${PKG}" ]; then
+            echo "ERROR: failed to download ${PKG} from ${URL}"
+        else
+            #the .deb provides /usr/bin/potacat, the desktop entry, and the icon
+            sudo -A apt install -y "${BAPSRC}/${PKG}"
+        fi
+    fi
+}
+
+
+REMOVE(){
+    sudo -A dpkg --remove potacat
+}
+
+VERSION(){
+    NEWVER=$(curl --max-time 20 -s https://api.github.com/repos/Waffleslop/POTACAT/releases/latest \
+        | grep '"tag_name":' | head -1 | sed 's/.*"tag_name":[[:space:]]*"v\{0,1\}//;s/".*//')
+    CURRENT=$(dpkg-query -W -f='${Version}' potacat 2>/dev/null)
+    [ -z "${CURRENT}" ] && CURRENT=0
+}

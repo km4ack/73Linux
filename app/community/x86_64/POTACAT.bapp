@@ -1,0 +1,59 @@
+BAPP=4.0
+ID=POTACAT
+Name=POTACAT
+Comment="POTA/SOTA/DX spot aggregator with one-click CAT tuning"
+Ver=
+localVer=
+W3=https://github.com/Waffleslop/POTACAT
+
+CLEAN(){
+    #remove previous downloads
+    CK=$(ls ${BAPSRC} 2>/dev/null | grep potacat_.*\.deb)
+    if [ -n "$CK" ]; then
+        echo "###############################################"
+        echo "POTACAT .deb found in ${BAPSRC}. removing"
+        echo "###############################################"
+        rm -f ${BAPSRC}/potacat_*.deb
+    fi
+}
+
+INSTALL(){
+    mkdir -p ${BAPSRC}
+
+    #Discover the amd64 .deb asset URL from the GitHub API. The release
+    #also ships an arm64 .deb, so match on the amd64 suffix explicitly.
+    URL=$(curl --max-time 20 -s https://api.github.com/repos/Waffleslop/POTACAT/releases/latest \
+        | grep '"browser_download_url":' \
+        | grep -E 'amd64\.deb"' \
+        | head -1 \
+        | sed 's/.*"browser_download_url":[[:space:]]*"//;s/".*//')
+
+    if [ -z "${URL}" ]; then
+        echo "ERROR: could not find an amd64 .deb asset URL on the latest POTACAT release"
+    else
+        PKG=$(basename "${URL}")
+
+        CLEAN
+
+        wget --tries 2 --connect-timeout=60 -P "${BAPSRC}" "${URL}"
+
+        if [ ! -f "${BAPSRC}/${PKG}" ]; then
+            echo "ERROR: failed to download ${PKG} from ${URL}"
+        else
+            #the .deb provides /usr/bin/potacat, the desktop entry, and the icon
+            sudo -A apt install -y "${BAPSRC}/${PKG}"
+        fi
+    fi
+}
+
+
+REMOVE(){
+    sudo -A dpkg --remove potacat
+}
+
+VERSION(){
+    NEWVER=$(curl --max-time 20 -s https://api.github.com/repos/Waffleslop/POTACAT/releases/latest \
+        | grep '"tag_name":' | head -1 | sed 's/.*"tag_name":[[:space:]]*"v\{0,1\}//;s/".*//')
+    CURRENT=$(dpkg-query -W -f='${Version}' potacat 2>/dev/null)
+    [ -z "${CURRENT}" ] && CURRENT=0
+}
