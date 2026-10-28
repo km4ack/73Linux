@@ -17,6 +17,17 @@ CLEAN(){
     fi
 }
 
+DIALOUT(){
+    #serial CAT control needs access to the radio's serial port
+    CHK_DIALOUT=$(id -nG | grep -w dialout)
+    if [ -z "$CHK_DIALOUT" ]; then
+        echo "Adding user to dialout group"
+        sudo -A usermod -a -G dialout $(whoami)
+    else
+        echo "User already in dialout group"
+    fi
+}
+
 INSTALL(){
     mkdir -p ${BAPSRC}
 
@@ -42,6 +53,7 @@ INSTALL(){
         else
             #the .deb provides /usr/bin/potacat, the desktop entry, and the icon
             sudo -A apt install -y "${BAPSRC}/${PKG}"
+            DIALOUT
         fi
     fi
 }
