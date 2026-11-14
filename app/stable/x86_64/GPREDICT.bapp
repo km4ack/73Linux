@@ -1,25 +1,133 @@
 BAPP=4.0
 ID=GPREDICT
 Name=GPredict
-Comment="Satellite Tracking"
-Ver=Update:REPO
+Comment="Satellite Tracking with GPSD Support"
+Ver=Update:2.6
 localVer=0
 
+GPREDICT_RELEASE=2.6
+GPREDICT_SHA256=f4e6967cb2eeb6d74b8e8208c90dc8f4b1c00955ae1049753ad8352c927e54a3
+
 INSTALL(){
-    CUR_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-    sudo -A apt install -y gpredict
+    local archive="gpredict-${GPREDICT_RELEASE}.tar.bz2"
+    local build_dir
+    local source_dir
+    local active_link="${BAPSRC}/gpredict-current"
+    local url="https://github.com/csete/gpredict/releases/download/v${GPREDICT_RELEASE}/${archive}"
+
+    mkdir -p "${BAPSRC}" || return 1
+
+    # Install build dependencies.
+    sudo -A apt install -y \
+        build-essential \
+        libtool \
+        intltool \
+        autoconf \
+        automake \
+        pkg-config \
+        wget \
+        bzip2 \
+        libcurl4-openssl-dev \
+        libglib2.0-dev \
+        libgtk-3-dev \
+        libgps-dev || return 1
+
+    # Download and verify the pinned upstream release.
+    cd "${BAPSRC}" || return 1
+
+    wget --tries 2 --connect-timeout=60 \
+        -O "${archive}" "${url}" || return 1
+
+    if ! printf '%s  %s\n' \
+        "${GPREDICT_SHA256}" "${archive}" | sha256sum -c -; then
+        echo "ERROR: Gpredict checksum verification failed."
+        return 1
+    fi
+
+    # Create an isolated build directory for each installation.
+    build_dir=$(mktemp -d \
+    "${BAPSRC}/gpredict-${GPREDICT_RELEASE}.build.XXXXXX") \
+    || return 1
+
+    source_dir="${build_dir}/gpredict-${GPREDICT_RELEASE}"
+
+    # Extract and compile without elevated privileges.
+    tar -xjf "${archive}" -C "${build_dir}" || return 1
+
+    cd "${source_dir}" || return 1
+
+    ./configure --prefix=/usr/local || return 1
+
+    make -j2 || return 1
+
+    # Verify GPSD support before installation.
+    if ! ldd src/gpredict | grep -q 'libgps\.so'; then
+        echo "ERROR: Gpredict was built without GPSD support."
+        return 1
+    fi
+
+    sudo -A make install || return 1
+
+    # Record the successfully installed build.
+    ln -sfnT "${source_dir}" "${active_link}" || return 1
+
+    echo "Gpredict ${GPREDICT_RELEASE} installed with GPSD support."
 }
 
 REMOVE(){
-    sudo -A apt purge -y gpredict
+    local source_dir="${BAPSRC}/gpredict-current"
+
+    if [ -x /usr/local/bin/gpredict ]; then
+
+        if [ ! -f "${source_dir}/Makefile" ]; then
+            echo "ERROR: Gpredict build directory is missing."
+            return 1
+        fi
+
+        cd "${source_dir}" || return 1
+
+        sudo -A make uninstall || return 1
+
+        # Upstream uninstall leaves these documentation files.
+        sudo -A rm -f \
+            /usr/local/share/gpredict/AUTHORS \
+            /usr/local/share/gpredict/COPYING \
+            /usr/local/share/gpredict/NEWS \
+            /usr/local/share/gpredict/README || return 1
+    fi
+
+    # Remove the legacy distribution installation, if present.
+    if dpkg-query -W -f='${Status}' gpredict 2>/dev/null |
+        grep -q '^install ok installed$'; then
+        sudo -A apt remove -y gpredict || return 1
+    fi
+
+    echo "Gpredict removed. User configuration preserved."
 }
 
 VERSION(){
-	if ! hash gpredict 2>/dev/null; then
-		CURRENT=0
-        NEWVER=REPO
-    else
-        CURRENT=REPO
-        NEWVER=REPO
+    CURRENT=0
+    NEWVER="${GPREDICT_RELEASE}"
+
+    if [ -x /usr/local/bin/gpredict ] &&
+       [ -r /usr/local/share/gpredict/NEWS ]; then
+
+        CURRENT=$(awk '/^Changes in version / {
+            print $4
+            exit
+        }' /usr/local/share/gpredict/NEWS)
+
+        if [ -z "${CURRENT}" ]; then
+            CURRENT=0
+        fi
+
+    elif [ -x /usr/bin/gpredict ]; then
+
+        CURRENT=$(dpkg-query -W -f='${Version}' \
+            gpredict 2>/dev/null | cut -d- -f1)
+
+        if [ -z "${CURRENT}" ]; then
+            CURRENT=0
+        fi
     fi
 }
