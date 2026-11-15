@@ -8,9 +8,24 @@ localVer=0
 GPREDICT_RELEASE=2.6
 GPREDICT_SHA256=f4e6967cb2eeb6d74b8e8208c90dc8f4b1c00955ae1049753ad8352c927e54a3
 
-INSTALL(){
+INSTALL()(
     if [[ -z "${BAPSRC:-}" || "${BAPSRC}" != /* ]]; then
         echo "ERROR: BAPSRC must be an absolute directory path." >&2
+        return 1
+    fi
+    mkdir -p "${BAPSRC}" || return 1
+
+    if [[ ! -O "${BAPSRC}" || -L "${BAPSRC}" ]]; then
+        echo "ERROR: Invalid Gpredict source directory ownership." >&2
+        return 1
+    fi
+
+    local lock_fd
+
+    exec {lock_fd}>>"${BAPSRC}/gpredict.lock" || return 1
+
+    if ! flock -n "${lock_fd}"; then
+        echo "ERROR: Another Gpredict operation is running." >&2
         return 1
     fi
     local archive="gpredict-${GPREDICT_RELEASE}.tar.bz2"
@@ -19,7 +34,6 @@ INSTALL(){
     local active_link="${BAPSRC}/gpredict-current"
     local url="https://github.com/csete/gpredict/releases/download/v${GPREDICT_RELEASE}/${archive}"
 
-    mkdir -p "${BAPSRC}" || return 1
 
     # Install build dependencies.
     sudo -A apt install -y \
@@ -36,27 +50,27 @@ INSTALL(){
         libgtk-3-dev \
         libgps-dev || return 1
 
-    # Download and verify the pinned upstream release.
-    cd "${BAPSRC}" || return 1
+    # Create an isolated directory for download and compilation.
+    build_dir=$(mktemp -d \
+        "${BAPSRC}/gpredict-${GPREDICT_RELEASE}.build.XXXXXX") \
+        || return 1
 
+    source_dir="${build_dir}/gpredict-${GPREDICT_RELEASE}"
+
+    cd "${build_dir}" || return 1
+
+    # Download and verify the pinned upstream release.
     wget --tries 2 --connect-timeout=60 \
         -O "${archive}" "${url}" || return 1
 
     if ! printf '%s  %s\n' \
         "${GPREDICT_SHA256}" "${archive}" | sha256sum -c -; then
-        echo "ERROR: Gpredict checksum verification failed."
+        echo "ERROR: Gpredict checksum verification failed." >&2
         return 1
     fi
 
-    # Create an isolated build directory for each installation.
-    build_dir=$(mktemp -d \
-    "${BAPSRC}/gpredict-${GPREDICT_RELEASE}.build.XXXXXX") \
-    || return 1
-
-    source_dir="${build_dir}/gpredict-${GPREDICT_RELEASE}"
-
-    # Extract and compile without elevated privileges.
-    tar -xjf "${archive}" -C "${build_dir}" || return 1
+    # Extract without elevated privileges.
+    tar -xjf "${archive}" || return 1
 
     cd "${source_dir}" || return 1
 
@@ -70,7 +84,12 @@ INSTALL(){
         return 1
     fi
 
-    sudo -A make install || return 1
+    if ! sudo -A make install; then
+        echo "ERROR: Gpredict installation failed." >&2
+        echo "Installation may be incomplete." >&2
+        echo "Recovery build directory: ${source_dir}" >&2
+        return 1
+    fi
 
     # Atomically record the successfully installed build.
     local pending_link="${build_dir}/gpredict-current"
@@ -80,11 +99,26 @@ INSTALL(){
     mv -Tf -- "${pending_link}" "${active_link}" || return 1
 
     echo "Gpredict ${GPREDICT_RELEASE} installed with GPSD support."
-}
+)
 
-REMOVE(){
+REMOVE()(
     if [[ -z "${BAPSRC:-}" || "${BAPSRC}" != /* ]]; then
         echo "ERROR: BAPSRC must be an absolute directory path." >&2
+        return 1
+    fi
+    mkdir -p "${BAPSRC}" || return 1
+
+    if [[ ! -O "${BAPSRC}" || -L "${BAPSRC}" ]]; then
+        echo "ERROR: Invalid Gpredict source directory ownership." >&2
+        return 1
+    fi
+
+    local lock_fd
+
+    exec {lock_fd}>>"${BAPSRC}/gpredict.lock" || return 1
+
+    if ! flock -n "${lock_fd}"; then
+        echo "ERROR: Another Gpredict operation is running." >&2
         return 1
     fi
     local source_dir="${BAPSRC}/gpredict-current"
@@ -120,7 +154,7 @@ REMOVE(){
     fi
 
     echo "Gpredict removed. User configuration preserved."
-}
+)
 
 VERSION(){
     CURRENT=0
