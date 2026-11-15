@@ -9,6 +9,10 @@ GPREDICT_RELEASE=2.6
 GPREDICT_SHA256=f4e6967cb2eeb6d74b8e8208c90dc8f4b1c00955ae1049753ad8352c927e54a3
 
 INSTALL(){
+    if [[ -z "${BAPSRC:-}" || "${BAPSRC}" != /* ]]; then
+        echo "ERROR: BAPSRC must be an absolute directory path." >&2
+        return 1
+    fi
     local archive="gpredict-${GPREDICT_RELEASE}.tar.bz2"
     local build_dir
     local source_dir
@@ -68,13 +72,21 @@ INSTALL(){
 
     sudo -A make install || return 1
 
-    # Record the successfully installed build.
-    ln -sfnT "${source_dir}" "${active_link}" || return 1
+    # Atomically record the successfully installed build.
+    local pending_link="${build_dir}/gpredict-current"
+
+    ln -s "${source_dir}" "${pending_link}" || return 1
+
+    mv -Tf -- "${pending_link}" "${active_link}" || return 1
 
     echo "Gpredict ${GPREDICT_RELEASE} installed with GPSD support."
 }
 
 REMOVE(){
+    if [[ -z "${BAPSRC:-}" || "${BAPSRC}" != /* ]]; then
+        echo "ERROR: BAPSRC must be an absolute directory path." >&2
+        return 1
+    fi
     local source_dir="${BAPSRC}/gpredict-current"
 
     if [ -x /usr/local/bin/gpredict ]; then
@@ -100,6 +112,11 @@ REMOVE(){
     if dpkg-query -W -f='${Status}' gpredict 2>/dev/null |
         grep -q '^install ok installed$'; then
         sudo -A apt remove -y gpredict || return 1
+    fi
+
+    # Clear the active build reference after successful removal.
+    if [ -L "${BAPSRC}/gpredict-current" ]; then
+        rm -- "${BAPSRC}/gpredict-current" || return 1
     fi
 
     echo "Gpredict removed. User configuration preserved."
