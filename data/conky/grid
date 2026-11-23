@@ -1,16 +1,22 @@
-#!/bin/bash
+#!/usr/bin/env ruby
 
-#script get maidenhead from GPS for display in conky
-#called by cronjob
-#04FEB2021 KM4ACK
+require 'gpsd_client'
+require 'maidenhead'
 
-GRID=$($HOME/bin/conky/get-grid)
-GRIDCH=$(echo $GRID | grep -i JJ00)
-FILE=/run/user/$UID/gridinfo.txt
+output = "No GPS"
 
-if [ -z "$GRIDCH" ]
-then
-echo $GRID > $FILE
-else
-echo "NO GPS" > $FILE
-fi
+begin
+  gpsd = GpsdClient::Gpsd.new()
+  gpsd.start()
+
+  if gpsd.started?
+    pos = gpsd.get_position
+    unless pos[:lat].nil? or pos[:lon].nil?
+      output = Maidenhead.to_maidenhead(pos[:lat], pos[:lon], precision = 4)
+    end
+  end
+
+  gpsd.stop()
+end
+
+File.write(File.join("/run/user", Process.uid.to_s, "gridinfo.txt"), output)
