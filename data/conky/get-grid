@@ -1,23 +1,94 @@
 #!/usr/bin/env ruby
 
-require 'gpsd_client'
-require 'maidenhead'
 require 'socket'
 require 'json'
+require 'maidenhead'
 
-ft8call_port = 2237
+def valid_position(message)
+  reports = if message['class'] == 'POLL'
+              message['tpv'] || []
+            else
+              [message]
+            end
 
-gpsd = GpsdClient::Gpsd.new()
-gpsd.start()
-apicmd = {}
+  reports.each do |report|
+    next unless report.is_a?(Hash)
+    next unless report['class'] == 'TPV'
+    next unless report['mode'].to_i >= 2
 
-# get maidenhead if gps is ready
-if gpsd.started?
-  pos = gpsd.get_position
-  maid = Maidenhead.to_maidenhead(pos[:lat], pos[:lon], precision = 5)
-#  puts "lat = #{pos[:lat]}, lon = #{pos[:lon]}, grid = #{maid}"
-  apicmd = {:type => "STATION.SET_GRID", :value => maid}
+    lat = report['lat']
+    lon = report['lon']
+
+    next unless lat.is_a?(Numeric) && lon.is_a?(Numeric)
+    next unless lat.finite? && lon.finite?
+    next unless (-90..90).cover?(lat)
+    next unless (-180..180).cover?(lon)
+
+    return [lat, lon]
+  end
+
+  nil
 end
 
-puts "#{maid}"
+socket = nil
 
+begin
+  socket = TCPSocket.new('127.0.0.1', 2947)
+
+  socket.write("?WATCH={\"enable\":true,\"json\":true};\n")
+  socket.write("?POLL;\n")
+
+  buffer = +''
+  deadline = Process.clock_gettime(
+    Process::CLOCK_MONOTONIC
+  ) + 12
+
+  loop do
+    remaining = deadline -
+      Process.clock_gettime(Process::CLOCK_MONOTONIC)
+
+    break if remaining <= 0
+    break unless IO.select([socket], nil, nil, remaining)
+
+    chunk = socket.read_nonblock(4096, exception: false)
+
+    break if chunk.nil?
+    next if chunk == :wait_readable
+
+    buffer << chunk
+
+    while (newline = buffer.index("\n"))
+      line = buffer.slice!(0, newline + 1)
+
+      begin
+        message = JSON.parse(line)
+      rescue JSON::ParserError
+        next
+      end
+
+      position = valid_position(message)
+      next unless position
+
+      puts Maidenhead.to_maidenhead(
+        position[0],
+        position[1],
+        5
+      )
+
+      exit 0
+    end
+  end
+
+  warn 'GPSD: No valid position received'
+
+rescue StandardError => error
+  warn "GPSD: #{error.class}: #{error.message}"
+
+ensure
+  socket.close if socket && !socket.closed?
+end
+
+# Preserve the existing 73 Linux shell script's
+# JJ00 failure convention.
+puts 'JJ00'
+exit 1
